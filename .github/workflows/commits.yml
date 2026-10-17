@@ -1,0 +1,27 @@
+# Pull request titles must be Conventional Commits: they become the
+# squash-merged commits on main. Separate from CI, so that editing a title
+# reruns only this.
+name: Commits
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+concurrency:
+  group: commits-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  conventional:
+    name: Conventional Commits
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: The pull request title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: node scripts/lint-commit.mjs "$TITLE"
