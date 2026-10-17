@@ -42,8 +42,11 @@ CI checks every pull request title.
 ## The description
 
 What changed and why, and how you looked at it: the playground in both
-themes, screenshots for anything visual. Link issues with `Closes #3`. End
-with the attribution lines your environment asks for.
+themes, screenshots for anything visual. Link issues with `Closes #3`.
+
+The description becomes the commit message on `main`, so it ends with
+the content: no "Generated with …" footers and no links to chat sessions.
+A link to the fctl session that made the change is welcome.
 
 ## The flow
 
