@@ -1,8 +1,8 @@
 # AGENTS.md
 
-This is **@hyperstructure/design**: tokens, fonts, WebGL scenes and the mark,
-shared by fctl's web app (hyperstructure/fctl, `web/`) and fctl.sh
-(hyperstructure/fctl-site).
+This is **@hyperstructure/design**: tokens, fonts, WebGL scenes, fctl's mark
+and hyperstructure's symbol, shared by fctl's web app (hyperstructure/fctl,
+`web/`) and fctl.sh (hyperstructure/fctl-site).
 
 ## Commands
 
@@ -30,6 +30,10 @@ npm run build    # builds the playground into dist/
 - This package is an API: exports in `package.json` are public. Changing a
   scene's options or a token's meaning is a breaking change — bump the minor
   version (0.x) and say so in the release notes.
+- hyperstructure's symbol (Twist, `assets/hyperstructure/`) is drawn once:
+  `symbol.svg` is the source; `symbol-yellow.svg`, `symbol-rings.svg` and
+  `brand.ts` reuse its ring path. The GitHub avatar is the rings in `#0d1117`
+  on `#ffff5d`. Do not redraw it; derive from the path.
 - Look at changes in the playground in both themes before tagging.
 
 ## Releasing

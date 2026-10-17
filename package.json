@@ -1,7 +1,7 @@
 {
   "name": "@hyperstructure/design",
-  "version": "0.1.0",
-  "description": "hyperstructure's design system: brand tokens, fonts, the WebGL scenes and the mark",
+  "version": "0.1.1",
+  "description": "hyperstructure's design system: brand tokens, fonts, the WebGL scenes, fctl's mark and the hyperstructure symbol",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -26,7 +26,8 @@
     "./gl/orb": "./src/gl/orb.ts",
     "./assets/mark.svg": "./assets/mark.svg",
     "./assets/favicon.svg": "./assets/favicon.svg",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./assets/hyperstructure/*": "./assets/hyperstructure/*"
   },
   "scripts": {
     "dev": "vite",

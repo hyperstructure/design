@@ -1,7 +1,7 @@
 // The playground: the scenes and tokens, live, in both themes.
 
 import "./playground.css";
-import { markSvg, palette } from "../src/brand";
+import { hyperstructureSvg, markSvg, palette } from "../src/brand";
 import { cssColor, mount, type Scene } from "../src/gl/core";
 import { type FoundryHandle, type FoundryLane, foundry, LANES } from "../src/gl/foundry";
 import { orb } from "../src/gl/orb";
@@ -30,9 +30,13 @@ for (const b of document.querySelectorAll<HTMLButtonElement>("[data-theme-choice
   b.addEventListener("click", () => setTheme(b.dataset.themeChoice ?? "dark"));
 }
 
-// The mark, from brand.ts.
+// The marks, from brand.ts.
 const markEl = $(".mark");
 if (markEl) markEl.innerHTML = markSvg(22);
+const ringsInk = $("#rings-ink");
+if (ringsInk) ringsInk.innerHTML = hyperstructureSvg(120, { ink: "currentColor", background: null });
+const ringsYellow = $("#rings-yellow");
+if (ringsYellow) ringsYellow.innerHTML = hyperstructureSvg(120, { ink: palette.yellow, background: null });
 
 // The foundry, with imaginary sessions.
 const PLANETS: Record<string, [number, number, number]> = {

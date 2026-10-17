@@ -14,7 +14,7 @@ export const palette = {
   whiteish: "#fafafa",
 } as const;
 
-/** The mark: two slanted bars on a rounded blackish square (32×32). */
+/** fctl's mark: two slanted bars on a rounded blackish square (32×32). */
 export const mark = {
   viewBox: "0 0 32 32",
   radius: 8,
@@ -27,4 +27,31 @@ export const mark = {
 /** The mark as an SVG document (for favicons and generated pages). */
 export function markSvg(size = 32): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${mark.viewBox}"><rect width="32" height="32" rx="${mark.radius}" fill="${mark.background}"/><rect x="0.5" y="0.5" width="31" height="31" rx="${mark.radius - 0.5}" fill="none" stroke="rgb(250 250 250 / 0.12)"/><path d="${mark.path}" fill="${mark.foreground}"/></svg>`;
+}
+
+/**
+ * hyperstructure's symbol ("Twist"): two rounded squares turning inside each
+ * other. On GitHub it is the dark rings on full-bleed yellow
+ * (assets/hyperstructure/symbol-yellow.svg).
+ */
+export const hyperstructure = {
+  viewBox: "0 0 256 256",
+  /** Both rings, as one path (fill-rule evenodd). */
+  rings:
+    "M150.97 43.73C181.41 53.62 196.63 58.57 206.33 68.27A57.14 57.14 0 0 1 222.36 99.74C224.51 113.29 219.56 128.51 209.68 158.94L212.27 150.97C202.38 181.41 197.43 196.63 187.73 206.33A57.14 57.14 0 0 1 156.26 222.36C142.71 224.51 127.49 219.56 97.06 209.68L105.03 212.27C74.59 202.38 59.37 197.43 49.67 187.73A57.14 57.14 0 0 1 33.64 156.26C31.49 142.71 36.44 127.49 46.32 97.06L43.73 105.03C53.62 74.59 58.57 59.37 68.27 49.67A57.14 57.14 0 0 1 99.74 33.64C113.29 31.49 128.51 36.44 158.94 46.32ZM154.11 57.37C178.16 65.19 190.18 69.09 197.84 76.76A45.14 45.14 0 0 1 210.51 101.62C212.21 112.32 208.3 124.34 200.49 148.39L198.63 154.11C190.81 178.16 186.91 190.18 179.24 197.84A45.14 45.14 0 0 1 154.38 210.51C143.68 212.21 131.66 208.3 107.61 200.49L101.89 198.63C77.84 190.81 65.82 186.91 58.16 179.24A45.14 45.14 0 0 1 45.49 154.38C43.79 143.68 47.7 131.66 55.51 107.61L57.37 101.89C65.19 77.84 69.09 65.82 76.76 58.16A45.14 45.14 0 0 1 101.62 45.49C112.32 43.79 124.34 47.7 148.39 55.51ZM160.02 75.05C178.96 88.81 188.43 95.69 192.98 104.63A41.8 41.8 0 0 1 197.03 130.14C195.46 140.05 188.58 149.52 174.82 168.46L180.95 160.02C167.19 178.96 160.31 188.43 151.37 192.98A41.8 41.8 0 0 1 125.86 197.03C115.95 195.46 106.48 188.58 87.54 174.82L95.98 180.95C77.04 167.19 67.57 160.31 63.02 151.37A41.8 41.8 0 0 1 58.97 125.86C60.54 115.95 67.42 106.48 81.18 87.54L75.05 95.98C88.81 77.04 95.69 67.57 104.63 63.02A41.8 41.8 0 0 1 130.14 58.97C140.05 60.54 149.52 67.42 168.46 81.18ZM158.8 88.99C172.3 98.8 179.05 103.71 182.29 110.08A29.8 29.8 0 0 1 185.17 128.27C184.05 135.33 179.15 142.08 169.34 155.58L167.01 158.8C157.2 172.3 152.29 179.05 145.92 182.29A29.8 29.8 0 0 1 127.73 185.17C120.67 184.05 113.92 179.15 100.42 169.34L97.2 167.01C83.7 157.2 76.95 152.29 73.71 145.92A29.8 29.8 0 0 1 70.83 127.73C71.95 120.67 76.85 113.92 86.66 100.42L88.99 97.2C98.8 83.7 103.71 76.95 110.08 73.71A29.8 29.8 0 0 1 128.27 70.83C135.33 71.95 142.08 76.85 155.58 86.66Z",
+  background: palette.yellow,
+  /** The rings' color on the yellow avatar. */
+  ink: "#0d1117",
+} as const;
+
+/** The hyperstructure symbol as an SVG document: rings in `ink` on `background` (null for none). */
+export function hyperstructureSvg(
+  size = 256,
+  {
+    ink = hyperstructure.ink,
+    background = hyperstructure.background,
+  }: { ink?: string; background?: string | null } = {},
+): string {
+  const bg = background ? `<rect width="256" height="256" fill="${background}"/>` : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${hyperstructure.viewBox}">${bg}<path fill="${ink}" fill-rule="evenodd" d="${hyperstructure.rings}"/></svg>`;
 }

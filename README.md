@@ -13,10 +13,15 @@ dithered WebGL scenes, and the mark. Used by
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
 | `@hyperstructure/design/gl/orb` | A tiny dithered planet for a session's state |
-| `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | The mark |
+| `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark |
+| `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
 
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
 `#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`.
+
+hyperstructure's symbol is **Twist**: two rounded squares turning inside each
+other. The organization avatar is the rings in `#0d1117` on full-bleed yellow
+`#ffff5d`; `brand.ts` has it as values (`hyperstructure`, `hyperstructureSvg()`).
 
 ## Using it
 
