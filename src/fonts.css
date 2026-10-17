@@ -1,0 +1,4 @@
+/* The brand's typefaces: Inter (with optical sizes, so large text gets its
+   Display cut) and JetBrains Mono. Import before tokens.css. */
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";

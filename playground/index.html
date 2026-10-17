@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>hyperstructure design</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="bar">
+      <span class="brand"><span class="mark" aria-hidden="true"></span> hyperstructure design</span>
+      <div class="themes">
+        <button type="button" data-theme-choice="dark">Dark</button>
+        <button type="button" data-theme-choice="light">Light</button>
+      </div>
+    </header>
+    <main>
+      <section>
+        <h1>The foundry</h1>
+        <p class="note">
+          The signature scene: dithered to the palette, one pixel per three device pixels. Move the pointer over it;
+          the threads part.
+        </p>
+        <div class="stage"><canvas id="foundry" aria-label="The foundry scene"></canvas></div>
+        <div class="controls">
+          <label>Working <input id="lit" type="range" min="0" max="20" value="9" /></label>
+          <label>Idle threads <input id="density" type="range" min="0" max="100" value="55" /></label>
+          <label>
+            Planet
+            <select id="planet">
+              <option value="hero">Hero (fctl.sh, sign-in)</option>
+              <option value="floor">Floor (wide)</option>
+            </select>
+          </label>
+          <button type="button" id="pulse">Send a packet</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Orbs</h2>
+        <p class="note">A session's orb, in each state.</p>
+        <div class="orbs" id="orbs"></div>
+      </section>
+
+      <section>
+        <h2>Palette</h2>
+        <div class="swatches" id="brand"></div>
+        <h3>Tokens in this theme</h3>
+        <div class="swatches small" id="tokens"></div>
+      </section>
+
+      <section>
+        <h2>Type</h2>
+        <p class="display-xl">Agents that build</p>
+        <p class="display-l">Made for the long run.</p>
+        <p class="display-m">Three steps from a spare Mac</p>
+        <p class="body">
+          Body text is Inter at 16 pixels with a 1.65 line height. Inter's optical sizes give large text its Display
+          cut automatically.
+        </p>
+        <p class="mono">JetBrains Mono — curl -fsSL https://fctl.sh/install | sh</p>
+        <p class="label">Small mono labels · macOS · Linux</p>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
