@@ -1,0 +1,66 @@
+# Releases @hyperstructure/design: Actions → Release → Run workflow, or
+# `gh workflow run release.yml --ref main -f bump=auto` (see
+# .claude/skills/release). It checks and builds main, picks the version from
+# the Conventional Commits since the last tag (scripts/release.mjs), writes
+# package.json, package-lock.json and CHANGELOG.md, pushes the release commit
+# and tag, and makes the GitHub release. Consumers (fctl's web app, fctl-site)
+# then move their pinned tag in pull requests.
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump (auto follows the commits since the last release)
+        type: choice
+        options: [auto, patch, minor, major]
+        default: auto
+      dry_run:
+        description: Only show the next version and its notes
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check && npm test && npm run build
+      - name: Release commit, tag and GitHub release
+        env:
+          BUMP: ${{ inputs.bump }}
+          DRY_RUN: ${{ inputs.dry_run && 'yes' || '' }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_NOTES: ${{ runner.temp }}/notes.md
+        run: |
+          if [ -n "$DRY_RUN" ]; then
+            node scripts/release.mjs --bump "$BUMP" --dry-run
+            exit 0
+          fi
+          if [ "$GITHUB_REF" != refs/heads/main ]; then
+            echo "::error::Releases are made from main (this run is on $GITHUB_REF_NAME); a dry run works anywhere."
+            exit 1
+          fi
+          git config user.name "fctl-sh[bot]"
+          git config user.email "343971779+fctl-sh[bot]@users.noreply.github.com"
+          node scripts/release.mjs --bump "$BUMP"
+          tag=$(git describe --tags --exact-match HEAD)
+          # Both or neither: a main that moved meanwhile rejects the push.
+          git push --atomic origin HEAD:main "refs/tags/$tag"
+          gh release create "$tag" --title "@hyperstructure/design ${tag#v}" --notes-file "$RELEASE_NOTES" --verify-tag
