@@ -9,8 +9,11 @@ and hyperstructure's symbol, shared by fctl's web app (hyperstructure/fctl,
 ```sh
 npm install
 npm run dev      # the playground at http://localhost:5175
-npm run check    # Biome + TypeScript; CI runs this and the build
+npm run check    # Biome + TypeScript; CI runs this, the tests and the build
+npm test         # the commit and release rules (scripts/commits.mjs)
 npm run build    # builds the playground into dist/
+node scripts/lint-commit.mjs "feat(gl): add x"   # a pull request title
+node scripts/release.mjs --dry-run               # the next version and its notes
 ```
 
 ## Rules
@@ -28,15 +31,25 @@ npm run build    # builds the playground into dist/
   reduced (`mount()` handles this; call `scene.invalidate?.()` when inputs
   change). Keep them cheap: one fullscreen pass at low resolution.
 - This package is an API: exports in `package.json` are public. Changing a
-  scene's options or a token's meaning is a breaking change — bump the minor
-  version (0.x) and say so in the release notes.
+  scene's options or a token's meaning is a breaking change: mark the pull
+  request title with `!` and explain it in a `BREAKING CHANGE:` paragraph
+  (before 1.0 that bumps the minor version).
 - hyperstructure's symbol (Twist, `assets/hyperstructure/`) is drawn once:
   `symbol.svg` is the source; `symbol-yellow.svg`, `symbol-rings.svg` and
   `brand.ts` reuse its ring path. The GitHub avatar is the rings in `#0d1117`
   on `#ffff5d`. Do not redraw it; derive from the path.
 - Look at changes in the playground in both themes before tagging.
 
-## Releasing
+## Commits, pull requests and releases
 
-Bump `version`, commit ("Release 0.2.0"), tag `v0.2.0`, push the tag, then
-open pull requests in the consumers to move their pinned tag.
+- Changes reach `main` as squash-merged pull requests. The title becomes
+  the commit, so it is a
+  [Conventional Commit](https://www.conventionalcommits.org):
+  `feat(gl): add a dithered orb`. CI checks it. Types, scopes and the flow:
+  [.claude/skills/commit/SKILL.md](.claude/skills/commit/SKILL.md).
+- A person merges agents' pull requests unless they ask the agent to.
+  Never push to `main` directly.
+- Releases come from the Release workflow: the version from those commits,
+  CHANGELOG.md, the tag and the GitHub release. Then the consumers move
+  their pinned tag in pull requests:
+  [.claude/skills/release/SKILL.md](.claude/skills/release/SKILL.md).
