@@ -230,3 +230,13 @@ input[type="range"] {
   font-size: 11.5px;
   color: var(--c-ink-3);
 }
+.display-serif {
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: clamp(54px, 8vw, 112px);
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+}
+.display-serif em {
+  color: var(--c-ink-3);
+}

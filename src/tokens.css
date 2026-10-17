@@ -12,6 +12,8 @@
   /* Inter again: with optical sizing, large text gets its Display cut. */
   --font-display: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+  /* For display headlines only (marketing pages): condensed, high contrast. */
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
 
   --color-canvas: var(--c-canvas);
   --color-surface: var(--c-surface);

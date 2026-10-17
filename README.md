@@ -8,7 +8,7 @@ dithered WebGL scenes, and the mark. Used by
 | Export | What |
 |---|---|
 | `@hyperstructure/design/tokens.css` | Colors (dark and light themes), fonts, easings, radii, keyframes, base styles, as a Tailwind 4 `@theme` |
-| `@hyperstructure/design/fonts.css` | Inter (with optical sizes) and JetBrains Mono |
+| `@hyperstructure/design/fonts.css` | Inter (with optical sizes), JetBrains Mono, and Instrument Serif for display headlines (`font-serif`) |
 | `@hyperstructure/design/brand` | The palette and the mark as values (`palette`, `mark`, `markSvg()`) |
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
