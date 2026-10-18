@@ -6,15 +6,16 @@
 
 import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { bumpOf, changelogWith, nextVersion, notes, parse } from "./commits.mjs";
+import { bumpOf, changelogWith, nextVersion, notes, parse, releaseOptions } from "./commits.mjs";
 
-const args = process.argv.slice(2);
-const dryRun = args.includes("--dry-run");
-const bumpArg = args[args.indexOf("--bump") + 1] ?? "auto";
-if (args.includes("--bump") && !["auto", "patch", "minor", "major"].includes(bumpArg)) {
-  console.error("--bump is auto, patch, minor or major");
+let options;
+try {
+  options = releaseOptions(process.argv.slice(2));
+} catch (e) {
+  console.error(`${e.message}\nusage: node scripts/release.mjs [--bump auto|patch|minor|major] [--dry-run]`);
   process.exit(2);
 }
+const { bump: bumpArg, dryRun } = options;
 const git = (...a) => execFileSync("git", a, { encoding: "utf8" }).trim();
 
 let prev = null;
