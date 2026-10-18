@@ -2,6 +2,12 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.3.0 (2026-10-18)
+
+### Features
+
+- **tokens:** Make danger red instead of hot pink ([#5](https://github.com/hyperstructure/design/pull/5))
+
 ## 0.2.0 (2026-10-18)
 
 ### Breaking changes
