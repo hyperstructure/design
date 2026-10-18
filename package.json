@@ -1,6 +1,6 @@
 {
   "name": "@hyperstructure/design",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "hyperstructure's design system: brand tokens, fonts, the WebGL scenes, hyperstructure's symbol and fctl's mark and app icons",
   "license": "MIT",
   "type": "module",

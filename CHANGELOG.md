@@ -2,6 +2,17 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.5.1 (2026-10-18)
+
+### Documentation
+
+- Add a security policy and drop the private-repository note ([#12](https://github.com/hyperstructure/design/pull/12))
+
+### Other changes
+
+- Replace Biome's deprecated recommended field with preset ([#11](https://github.com/hyperstructure/design/pull/11))
+- Protect main with rulesets and push releases with a deploy key ([#13](https://github.com/hyperstructure/design/pull/13))
+
 ## 0.5.0 (2026-10-18)
 
 ### Features
