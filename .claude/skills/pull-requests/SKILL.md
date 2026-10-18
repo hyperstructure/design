@@ -87,14 +87,17 @@ Check it: `gh pr view N --json state,mergeCommit,mergedAt`.
   links the first.
 - **Record it in the issue.** Tick what the merge completed and link the
   pull request. If it had `Refs`, comment what is left (the `issues` skill).
-- **Say where it is live.** Merging changes nothing for consumers until
-  a release and a pin bump:
+- **Say where it is live.** A merged `feat`, `fix`, `perf`, `revert` or
+  breaking change is released by the Release run that the merge starts;
+  other changes wait for the next release. Consumers get it when they move
+  their pin. Wait for the run, then look for the tag:
 
   ```sh
+  gh run list --workflow release.yml --commit MERGE_SHA   # then gh run watch ID --exit-status
   git fetch --tags origin
   git tag --contains MERGE_SHA    # empty: not released yet
   ```
 
   Then say "released in vX.Y.Z" (and whether fctl and fctl-site moved their
-  pin), or "ships with the next release". Releasing and moving the consumers
-  are the `release` skill's job, for those with access.
+  pin), or "ships with the next release". Moving the consumers is the
+  `release` skill's job.
