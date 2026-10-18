@@ -21,7 +21,9 @@ node scripts/release.mjs --dry-run               # the next version and its note
 
 - The palette is fixed: yellow `#ffff5d`, lime `#eaff81` (yellow on light
   backgrounds), hot pink `#ff00d8`, blue `#007eff`, blackish `#171717`,
-  whiteish `#fafafa`. Light-theme text shades exist only where a brand color
+  whiteish `#fafafa`. Red `#ff4d4d` (`#cc1f1f` on light backgrounds) is not
+  a brand color: it is only for `danger` (destructive actions, errors,
+  failures). Light-theme text shades exist only where a brand color
   cannot be read on whiteish (see the comments in `src/tokens.css`). Keep
   `src/brand.ts` in step with `src/tokens.css`.
 - Tokens are semantic (`canvas`, `surface`, `ink`, `accent`, `highlight`,

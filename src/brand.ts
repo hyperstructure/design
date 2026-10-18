@@ -6,12 +6,14 @@ export const palette = {
   yellow: "#ffff5d",
   /** The yellow on light backgrounds. */
   lime: "#eaff81",
-  /** Contrast: packets of activity, attention, errors. */
+  /** Contrast: packets of activity, attention. */
   pink: "#ff00d8",
   /** Waiting, links on dark, calm states. */
   blue: "#007eff",
   blackish: "#171717",
   whiteish: "#fafafa",
+  /** Danger only (destructive actions, errors, failures); not a brand color. */
+  red: "#ff4d4d",
 } as const;
 
 /**

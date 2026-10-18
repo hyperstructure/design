@@ -18,7 +18,9 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
 
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
-`#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`.
+`#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`. Danger
+(destructive actions, errors, failures) is red `#ff4d4d` (`#cc1f1f` on light
+backgrounds), which is not a brand color and is used for nothing else.
 
 hyperstructure's symbol is **Twist**: two rounded squares turning inside each
 other. The organization avatar is the rings in `#0d1117` on full-bleed yellow
