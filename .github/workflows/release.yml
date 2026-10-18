@@ -8,7 +8,10 @@
 # since the last tag, writes package.json, package-lock.json and
 # CHANGELOG.md, pushes the release commit and tag, and makes the GitHub
 # release. Consumers (fctl's web app, fctl-site) then move their pinned tag
-# in pull requests.
+# in pull requests. It pushes with RELEASE_DEPLOY_KEY, the deploy key that the
+# rulesets on main and on v* tags let through (hyperstructure/fctl's ADR 0021),
+# a secret of the production environment, which only main may use: every run
+# starts from main, a dry run too.
 name: Release
 
 on:
@@ -37,6 +40,9 @@ jobs:
   release:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    # RELEASE_DEPLOY_KEY is a secret of the production environment, which only
+    # main may use.
+    environment: production
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,6 +51,9 @@ jobs:
           ref: ${{ github.ref }}
           fetch-depth: 0
           fetch-tags: true
+          # Over SSH with the deploy key: main's ruleset lets its push below
+          # through, and refuses GITHUB_TOKEN's.
+          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
@@ -65,7 +74,7 @@ jobs:
             exit 0
           fi
           if [ "$GITHUB_REF" != refs/heads/main ]; then
-            echo "::error::Releases are made from main (this run is on $GITHUB_REF_NAME); a dry run works anywhere."
+            echo "::error::Releases are made from main (this run is on $GITHUB_REF_NAME)."
             exit 1
           fi
           git config user.name "fctl-sh[bot]"

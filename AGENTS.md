@@ -56,8 +56,10 @@ node scripts/release.mjs --dry-run               # the next version and its note
   [Conventional Commit](https://www.conventionalcommits.org):
   `feat(gl): add a dithered orb`. CI checks it. Types, scopes and the flow:
   [.claude/skills/commit/SKILL.md](.claude/skills/commit/SKILL.md).
-- A person merges agents' pull requests unless they ask the agent to.
-  Never push to `main` directly.
+- A person merges agents' pull requests: `main` takes a pull request only
+  once a code owner who didn't push its last commit approves it, so agents
+  cannot merge their own. Never push to `main` directly: its ruleset
+  refuses it (`.github/rulesets/`).
 - Merges release: after each one, the Release workflow makes a release
   (the version from those commits, CHANGELOG.md, the tag and the GitHub
   release) when the commits since the last tag include a `feat`, `fix`,

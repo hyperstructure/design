@@ -16,8 +16,9 @@ The Release workflow runs after every merge to `main`. It checks and builds
 `main`, and releases when the commits since the last tag include a `feat`,
 `fix`, `perf`, `revert` or breaking change: it writes the version into
 `package.json` and `package-lock.json`, adds the notes to `CHANGELOG.md`,
-pushes the `chore(release): vX.Y.Z` commit and the tag, and creates the
-GitHub release with the notes. Other changes (`docs`, `refactor`, `test`,
+pushes the `chore(release): vX.Y.Z` commit and the tag with
+`RELEASE_DEPLOY_KEY` (the deploy key that the rulesets on `main` and `v*`
+tags let through), and creates the GitHub release with the notes. Other changes (`docs`, `refactor`, `test`,
 `build`, `ci`, `chore`) wait for the next release.
 
 The version follows the commits since the last tag: a breaking change bumps
@@ -48,7 +49,8 @@ gh workflow run release.yml --repo hyperstructure/design --ref main -f bump=auto
 or GitHub → Actions → Release → Run workflow. Run by hand, it releases
 whatever is new since the last tag. `bump` (patch, minor or major)
 overrides the version, and `dry_run` only shows the next version and its
-notes, on any branch.
+notes. Every run starts from `main`, a dry run too: the job uses the
+production environment, which only `main` may use.
 
 ## 3. Move the consumers
 
