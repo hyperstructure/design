@@ -14,21 +14,6 @@ export const palette = {
   whiteish: "#fafafa",
 } as const;
 
-/** fctl's mark: two slanted bars on a rounded blackish square (32×32). */
-export const mark = {
-  viewBox: "0 0 32 32",
-  radius: 8,
-  background: palette.blackish,
-  foreground: palette.yellow,
-  /** The bars. */
-  path: "M7 22.5 L15 9.5 h4 L11 22.5z M14 22.5 L22 9.5 h4 L18 22.5z",
-} as const;
-
-/** The mark as an SVG document (for favicons and generated pages). */
-export function markSvg(size = 32): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${mark.viewBox}"><rect width="32" height="32" rx="${mark.radius}" fill="${mark.background}"/><rect x="0.5" y="0.5" width="31" height="31" rx="${mark.radius - 0.5}" fill="none" stroke="rgb(250 250 250 / 0.12)"/><path d="${mark.path}" fill="${mark.foreground}"/></svg>`;
-}
-
 /**
  * hyperstructure's symbol ("Twist"): two rounded squares turning inside each
  * other. On GitHub it is the dark rings on full-bleed yellow
@@ -54,4 +39,34 @@ export function hyperstructureSvg(
 ): string {
   const bg = background ? `<rect width="256" height="256" fill="${background}"/>` : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${hyperstructure.viewBox}">${bg}<path fill="${ink}" fill-rule="evenodd" d="${hyperstructure.rings}"/></svg>`;
+}
+
+/**
+ * fctl's mark: hyperstructure's symbol, the rings on a yellow square with
+ * rounded corners (256×256). Logos, favicons and app icons shown as they are
+ * use it rounded; icons that the platform shapes itself (iOS home screens, the
+ * macOS Dock, Android's maskable icons) fill the square: `markSvg(size, { square: true })`.
+ */
+export const mark = {
+  viewBox: hyperstructure.viewBox,
+  /** The corner radius: a fifth of the side. */
+  radius: 51.2,
+  background: hyperstructure.background,
+  foreground: hyperstructure.ink,
+  /** The rings, as one path (fill-rule evenodd). */
+  path: hyperstructure.rings,
+} as const;
+
+/**
+ * The mark as an SVG document (favicons, app icons, generated pages).
+ * `square` leaves the corners for the platform to shape; `title` names it for
+ * assistive technology.
+ */
+export function markSvg(
+  size = 32,
+  { square = false, title }: { square?: boolean; title?: string } = {},
+): string {
+  const label = title ? ` role="img"><title>${title}</title>` : ">";
+  const rx = square ? "" : ` rx="${mark.radius}"`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${mark.viewBox}"${label}<rect width="256" height="256"${rx} fill="${mark.background}"/><path fill="${mark.foreground}" fill-rule="evenodd" d="${mark.path}"/></svg>`;
 }
