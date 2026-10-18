@@ -255,6 +255,11 @@ export function stream(opts: StreamOptions): StreamHandle {
   let show = reduced ? 1 : 0;
   let settle = 0; // reduced motion: seconds to simulate before the next still frame
   let nextPacket = 0;
+  // Frames drawn, seconds not simulated yet, and what a step costs (ms, averaged).
+  let frames = 0;
+  let owed = 0;
+  let cost = 0;
+  let slow = false;
   /** The lights: 1 with the power on; off, dim, flickering up a little with each gust. */
   let light = on ? 1 : 0.15;
   /** How many glyphs have dropped since the power went: one every so often. */
@@ -851,7 +856,17 @@ export function stream(opts: StreamOptions): StreamHandle {
         }
         settle = 0;
       } else {
-        step(Math.min(dt, 1 / 30));
+        // Where the simulation is slow (an old phone), it runs every other
+        // frame, twice as far each time.
+        frames++;
+        owed += dt;
+        if (!slow || frames % 2 === 0) {
+          const t0 = performance.now();
+          step(Math.min(owed, slow ? 1 / 15 : 1 / 30));
+          owed = 0;
+          cost = cost * 0.95 + (performance.now() - t0) * 0.05;
+          if (!slow && frames > 90 && cost > 12) slow = true;
+        }
         show = Math.min(1, show + dt / 0.9);
       }
       vertices();
