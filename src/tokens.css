@@ -138,8 +138,9 @@
   /* amber: caution (warnings, limits), the softer lime. */
   --c-amber: #eaff81;
   --c-amber-soft: rgb(234 255 129 / 0.1);
-  --c-danger: #ff00d8;
-  --c-danger-soft: rgb(255 0 216 / 0.12);
+  /* danger: destructive actions, errors, failures. Red, which is not a brand color. */
+  --c-danger: #ff4d4d;
+  --c-danger-soft: rgb(255 77 77 / 0.12);
   --c-selection: rgb(255 255 93 / 0.3);
   --c-glow: rgb(255 255 93 / 0.14);
 }
@@ -164,15 +165,15 @@
   --c-highlight-ink: #171717;
   --c-pink: #ff00d8;
   --c-pink-soft: rgb(255 0 216 / 0.08);
-  /* Text-safe shades of the brand blue and pink (4.5:1 on whiteish). */
+  /* Text-safe shades of the brand blue and pink and of the danger red (4.5:1 on whiteish). */
   --c-blue: #0070e0;
   --c-blue-soft: rgb(0 126 255 / 0.09);
   --c-violet: #c800aa;
   --c-violet-soft: rgb(255 0 216 / 0.08);
   --c-amber: #6b6b00;
   --c-amber-soft: rgb(234 255 129 / 0.45);
-  --c-danger: #c800aa;
-  --c-danger-soft: rgb(255 0 216 / 0.07);
+  --c-danger: #cc1f1f;
+  --c-danger-soft: rgb(255 77 77 / 0.07);
   --c-selection: rgb(234 255 129 / 0.85);
   --c-glow: rgb(23 23 23 / 0.08);
 }
