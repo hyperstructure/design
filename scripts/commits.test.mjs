@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { bumpOf, changelogWith, lint, nextVersion, notes, parse, releaseOptions } from "./commits.mjs";
+import { bumpOf, changelogWith, lint, nextVersion, notes, parse } from "./commits.mjs";
 
 test("parses subjects", () => {
   const c = parse("abc1234def", "feat(gl): add a dithered orb (#3)");
@@ -27,20 +27,6 @@ test("versions", () => {
   assert.equal(nextVersion("0.1.2", "major"), "0.2.0");
   assert.equal(nextVersion("1.4.2", "major"), "2.0.0");
   assert.equal(nextVersion("0.1.2", "patch"), "0.1.3");
-});
-
-test("release options", () => {
-  // Without --bump the commits pick it, in a preview too.
-  assert.deepEqual(releaseOptions([]), { bump: "auto", dryRun: false });
-  assert.deepEqual(releaseOptions(["--dry-run"]), { bump: "auto", dryRun: true });
-  // As the Release workflow passes them, and in any order.
-  assert.deepEqual(releaseOptions(["--bump", "minor"]), { bump: "minor", dryRun: false });
-  assert.deepEqual(releaseOptions(["--bump", "auto", "--dry-run"]), { bump: "auto", dryRun: true });
-  assert.deepEqual(releaseOptions(["--dry-run", "--bump=patch"]), { bump: "patch", dryRun: true });
-  // A mistake stops the release instead of making a patch.
-  for (const args of [["--bump"], ["--bump", "huge"], ["--bump", "--dry-run"], ["--dryrun"], ["minor"]]) {
-    assert.throws(() => releaseOptions(args), Error, args.join(" "));
-  }
 });
 
 test("notes and changelog", () => {

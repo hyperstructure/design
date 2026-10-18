@@ -2,8 +2,6 @@
 // The same rules as hyperstructure/fctl's `cargo xtask release`
 // (xtask/src/release.rs): keep them in step.
 
-import { parseArgs } from "node:util";
-
 /** Commit types, in the order their sections appear in the notes. */
 export const TYPES = [
   ["feat", "Features"],
@@ -87,21 +85,6 @@ export function nextVersion(version, bump) {
   if (bump === "major") return major === 0 ? `0.${minor + 1}.0` : `${major + 1}.0.0`;
   if (bump === "minor") return `${major}.${minor + 1}.0`;
   return `${major}.${minor}.${patch + 1}`;
-}
-
-/**
- * The options of `scripts/release.mjs [--bump auto|patch|minor|major] [--dry-run]`. Without `--bump`
- * the bump is auto: the commits pick it, as in the Release workflow. Anything else throws.
- */
-export function releaseOptions(args) {
-  const { values } = parseArgs({
-    args,
-    options: { bump: { type: "string", default: "auto" }, "dry-run": { type: "boolean", default: false } },
-  });
-  if (!["auto", "patch", "minor", "major"].includes(values.bump)) {
-    throw new Error(`--bump is auto, patch, minor or major, not \`${values.bump}\``);
-  }
-  return { bump: values.bump, dryRun: values["dry-run"] };
 }
 
 function capitalized(text) {
