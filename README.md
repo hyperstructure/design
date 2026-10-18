@@ -36,7 +36,8 @@ maskable safe zone. `npm run icons` renders `mark.svg`, `favicon.svg` and
 
 ## Using it
 
-While the repository is private, depend on a tag:
+The package isn't on npm: depend on a release tag on GitHub, which npm
+downloads without signing in:
 
 ```sh
 npm install "github:hyperstructure/design#v0.1.0"
