@@ -2,6 +2,16 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.5.0 (2026-10-18)
+
+### Features
+
+- **gl:** Add the stream, a scene for 404 and 5xx pages ([#10](https://github.com/hyperstructure/design/pull/10))
+
+### Other changes
+
+- **release:** Release features and fixes when they merge ([#9](https://github.com/hyperstructure/design/pull/9))
+
 ## 0.4.0 (2026-10-18)
 
 ### Features
