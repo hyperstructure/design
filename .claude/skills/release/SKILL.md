@@ -1,35 +1,54 @@
 ---
 name: release
-description: Release a new version of @hyperstructure/design (the tag fctl's web app and fctl.sh pin) through the Release workflow, then move the consumers to it. Only for people and agents with release access (write access to Actions on hyperstructure/design). Use when asked to release or publish the design package, or to bring a design change to fctl or fctl.sh.
+description: How @hyperstructure/design is released (the tag fctl's web app and fctl.sh pin): by the Release workflow after a merge that brings a feature or fix, or by hand, then moving the consumers to the new tag. Use when asked to release or publish the design package, to find out whether a change is released, or to bring a design change to fctl or fctl.sh.
 ---
 
 # Releasing @hyperstructure/design
 
 Consumers install the package from git at a tag
-(`github:hyperstructure/design#v0.1.2`), so a release is a tag on `main`.
+(`github:hyperstructure/design#v0.4.0`), so a release is a tag on `main`.
 The **Release** workflow makes it; never edit the version, CHANGELOG.md or
-tags by hand. Starting it needs write access to Actions; if you don't have
-it, ask a person to start it.
+tags by hand.
 
-## 1. Before
+## 1. A merge releases
 
-- CI passed on `main`, and the change looks right in the playground in both
-  themes.
-- Preview: `git switch main && git pull && node scripts/release.mjs --dry-run`,
-  or run the workflow with `dry_run`. The version follows the commits since
-  the last tag: a breaking change bumps the minor version (before 1.0), a
-  `feat` the minor version, anything else the patch.
+The Release workflow runs after every merge to `main`. It checks and builds
+`main`, and releases when the commits since the last tag include a `feat`,
+`fix`, `perf`, `revert` or breaking change: it writes the version into
+`package.json` and `package-lock.json`, adds the notes to `CHANGELOG.md`,
+pushes the `chore(release): vX.Y.Z` commit and the tag, and creates the
+GitHub release with the notes. Other changes (`docs`, `refactor`, `test`,
+`build`, `ci`, `chore`) wait for the next release.
 
-## 2. Release
+The version follows the commits since the last tag: a breaking change bumps
+the minor version (before 1.0), a `feat` the minor version, anything else
+the patch. Preview it with `node scripts/release.mjs --dry-run` on an
+up-to-date `main`; `--if-due` shows whether a merge would release now.
+
+So a change has to be ready when it merges: CI passed, and it looks right
+in the playground in both themes. After the merge, watch the run and find
+the tag:
+
+```sh
+gh run list --repo hyperstructure/design --workflow release.yml --commit MERGE_SHA
+gh run watch ID --repo hyperstructure/design --exit-status
+git fetch --tags origin && git tag --contains MERGE_SHA
+```
+
+## 2. Releasing by hand
+
+To release changes that are waiting (a dependency update consumers need),
+or to choose the bump, start the workflow yourself. That needs write access
+to Actions; if you don't have it, ask a person.
 
 ```sh
 gh workflow run release.yml --repo hyperstructure/design --ref main -f bump=auto
 ```
 
-or GitHub → Actions → Release → Run workflow. It checks and builds `main`,
-writes the version into `package.json` and `package-lock.json`, adds the
-notes to `CHANGELOG.md`, pushes the `chore(release): vX.Y.Z` commit and the
-tag, and creates the GitHub release with the notes.
+or GitHub → Actions → Release → Run workflow. Run by hand, it releases
+whatever is new since the last tag. `bump` (patch, minor or major)
+overrides the version, and `dry_run` only shows the next version and its
+notes, on any branch.
 
 ## 3. Move the consumers
 

@@ -70,8 +70,13 @@ npm run icons    # render fctl's mark and app icons from src/brand.ts
 
 ## Releasing
 
-Bump `version` in package.json, commit, tag `v<version>` and push the tag.
-Consumers update their pinned tag in a pull request.
+Merging a pull request releases it when it brings a feature, a fix, a
+performance change, a revert or a breaking change. The Release workflow
+picks the version from the Conventional Commits since the last tag, adds
+the notes to CHANGELOG.md, and makes the tag and the GitHub release. Other
+changes wait for the next release, or for a run of the workflow by hand.
+Consumers then move their pinned tag in a pull request. The details:
+[.claude/skills/release/SKILL.md](.claude/skills/release/SKILL.md).
 
 ## License
 

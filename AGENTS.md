@@ -46,7 +46,8 @@ node scripts/release.mjs --dry-run               # the next version and its note
   are rendered from it by `npm run icons`: change `brand.ts`, rerun it, and
   never edit those files by hand (`npm test` fails when they are stale).
   Icons that platforms mask fill the square to the edges.
-- Look at changes in the playground in both themes before tagging.
+- Look at changes in the playground in both themes before they merge: a
+  merged `feat` or `fix` is released right away.
 
 ## Commits, pull requests and releases
 
@@ -57,9 +58,11 @@ node scripts/release.mjs --dry-run               # the next version and its note
   [.claude/skills/commit/SKILL.md](.claude/skills/commit/SKILL.md).
 - A person merges agents' pull requests unless they ask the agent to.
   Never push to `main` directly.
-- Releases come from the Release workflow: the version from those commits,
-  CHANGELOG.md, the tag and the GitHub release. Then the consumers move
-  their pinned tag in pull requests:
+- Merges release: after each one, the Release workflow makes a release
+  (the version from those commits, CHANGELOG.md, the tag and the GitHub
+  release) when the commits since the last tag include a `feat`, `fix`,
+  `perf`, `revert` or breaking change. Other changes wait for the next
+  release. Then the consumers move their pinned tag in pull requests:
   [.claude/skills/release/SKILL.md](.claude/skills/release/SKILL.md).
 
 ## Issues
