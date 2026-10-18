@@ -2,6 +2,16 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.4.0 (2026-10-18)
+
+### Features
+
+- **tokens:** Add hover, a fill for hovered rows and buttons ([#6](https://github.com/hyperstructure/design/pull/6))
+
+### Fixes
+
+- **release:** Follow the commits when --bump is not given ([#8](https://github.com/hyperstructure/design/pull/8))
+
 ## 0.3.0 (2026-10-18)
 
 ### Features
