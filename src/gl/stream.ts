@@ -259,6 +259,10 @@ export function stream(opts: StreamOptions): StreamHandle {
   let light = on ? 1 : 0.15;
   /** How many glyphs have dropped since the power went: one every so often. */
   let dropped = 0;
+  /** When someone last touched the scene, and when a glyph next fidgets if nobody does. */
+  let touched = 0;
+  let fidget = 9;
+  let gusting = false;
 
   // Threads: E rings of M particles, newest at head.
   let M = 0;
@@ -286,7 +290,7 @@ export function stream(opts: StreamOptions): StreamHandle {
   let nruns = 0;
 
   // Pointers: where each one is, how far it moved since the last frame.
-  const pointers = new Map<number, { x: number; y: number; dx: number; dy: number; seen: number }>();
+  const pointers = new Map<number, { x: number; y: number; dx: number; dy: number }>();
   /** Taps: a ring that runs out from (x, y), pushing the threads aside and lighting them pink. */
   const bursts: { x: number; y: number; at: number; fresh: boolean }[] = [];
   const RING = 0.16;
@@ -542,6 +546,28 @@ export function stream(opts: StreamOptions): StreamHandle {
       glow = 0.12 + 0.5 * gust;
     }
     wind += (target - wind) * (1 - Math.exp(-dt * (on ? 3.5 : 1.6)));
+    // Left alone, a glyph hops now and then (people find out they move); in
+    // the dark, a fallen one twitches when a gust comes, as if to get up.
+    const idle = bodies.filter((b) => !b.grab);
+    if (on && time - touched > fidget && since > 3) {
+      const b = idle[Math.floor(Math.random() * idle.length)];
+      if (b) {
+        b.vy -= 0.55 + Math.random() * 0.25;
+        b.w += (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 1.5);
+        b.free = Math.max(b.free, 0.35);
+      }
+      touched = time;
+      fidget = 10 + Math.random() * 8;
+    }
+    const gust = !on && glow > 0.4;
+    if (gust && !gusting) {
+      const b = idle[Math.floor(Math.random() * idle.length)];
+      if (b?.falling) {
+        b.vy -= 0.3 + Math.random() * 0.2;
+        b.w += (Math.random() - 0.5) * 2.5;
+      }
+    }
+    gusting = gust;
     light += (glow - light) * (1 - Math.exp(-dt * (on ? 4 : 2.5)));
     // Off: the glyphs stop floating and drop to the floor one after another,
     // spinning away from the middle, so they land on a corner and topple, or roll.
@@ -549,10 +575,10 @@ export function stream(opts: StreamOptions): StreamHandle {
       const b = bodies[dropped];
       if (b && !b.grab) {
         const middle = ((bodies[0]?.hx ?? 0) + (bodies[bodies.length - 1]?.hx ?? 0)) / 2;
-        const side =
-          Math.abs(b.hx - middle) < 0.01 ? (Math.random() < 0.5 ? -1 : 1) : Math.sign(b.hx - middle);
+        const centre = Math.abs(b.hx - middle) < 0.01;
+        const side = centre ? (Math.random() < 0.5 ? -1 : 1) : Math.sign(b.hx - middle);
         b.falling = true;
-        b.w += side * (1.8 + Math.random() * 1.4);
+        b.w += side * (centre ? 0.5 + Math.random() * 0.7 : 2.4 + Math.random() * 1.3);
         b.vx += (Math.random() - 0.5) * 0.08;
       }
       dropped++;
@@ -628,6 +654,16 @@ export function stream(opts: StreamOptions): StreamHandle {
     solids();
     fluid.step(dt, wind, on ? 2.5 : 1.5, 18);
 
+    // A thrown glyph lights the threads it passes.
+    for (const b of bodies) {
+      const speed = Math.hypot(b.vx, b.vy);
+      if (speed < 0.9) continue;
+      const r = (b.r * 1.15) ** 2;
+      const glow = Math.min(1.4, (speed - 0.9) * 1.2 + 0.6);
+      for (let k = 0; k < tx.length; k++) {
+        if (((tx[k] ?? 0) - b.x) ** 2 + ((ty[k] ?? 0) - b.y) ** 2 < r) pink[k] = Math.max(pink[k] ?? 0, glow);
+      }
+    }
     const sag = on ? 0 : 0.03 * Math.max(0, 1 - (2 * wind) / WIND);
     if (on && time >= nextPacket) {
       const working = [];
@@ -946,7 +982,8 @@ export function stream(opts: StreamOptions): StreamHandle {
     },
     pointerDown(x, y, id = 0, slop = 0.012) {
       const wx = toWorldX(x);
-      pointers.set(id, { x: wx, y, dx: 0, dy: 0, seen: time });
+      touched = time;
+      pointers.set(id, { x: wx, y, dx: 0, dy: 0 });
       if (reduced) return false;
       for (let i = bodies.length - 1; i >= 0; i--) {
         const b = bodies[i];
@@ -960,14 +997,14 @@ export function stream(opts: StreamOptions): StreamHandle {
     },
     pointerMove(x, y, id = 0) {
       const wx = toWorldX(x);
+      touched = time;
       const p = pointers.get(id);
       if (p) {
         p.dx += wx - p.x;
         p.dy += y - p.y;
         p.x = wx;
         p.y = y;
-        p.seen = time;
-      } else pointers.set(id, { x: wx, y, dx: 0, dy: 0, seen: time });
+      } else pointers.set(id, { x: wx, y, dx: 0, dy: 0 });
       for (const b of bodies) {
         if (b.grab?.id === id) {
           b.grab.tx = wx;
