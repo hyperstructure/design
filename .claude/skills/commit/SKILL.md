@@ -42,7 +42,9 @@ CI checks every pull request title.
 ## The description
 
 What changed and why, and how you looked at it: the playground in both
-themes, screenshots for anything visual. Link issues with `Closes #3`.
+themes, screenshots for anything visual. Link the issue: `Fixes #3` only
+when the pull request does everything it asks (merging closes it), `Refs #3`
+otherwise (the `issues` skill).
 
 The description becomes the commit message on `main`, so it ends with
 the content: no "Generated with …" footers and no links to chat sessions.
@@ -53,6 +55,7 @@ A link to the fctl session that made the change is welcome.
 1. Branch from an up-to-date `main`: `<type>/<topic>`.
 2. Run `npm run check && npm test && npm run build` before you push.
 3. Open the pull request: a conventional title, a description, one change.
-4. A person merges it (squash) when CI is green, unless they asked you to.
+4. Wait for CI and answer the review: the `pull-requests` skill.
+5. A person merges it (squash) when CI is green, unless they asked you to.
 
 Never push to `main` directly; only the Release workflow does.
