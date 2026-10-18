@@ -13,6 +13,7 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
 | `@hyperstructure/design/gl/orb` | A tiny dithered planet for a session's state |
+| `@hyperstructure/design/gl/stream` | The stream: the foundry's threads flowing around glyphs made of the planet's matter, which people can stir, throw and knock over (fctl's 404 and 5xx pages) |
 | `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark: hyperstructure's symbol on a rounded yellow square |
 | `@hyperstructure/design/assets/icons/*` | fctl's app icons for web app manifests and home screens: `icon-192.png` and `icon-512.png` (rounded, manifest purpose `any`); `icon-maskable-512.png`, `icon-maskable-1024.png` and `apple-touch-icon.png` (yellow to the edges, for platforms that shape icons themselves) |
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
@@ -54,6 +55,21 @@ import { foundry } from "@hyperstructure/design/gl/foundry";
 const scene = foundry({ planet: [1.02, -0.75, 1.15], density: 0.55 });
 const dispose = mount(canvas, scene.scene, { pixel: 3 });
 scene.setLanes(new Map([[12, { lit: 1, color: 1, energy: 0.4 }]]));
+```
+
+The stream takes the text its glyphs spell and a box (fractions of the
+canvas) to fit them into; `play()` hands it pointer events: moving stirs the
+threads, dragging a glyph throws it, a tap sends a burst. `power(false)`
+turns the wind and the lights off, and the glyphs drop to the floor;
+`power(true)` stands them up again.
+
+```ts
+import { play, stream } from "@hyperstructure/design/gl/stream";
+
+const s = stream({ text: "404" });
+mount(canvas, s.scene, { pixel: 3 });
+s.place({ x: 0.2, y: 0.18, width: 0.6, height: 0.3 });
+play(canvas.parentElement, canvas, s);
 ```
 
 The package ships TypeScript sources; a bundler that compiles TypeScript

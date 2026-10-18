@@ -246,3 +246,59 @@ input[type="range"] {
 .display-serif em {
   color: var(--c-ink-3);
 }
+
+/* stream.html: the stream, full screen. */
+.stream-page {
+  padding: 0;
+  overflow: hidden;
+  height: 100dvh;
+}
+.stream-page #stream {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.stream-page .digits {
+  position: fixed;
+  left: 50%;
+  top: 14vh;
+  width: min(78vw, 70vh);
+  height: min(36vh, 30vw);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.stream-page .panel {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--c-ink-3);
+}
+.stream-page .panel input {
+  width: 6em;
+  font: inherit;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--c-line-strong);
+  background: var(--c-raised);
+  color: var(--c-ink);
+}
+
+/* The stream in the overview: the glyphs stand in the middle of the stage. */
+.stream-stage {
+  position: relative;
+}
+.stream-box {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  width: 60%;
+  height: 40%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
