@@ -5,6 +5,7 @@ import { hyperstructureSvg, markSvg, palette } from "../src/brand";
 import { cssColor, mount, type Scene } from "../src/gl/core";
 import { type FoundryHandle, type FoundryLane, foundry, LANES } from "../src/gl/foundry";
 import { orb } from "../src/gl/orb";
+import { play, type StreamHandle, stream } from "../src/gl/stream";
 
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel);
 
@@ -84,6 +85,50 @@ setInterval(() => {
   const pick = working[Math.floor(Math.random() * working.length)];
   if (pick) scene?.pulse(pick[0], 40 + Math.random() * 900);
 }, 600);
+
+// The stream, with the glyphs in a box in its middle.
+const streamCanvas = $<HTMLCanvasElement>("#stream");
+const streamStage = $("#stream-stage");
+const streamBox = $("#stream-box");
+let streamScene: StreamHandle | null = null;
+let streamStop = () => {};
+let streamOn = true;
+function placeStream() {
+  if (!streamScene || !streamCanvas || !streamBox) return;
+  const c = streamCanvas.getBoundingClientRect();
+  const b = streamBox.getBoundingClientRect();
+  if (!c.width || !c.height) return;
+  streamScene.place({
+    x: (b.left - c.left) / c.width,
+    y: (b.top - c.top) / c.height,
+    width: b.width / c.width,
+    height: b.height / c.height,
+  });
+}
+function startStream(text: string) {
+  streamStop();
+  if (!streamCanvas || !streamStage) return;
+  const s = stream({ text, power: streamOn });
+  const unmount = mount(streamCanvas, s.scene, { pixel: 3 });
+  const unplay = play(streamStage, streamCanvas, s);
+  streamStop = () => {
+    unplay();
+    unmount();
+  };
+  streamScene = s;
+  placeStream();
+}
+if (streamStage) new ResizeObserver(placeStream).observe(streamStage);
+const streamText = $<HTMLInputElement>("#stream-text");
+streamText?.addEventListener("change", () => startStream(streamText.value || "404"));
+const streamPower = $<HTMLButtonElement>("#stream-power");
+streamPower?.addEventListener("click", () => {
+  streamOn = !streamOn;
+  streamScene?.power(streamOn);
+  streamPower.textContent = streamOn ? "Wind on" : "Wind off";
+  streamPower.setAttribute("aria-pressed", String(streamOn));
+});
+startStream("404");
 
 // Orbs, one per session state: [color A, color B, dim, energy].
 const ORBS: [string, string, string, number, number][] = [

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>The stream · hyperstructure design</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="stream-page">
+    <canvas id="stream" aria-hidden="true"></canvas>
+    <div class="digits" id="digits" aria-hidden="true"></div>
+    <div class="panel">
+      <input id="text" value="404" maxlength="4" aria-label="Glyphs" />
+      <button type="button" id="power" aria-pressed="true">Wind on</button>
+      <button type="button" data-theme-choice="dark">Dark</button>
+      <button type="button" data-theme-choice="light">Light</button>
+      <span id="stats"></span>
+    </div>
+    <script type="module" src="./stream.ts"></script>
+  </body>
+</html>
