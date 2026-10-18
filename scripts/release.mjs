@@ -1,8 +1,9 @@
-// `node scripts/release.mjs [--bump auto|patch|minor|major] [--dry-run]`:
+// `node scripts/release.mjs [--bump auto|patch|minor|major] [--if-due] [--dry-run]`:
 // the next version from the Conventional Commits since the last v* tag,
 // package.json and package-lock.json at that version, CHANGELOG.md, and the
 // release commit and tag. The Release workflow pushes them and makes the
-// GitHub release; consumers then move their pinned tag.
+// GitHub release; consumers then move their pinned tag. After a merge, the
+// workflow passes --if-due: it releases only when a change calls for it.
 
 import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
@@ -17,15 +18,28 @@ import { bumpOf, changelogWith, nextVersion, notes, parse } from "./commits.mjs"
 export function releaseOptions(args) {
   const { values } = parseArgs({
     args,
-    options: { bump: { type: "string", default: "auto" }, "dry-run": { type: "boolean", default: false } },
+    options: {
+      bump: { type: "string", default: "auto" },
+      "if-due": { type: "boolean", default: false },
+      "dry-run": { type: "boolean", default: false },
+    },
   });
   if (!["auto", "patch", "minor", "major"].includes(values.bump)) {
     throw new Error(`--bump is auto, patch, minor or major, not \`${values.bump}\``);
   }
-  return { bump: values.bump, dryRun: values["dry-run"] };
+  return { bump: values.bump, ifDue: values["if-due"], dryRun: values["dry-run"] };
 }
 
-function release({ bump: bumpArg, dryRun }) {
+/**
+ * Whether the changes call for a release when they merge (`--if-due`): a feature, a fix, a
+ * performance change, a revert or a breaking change. Docs, CI, tests, refactors, builds and
+ * chores wait for the next release.
+ */
+export function releaseDue(changes) {
+  return changes.some((c) => c.breaking || ["feat", "fix", "perf", "revert"].includes(c.kind));
+}
+
+function release({ bump: bumpArg, ifDue, dryRun }) {
   const git = (...a) => execFileSync("git", a, { encoding: "utf8" }).trim();
 
   let prev = null;
@@ -47,6 +61,12 @@ function release({ bump: bumpArg, dryRun }) {
       const [sha, subject, body] = r.split("\x1f");
       return parse(sha.trim(), subject ?? "", body ?? "");
     });
+  if (ifDue && !releaseDue(changes)) {
+    const why = `No release: no feat, fix, perf, revert or breaking change since ${prev ?? "the start"}.`;
+    console.log(why);
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${why}\n`);
+    process.exit(0);
+  }
   if (changes.every((c) => c.kind === "chore" && c.scope === "release")) {
     console.error(`nothing to release since ${prev ?? "the start"}`);
     process.exit(1);
@@ -96,7 +116,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.me
     options = releaseOptions(process.argv.slice(2));
   } catch (e) {
     console.error(
-      `${e.message}\nusage: node scripts/release.mjs [--bump auto|patch|minor|major] [--dry-run]`,
+      `${e.message}\nusage: node scripts/release.mjs [--bump auto|patch|minor|major] [--if-due] [--dry-run]`,
     );
     process.exit(2);
   }

@@ -1,13 +1,19 @@
-# Releases @hyperstructure/design: Actions → Release → Run workflow, or
-# `gh workflow run release.yml --ref main -f bump=auto` (see
-# .claude/skills/release). It checks and builds main, picks the version from
-# the Conventional Commits since the last tag (scripts/release.mjs), writes
-# package.json, package-lock.json and CHANGELOG.md, pushes the release commit
-# and tag, and makes the GitHub release. Consumers (fctl's web app, fctl-site)
-# then move their pinned tag in pull requests.
+# Releases @hyperstructure/design (see .claude/skills/release). After every
+# merge to main, it releases when the commits since the last tag include a
+# feat, fix, perf, revert or breaking change (scripts/release.mjs --if-due);
+# other changes wait for the next release. Run it by hand to release them
+# anyway, to choose the bump or for a dry run: Actions → Release → Run
+# workflow, or `gh workflow run release.yml --ref main -f bump=auto`. It
+# checks and builds main, picks the version from the Conventional Commits
+# since the last tag, writes package.json, package-lock.json and
+# CHANGELOG.md, pushes the release commit and tag, and makes the GitHub
+# release. Consumers (fctl's web app, fctl-site) then move their pinned tag
+# in pull requests.
 name: Release
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       bump:
@@ -34,6 +40,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # The branch as it is now, not the commit that started the run: a
+          # run that waited for another one sees that one's release.
+          ref: ${{ github.ref }}
           fetch-depth: 0
           fetch-tags: true
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -44,8 +53,10 @@ jobs:
       - run: npm run check && npm test && npm run build
       - name: Release commit, tag and GitHub release
         env:
-          BUMP: ${{ inputs.bump }}
+          BUMP: ${{ inputs.bump || 'auto' }}
           DRY_RUN: ${{ inputs.dry_run && 'yes' || '' }}
+          # After a merge, release only when a change calls for it.
+          IF_DUE: ${{ github.event_name == 'push' && 'yes' || '' }}
           GH_TOKEN: ${{ github.token }}
           RELEASE_NOTES: ${{ runner.temp }}/notes.md
         run: |
@@ -59,8 +70,19 @@ jobs:
           fi
           git config user.name "fctl-sh[bot]"
           git config user.email "343971779+fctl-sh[bot]@users.noreply.github.com"
-          node scripts/release.mjs --bump "$BUMP"
+          before=$(git rev-parse HEAD)
+          node scripts/release.mjs --bump "$BUMP" ${IF_DUE:+--if-due}
+          # No release commit: nothing called for one.
+          if [ "$(git rev-parse HEAD)" = "$before" ]; then exit 0; fi
           tag=$(git describe --tags --exact-match HEAD)
-          # Both or neither: a main that moved meanwhile rejects the push.
-          git push --atomic origin HEAD:main "refs/tags/$tag"
+          # Both or neither: a main that moved meanwhile rejects the push. After
+          # a merge, that means another merge, whose run releases this too.
+          if ! git push --atomic origin HEAD:main "refs/tags/$tag"; then
+            now=$(git ls-remote origin refs/heads/main | cut -f1)
+            if [ -n "$IF_DUE" ] && [ -n "$now" ] && [ "$now" != "$before" ]; then
+              echo "::notice::main moved on during this run; the run for the newer commit releases it."
+              exit 0
+            fi
+            exit 1
+          fi
           gh release create "$tag" --title "@hyperstructure/design ${tag#v}" --notes-file "$RELEASE_NOTES" --verify-tag
