@@ -21,7 +21,7 @@ turn. An fctl session goes idle when the turn ends, and nothing wakes it
 when CI finishes or someone reviews (hyperstructure/fctl#8 will), so a failure you don't watch
 for stays unnoticed.
 
-The checks: **Commits** checks the title, and **CI** (`check`) runs `npm run check`, `npm test` and `npm run build`.
+The checks: **Commits** checks the title, and **CI** (`check`) runs `npm run check`, `npm test` and `npm run build`. A pull request that changes `.claude/skills` also runs **Skills**, which validates every skill against the [Agent Skills specification](https://agentskills.io/specification); its log names the file, the line and the rule.
 
 ## When a check fails
 

@@ -1,6 +1,6 @@
 ---
 name: release
-description: How @hyperstructure/design is released (the tag fctl's web app and fctl.sh pin): by the Release workflow after a merge that brings a feature or fix, or by hand, then moving the consumers to the new tag. Use when asked to release or publish the design package, to find out whether a change is released, or to bring a design change to fctl or fctl.sh.
+description: "How @hyperstructure/design is released (the tag fctl's web app and fctl.sh pin): by the Release workflow after a merge that brings a feature or fix, or by hand, then moving the consumers to the new tag. Use when asked to release or publish the design package, to find out whether a change is released, or to bring a design change to fctl or fctl.sh."
 ---
 
 # Releasing @hyperstructure/design
