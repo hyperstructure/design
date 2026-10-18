@@ -61,8 +61,13 @@ A link to the fctl session that made the change is welcome.
 2. Run `npm run check && npm test && npm run build` before you push.
 3. Open the pull request: a conventional title, a description, one change.
 4. Wait for CI and answer the review: the `pull-requests` skill.
-5. A person merges it (squash) when CI is green, unless they asked you to.
+5. A person merges it (squash) when CI is green. `main` takes a pull
+   request only once a code owner who didn't push its last commit approves
+   it, so you can merge only one a person approved, when they ask you to.
    A `feat`, `fix`, `perf`, `revert` or breaking change is released when
    it merges.
 
-Never push to `main` directly; only the Release workflow does.
+Never push to `main` directly; only the Release workflow does, with a
+deploy key. Rulesets refuse any other push, any pull request without
+passing checks (`check`, `Conventional Commits`), and any `v*` tag not made
+by the Release workflow: `.github/rulesets/`.
