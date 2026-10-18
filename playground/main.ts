@@ -141,6 +141,7 @@ const TOKENS = [
   "ink-4",
   "line",
   "line-strong",
+  "hover",
   "accent",
   "accent-soft",
   "highlight",

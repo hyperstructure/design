@@ -25,6 +25,7 @@
   --color-ink-4: var(--c-ink-4);
   --color-line: var(--c-line);
   --color-line-strong: var(--c-line-strong);
+  --color-hover: var(--c-hover);
   --color-accent: var(--c-accent);
   --color-accent-ink: var(--c-accent-ink);
   --color-accent-soft: var(--c-accent-soft);
@@ -122,6 +123,9 @@
   --c-ink-4: #5e5e5e;
   --c-line: rgb(250 250 250 / 0.075);
   --c-line-strong: rgb(250 250 250 / 0.14);
+  /* hover: the fill under the pointer (rows, borderless buttons). Translucent, so
+     it shows on the canvas, surfaces and raised alike. */
+  --c-hover: rgb(250 250 250 / 0.05);
   /* accent: yellow as foreground (text, icons, rules, "working"). */
   --c-accent: #ffff5d;
   --c-accent-ink: #171717;
@@ -157,6 +161,9 @@
   --c-ink-4: #a3a3a3;
   --c-line: rgb(23 23 23 / 0.08);
   --c-line-strong: rgb(23 23 23 / 0.15);
+  /* Raised is white here, as surface is, so it can't be a hover fill. A little
+     stronger than on dark, to show as much. */
+  --c-hover: rgb(23 23 23 / 0.06);
   /* Yellow cannot be read on white: foreground accents are ink, fills are the lime. */
   --c-accent: #171717;
   --c-accent-ink: #fafafa;
