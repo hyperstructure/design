@@ -2,6 +2,21 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.2.0 (2026-10-18)
+
+### Breaking changes
+
+- **brand:** Make hyperstructure's symbol fctl's mark, with app icons ([#4](https://github.com/hyperstructure/design/pull/4))
+
+### Documentation
+
+- Add agent rules for issues and pull requests ([#3](https://github.com/hyperstructure/design/pull/3))
+
+### Other changes
+
+- Release from a workflow, with notes from Conventional Commits ([#1](https://github.com/hyperstructure/design/pull/1))
+- Check pull request titles in their own workflow ([#2](https://github.com/hyperstructure/design/pull/2))
+
 ## 0.1.2 (2026-10-17)
 
 ### Other changes
