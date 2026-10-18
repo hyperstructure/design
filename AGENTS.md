@@ -10,7 +10,8 @@ and hyperstructure's symbol, shared by fctl's web app (hyperstructure/fctl,
 npm install
 npm run dev      # the playground at http://localhost:5175
 npm run check    # Biome + TypeScript; CI runs this, the tests and the build
-npm test         # the commit and release rules (scripts/commits.mjs)
+npm test         # the commit and release rules, and that the icons are current
+npm run icons    # renders fctl's mark and app icons from src/brand.ts
 npm run build    # builds the playground into dist/
 node scripts/lint-commit.mjs "feat(gl): add x"   # a pull request title
 node scripts/release.mjs --dry-run               # the next version and its notes
@@ -38,6 +39,11 @@ node scripts/release.mjs --dry-run               # the next version and its note
   `symbol.svg` is the source; `symbol-yellow.svg`, `symbol-rings.svg` and
   `brand.ts` reuse its ring path. The GitHub avatar is the rings in `#0d1117`
   on `#ffff5d`. Do not redraw it; derive from the path.
+- fctl's mark is that symbol on a rounded yellow square (`mark` in
+  `brand.ts`). `assets/mark.svg`, `assets/favicon.svg` and `assets/icons/`
+  are rendered from it by `npm run icons`: change `brand.ts`, rerun it, and
+  never edit those files by hand (`npm test` fails when they are stale).
+  Icons that platforms mask fill the square to the edges.
 - Look at changes in the playground in both themes before tagging.
 
 ## Commits, pull requests and releases

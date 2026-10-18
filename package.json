@@ -1,7 +1,7 @@
 {
   "name": "@hyperstructure/design",
   "version": "0.1.2",
-  "description": "hyperstructure's design system: brand tokens, fonts, the WebGL scenes, fctl's mark and the hyperstructure symbol",
+  "description": "hyperstructure's design system: brand tokens, fonts, the WebGL scenes, hyperstructure's symbol and fctl's mark and app icons",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -26,15 +26,17 @@
     "./gl/orb": "./src/gl/orb.ts",
     "./assets/mark.svg": "./assets/mark.svg",
     "./assets/favicon.svg": "./assets/favicon.svg",
+    "./assets/icons/*": "./assets/icons/*",
     "./package.json": "./package.json",
     "./assets/hyperstructure/*": "./assets/hyperstructure/*"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "icons": "node scripts/icons.mjs",
     "check": "biome check . && tsc --noEmit",
     "fix": "biome check --write .",
-    "test": "node --test scripts/commits.test.mjs"
+    "test": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
+    "@resvg/resvg-js": "2.6.2",
     "@tailwindcss/vite": "4.3.3",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",

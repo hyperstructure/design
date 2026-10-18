@@ -1,7 +1,7 @@
 # @hyperstructure/design
 
 hyperstructure's design system: the brand palette and tokens, the fonts, the
-dithered WebGL scenes, and the mark. Used by
+dithered WebGL scenes, and the marks and app icons. Used by
 [fctl](https://github.com/hyperstructure/fctl)'s web app and
 [fctl.sh](https://github.com/hyperstructure/fctl-site).
 
@@ -13,7 +13,8 @@ dithered WebGL scenes, and the mark. Used by
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
 | `@hyperstructure/design/gl/orb` | A tiny dithered planet for a session's state |
-| `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark |
+| `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark: hyperstructure's symbol on a rounded yellow square |
+| `@hyperstructure/design/assets/icons/*` | fctl's app icons for web app manifests and home screens: `icon-192.png` and `icon-512.png` (rounded, manifest purpose `any`); `icon-maskable-512.png`, `icon-maskable-1024.png` and `apple-touch-icon.png` (yellow to the edges, for platforms that shape icons themselves) |
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
 
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
@@ -22,6 +23,13 @@ The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
 hyperstructure's symbol is **Twist**: two rounded squares turning inside each
 other. The organization avatar is the rings in `#0d1117` on full-bleed yellow
 `#ffff5d`; `brand.ts` has it as values (`hyperstructure`, `hyperstructureSvg()`).
+
+fctl's mark is the same symbol on a yellow square whose corners are rounded to
+a fifth of its side (`mark`, `markSvg()`). Icons that the platform masks (iOS
+home screens, the macOS Dock, Android's maskable icons) fill the square
+instead (`markSvg(size, { square: true })`); the rings stay inside the
+maskable safe zone. `npm run icons` renders `mark.svg`, `favicon.svg` and
+`assets/icons/` from `brand.ts`, and `npm test` checks they are current.
 
 ## Using it
 
@@ -55,6 +63,7 @@ The package ships TypeScript sources; a bundler that compiles TypeScript
 npm install
 npm run dev      # http://localhost:5175: every scene and token, both themes
 npm run check    # Biome and TypeScript
+npm run icons    # render fctl's mark and app icons from src/brand.ts
 ```
 
 ## Releasing

@@ -216,6 +216,12 @@ input[type="range"] {
   height: 120px;
   border-radius: 24px;
 }
+.marks img.plain {
+  border-radius: 0;
+}
+.marks img.circle {
+  border-radius: 50%;
+}
 .marks .rings {
   display: grid;
   place-items: center;
