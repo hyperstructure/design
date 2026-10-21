@@ -195,6 +195,15 @@ const TOKENS = [
   "blue",
   "amber",
   "danger",
+  "pr-open",
+  "pr-draft",
+  "pr-queued",
+  "pr-merged",
+  "pr-closed",
+  "pr-unknown",
+  "checks-passed",
+  "checks-pending",
+  "checks-failed",
 ];
 function renderTokens() {
   const box = $("#tokens");

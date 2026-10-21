@@ -41,6 +41,15 @@
   --color-amber-soft: var(--c-amber-soft);
   --color-danger: var(--c-danger);
   --color-danger-soft: var(--c-danger-soft);
+  --color-pr-open: var(--c-pr-open);
+  --color-pr-draft: var(--c-pr-draft);
+  --color-pr-queued: var(--c-pr-queued);
+  --color-pr-merged: var(--c-pr-merged);
+  --color-pr-closed: var(--c-pr-closed);
+  --color-pr-unknown: var(--c-pr-unknown);
+  --color-checks-passed: var(--c-checks-passed);
+  --color-checks-pending: var(--c-checks-pending);
+  --color-checks-failed: var(--c-checks-failed);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
@@ -147,6 +156,19 @@
   --c-danger-soft: rgb(255 77 77 / 0.12);
   --c-selection: rgb(255 255 93 / 0.3);
   --c-glow: rgb(255 255 93 / 0.14);
+  /* GitHub's colors for a pull request's state (its icon) and its checks, in
+     both themes, so that people know them at a glance: not brand colors, and
+     only for pull requests. Unknown, for one nobody has looked up, is muted
+     text, a shade lighter on light backgrounds. */
+  --c-pr-open: #3fb950;
+  --c-pr-draft: #9198a1;
+  --c-pr-queued: #d29922;
+  --c-pr-merged: #ab7df8;
+  --c-pr-closed: #f85149;
+  --c-pr-unknown: #9198a1;
+  --c-checks-passed: #3fb950;
+  --c-checks-pending: #d29922;
+  --c-checks-failed: #f85149;
 }
 
 :root[data-theme="light"] {
@@ -183,6 +205,7 @@
   --c-danger-soft: rgb(255 77 77 / 0.07);
   --c-selection: rgb(234 255 129 / 0.85);
   --c-glow: rgb(23 23 23 / 0.08);
+  --c-pr-unknown: #59636e;
 }
 
 @layer base {
