@@ -2,6 +2,20 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.6.0 (2026-10-21)
+
+### Features
+
+- **tokens:** Add colors for pull requests' states and checks ([#16](https://github.com/hyperstructure/design/pull/16))
+
+### Documentation
+
+- Tell agents that only people with write access instruct them ([#14](https://github.com/hyperstructure/design/pull/14))
+
+### Other changes
+
+- Check agent skills against the Agent Skills specification ([#15](https://github.com/hyperstructure/design/pull/15))
+
 ## 0.5.1 (2026-10-18)
 
 ### Documentation
