@@ -13,6 +13,7 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
 | `@hyperstructure/design/gl/orb` | A tiny dithered planet for a session's state |
+| `@hyperstructure/design/gl/conduit` | The foundry squeezed into a bar, behind a row that powers on when hovered (fctl's Agent Floor, in its sidebar) |
 | `@hyperstructure/design/gl/stream` | The stream: the foundry's threads flowing around glyphs made of the planet's matter, which people can stir, throw and knock over (fctl's 404 and 5xx pages) |
 | `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark: hyperstructure's symbol on a rounded yellow square |
 | `@hyperstructure/design/assets/icons/*` | fctl's app icons for web app manifests and home screens: `icon-192.png` and `icon-512.png` (rounded, manifest purpose `any`); `icon-maskable-512.png`, `icon-maskable-1024.png` and `apple-touch-icon.png` (yellow to the edges, for platforms that shape icons themselves) |
@@ -56,6 +57,21 @@ import { foundry } from "@hyperstructure/design/gl/foundry";
 const scene = foundry({ planet: [1.02, -0.75, 1.15], density: 0.55 });
 const dispose = mount(canvas, scene.scene, { pixel: 3 });
 scene.setLanes(new Map([[12, { lit: 1, color: 1, energy: 0.4 }]]));
+```
+
+The conduit fills a row: `show(true)` powers it on (the light floods in from
+the left behind a volley of packets) and `show(false)` dissolves it in
+`DISSOLVE_MS`. It takes lit threads as the foundry does, and the pointer
+parts them; `burst()` sends packets down every thread. Keep its canvas out of
+the page (`display: none`) while it is dark, so that it stops drawing.
+
+```ts
+import { conduit } from "@hyperstructure/design/gl/conduit";
+
+const bar = conduit();
+mount(canvas, bar.scene, { pixel: 3 });
+row.addEventListener("pointerenter", () => bar.show(true));
+row.addEventListener("pointerleave", () => bar.show(false));
 ```
 
 The stream takes the text its glyphs spell and a box (fractions of the

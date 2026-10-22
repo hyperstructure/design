@@ -2,6 +2,7 @@
 
 import "./playground.css";
 import { hyperstructureSvg, markSvg, palette } from "../src/brand";
+import { LANES as CONDUIT_LANES, type ConduitHandle, conduit } from "../src/gl/conduit";
 import { cssColor, mount, type Scene } from "../src/gl/core";
 import { type FoundryHandle, type FoundryLane, foundry, LANES } from "../src/gl/foundry";
 import { orb } from "../src/gl/orb";
@@ -129,6 +130,56 @@ streamPower?.addEventListener("click", () => {
   streamPower.setAttribute("aria-pressed", String(streamOn));
 });
 startStream("404");
+
+// The conduit, behind a sidebar row and four times as large: one scene pixel per 1.5 CSS
+// pixels or so, as fctl's sidebar draws it.
+const conduits: ConduitHandle[] = [];
+let conduitHold = false;
+function conduitLanes(count: number) {
+  const lanes = new Map<number, FoundryLane>();
+  for (let i = 0; i < count; i++) {
+    const lane = Math.round(((i + 0.5) * CONDUIT_LANES) / count - 0.5);
+    lanes.set(lane, { lit: 1, color: i % 4 === 3 ? 2 : 1, energy: Math.random() * 0.6 });
+  }
+  for (const c of conduits) c.setLanes(lanes);
+}
+function conduitOn(canvasId: string, rowId: string, scale: number) {
+  const canvas = $<HTMLCanvasElement>(`#${canvasId}`);
+  const row = $(`#${rowId}`);
+  if (!canvas || !row) return;
+  const c = conduit();
+  mount(canvas, c.scene, { pixel: Math.max(2, Math.round(devicePixelRatio * 1.5)) * scale });
+  row.addEventListener("pointerenter", () => c.show(true));
+  row.addEventListener("pointermove", (e) => {
+    const r = row.getBoundingClientRect();
+    c.pointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+  });
+  row.addEventListener("pointerleave", () => {
+    c.pointerLeave();
+    if (!conduitHold) c.show(false);
+  });
+  row.addEventListener("click", (e) => {
+    e.preventDefault();
+    c.burst();
+  });
+  conduits.push(c);
+}
+conduitOn("conduit", "conduit-row", 1);
+conduitOn("conduit-big", "conduit-big-row", 4);
+const conduitLit = $<HTMLInputElement>("#conduit-lit");
+conduitLit?.addEventListener("input", () => conduitLanes(Number(conduitLit.value)));
+conduitLanes(Number(conduitLit?.value ?? 3));
+$<HTMLInputElement>("#conduit-hold")?.addEventListener("change", (e) => {
+  conduitHold = (e.target as HTMLInputElement).checked;
+  for (const c of conduits) c.show(conduitHold);
+});
+$("#conduit-pulse")?.addEventListener("click", () => {
+  const lane = Math.floor(Math.random() * CONDUIT_LANES);
+  for (const c of conduits) c.pulse(lane, 800);
+});
+$("#conduit-burst")?.addEventListener("click", () => {
+  for (const c of conduits) c.burst();
+});
 
 // Orbs, one per session state: [color A, color B, dim, energy].
 const ORBS: [string, string, string, number, number][] = [
