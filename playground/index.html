@@ -55,6 +55,29 @@
       </section>
 
       <section>
+        <h2>The conduit</h2>
+        <p class="note">
+          The foundry squeezed into a bar, behind a row: fctl's Agent Floor, in its sidebar. Hover the row: the light
+          floods in behind a line of packets, which flash where they land. Move along it and the threads part; click
+          for a burst. Below, the same bar four times as large.
+        </p>
+        <nav class="conduit-rail" aria-label="A sidebar">
+          <a class="conduit-row" id="conduit-row" href="#conduit">
+            <canvas id="conduit" aria-hidden="true"></canvas>
+            <span>Agent Floor</span>
+          </a>
+          <a class="conduit-row" href="#conduit"><span>Settings</span></a>
+        </nav>
+        <div class="conduit-big" id="conduit-big-row"><canvas id="conduit-big" aria-label="The conduit, four times as large"></canvas></div>
+        <div class="controls">
+          <label>Working <input id="conduit-lit" type="range" min="0" max="8" value="3" /></label>
+          <label><input id="conduit-hold" type="checkbox" /> Keep it on</label>
+          <button type="button" id="conduit-pulse">Send a packet</button>
+          <button type="button" id="conduit-burst">Burst</button>
+        </div>
+      </section>
+
+      <section>
         <h2>Marks</h2>
         <p class="note">
           hyperstructure's symbol (Twist), as on GitHub and on any background, and fctl's mark: the symbol on a rounded

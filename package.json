@@ -24,6 +24,7 @@
     "./gl/core": "./src/gl/core.ts",
     "./gl/foundry": "./src/gl/foundry.ts",
     "./gl/orb": "./src/gl/orb.ts",
+    "./gl/conduit": "./src/gl/conduit.ts",
     "./gl/stream": "./src/gl/stream.ts",
     "./assets/mark.svg": "./assets/mark.svg",
     "./assets/favicon.svg": "./assets/favicon.svg",
