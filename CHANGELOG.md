@@ -2,6 +2,12 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.7.0 (2026-10-22)
+
+### Features
+
+- **gl:** Add the conduit, the foundry squeezed into a row's bar ([#17](https://github.com/hyperstructure/design/pull/17))
+
 ## 0.6.0 (2026-10-21)
 
 ### Features
