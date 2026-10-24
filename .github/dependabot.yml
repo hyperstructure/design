@@ -1,0 +1,25 @@
+# Dependabot opens security updates only, where the repository's settings
+# turn them on: `open-pull-requests-limit: 0` keeps version updates off (each
+# entry still needs a schedule). This file titles their pull requests, which
+# become commits on main, as Conventional Commits that
+# `node scripts/lint-commit.mjs` takes: `build(deps): bump …`, and
+# `ci(deps): bump …` for the workflows' actions. Without it they would be
+# "Bump …", which the Commits check refuses, as it did hyperstructure/fctl's
+# first. One that a long package name and its versions take past 72
+# characters fails it all the same: shorten it on the pull request.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: build(deps)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: ci(deps)
