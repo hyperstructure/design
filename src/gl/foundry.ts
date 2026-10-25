@@ -130,6 +130,10 @@ void main() {
   float pace = hash12(px * 1.731 + 5.0);
   float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + pace * 2.4) + pace * 40.0);
   float star = h > 1.0 - (0.0022 + dust) ? twinkle : 0.0;
+  // Bright stars blink on and off; dim ones stay and fade. Only those at half brightness or more
+  // show in front of the planet: fainter ones would knock pixels out of its body and glow.
+  float shine = star * uStars;
+  bool lit = star > 0.5 * uStars && shine > 0.0;
 
   // Film grain on the empty dark.
   float g = hash12(px + floor(uTime * 10.0) * 13.17);
@@ -142,13 +146,14 @@ void main() {
     col = bestCol; a = 1.0;
   } else if (limb > th) {
     col = uInk; a = 1.0;
-  } else if (star > 0.5 * uStars) {
-    // Bright stars blink on and off; dim ones stay and fade.
-    col = uInk; a = star * uStars;
+  } else if (lit && shine >= 0.5) {
+    col = uInk; a = shine;
   } else if (body > th) {
     col = bodyCol; a = 1.0;
   } else if (air > th) {
     col = uAir; a = 1.0;
+  } else if (lit) {
+    col = uInk; a = shine;
   } else if (g > 0.94) {
     col = uInk; a = uDark > 0.5 ? 0.05 : 0.035;
   }
