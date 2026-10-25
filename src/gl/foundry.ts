@@ -24,6 +24,7 @@ uniform vec3 uPlanet;           // x, y: center, z: radius (all in heights)
 uniform vec2 uEnd[${LANES}];    // where each thread meets the limb (heights)
 uniform vec3 uMouse;            // xy: pointer (0..1, y up), z: strength
 uniform float uDensity;         // how many threads show at all (0..1)
+uniform float uStars;           // how bright the stars shine (0..1)
 uniform vec3 uCol[5];           // thread colors: neutral, working, waiting, paused, failed
 uniform vec3 uInk;              // stars, rim (white on dark, ink on light)
 uniform vec3 uHot;              // packets (hot pink)
@@ -122,10 +123,12 @@ void main() {
   float limb = exp(-pow(sd / (pixel * 1.05), 2.0));
   float air = sd > 0.0 ? exp(-sd * 24.0) * 0.32 : 0.0;
 
-  // Stars, with dust gathering near the limb.
+  // Stars, with dust gathering near the limb. Each twinkles at a pace of its own: the hash
+  // that picks the stars is near 1 for all of them, so it can't set their pace too.
   float h = hash12(px * 0.913 + 17.0);
   float dust = sd > 0.0 ? 0.05 * exp(-sd * 7.0) : 0.0;
-  float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + h * 2.4) + h * 40.0);
+  float pace = hash12(px * 1.731 + 5.0);
+  float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + pace * 2.4) + pace * 40.0);
   float star = h > 1.0 - (0.0022 + dust) ? twinkle : 0.0;
 
   // Film grain on the empty dark.
@@ -139,8 +142,9 @@ void main() {
     col = bestCol; a = 1.0;
   } else if (limb > th) {
     col = uInk; a = 1.0;
-  } else if (star > 0.5) {
-    col = uInk; a = star;
+  } else if (star > 0.5 * uStars) {
+    // Bright stars blink on and off; dim ones stay and fade.
+    col = uInk; a = star * uStars;
   } else if (body > th) {
     col = bodyCol; a = 1.0;
   } else if (air > th) {
@@ -165,6 +169,11 @@ export interface FoundryOptions {
   planet?: [number, number, number];
   /** Fraction of idle threads drawn (0..1). */
   density?: number;
+  /**
+   * How bright the stars shine (0..1). At 1, the default, they blink on and off; dimmer, they
+   * fade in and out instead, for a calm background behind a form. 0 hides them.
+   */
+  stars?: number;
 }
 
 export interface FoundryHandle {
@@ -188,6 +197,7 @@ export function foundry(opts: FoundryOptions = {}): FoundryHandle {
   const mouseTarget = new Float32Array([0.5, 0.5, 0]);
   const planet = opts.planet ?? [0.92, -0.62, 1.2];
   const density = opts.density ?? 0.55;
+  const stars = Math.min(1, Math.max(0, opts.stars ?? 1));
   let now = 0;
   let first = true;
   for (let i = 0; i < LANES; i++) {
@@ -204,6 +214,7 @@ export function foundry(opts: FoundryOptions = {}): FoundryHandle {
     "uEnd",
     "uMouse",
     "uDensity",
+    "uStars",
     "uCol",
     "uInk",
     "uHot",
@@ -259,6 +270,7 @@ export function foundry(opts: FoundryOptions = {}): FoundryHandle {
       gl.uniform2fv(u.uEnd ?? null, ends);
       gl.uniform3fv(u.uMouse ?? null, mouse);
       gl.uniform1f(u.uDensity ?? null, density);
+      gl.uniform1f(u.uStars ?? null, stars);
       const ink = dark ? cssColor("--c-ink", [0.98, 0.98, 0.98]) : cssColor("--c-ink", [0.09, 0.09, 0.09]);
       const pal = [
         dark ? cssColor("--c-ink-3", [0.55, 0.55, 0.55]) : cssColor("--c-ink-4", [0.64, 0.64, 0.64]),

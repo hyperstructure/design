@@ -189,10 +189,12 @@ void main() {
   float stir = exp(-dot(dp, dp) / 0.08) * uMouse.z;
   float glint = hash12(px * 1.31 + floor(uTime * 14.0) * 7.7);
 
-  // Stars, with dust gathering near the limb.
+  // Stars, with dust gathering near the limb, each twinkling at a pace of its own (as the
+  // foundry's).
   float h = hash12(px * 0.913 + 17.0);
   float dust = sd > 0.0 ? 0.05 * exp(-sd * 3.0) : 0.0;
-  float twinkle = 0.55 + 0.45 * sin(uTime * (0.8 + h * 3.0) + h * 40.0);
+  float pace = hash12(px * 1.731 + 5.0);
+  float twinkle = 0.55 + 0.45 * sin(uTime * (0.8 + pace * 3.0) + pace * 40.0);
   float star = h > 1.0 - (0.006 + dust) ? twinkle : 0.0;
 
   // Film grain on the empty dark.

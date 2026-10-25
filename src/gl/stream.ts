@@ -180,8 +180,10 @@ void main() {
   // The glow ends well inside the tile, whose edge would otherwise show.
   float air = sd > 0.0 ? exp(-sd * 34.0) * 0.32 * (1.0 - smoothstep(0.45, 0.85, sd / uMat[0].y)) * uShow * uLight : 0.0;
 
+  // Stars, each twinkling at a pace of its own (as the foundry's).
   float h = hash12(px * 0.913 + 17.0);
-  float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + h * 2.4) + h * 40.0);
+  float pace = hash12(px * 1.731 + 5.0);
+  float twinkle = 0.55 + 0.45 * sin(uTime * (0.6 + pace * 2.4) + pace * 40.0);
   float star = sd > 0.002 && h > 0.9978 ? twinkle : 0.0;
   float g = hash12(px + floor(uTime * 10.0) * 13.17);
 
