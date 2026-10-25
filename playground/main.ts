@@ -63,12 +63,14 @@ function start() {
   const canvas = $<HTMLCanvasElement>("#foundry");
   if (!canvas) return;
   const density = Number($<HTMLInputElement>("#density")?.value ?? 55) / 100;
-  scene = foundry({ planet: PLANETS[$<HTMLSelectElement>("#planet")?.value ?? "hero"], density });
+  const stars = Number($<HTMLInputElement>("#stars")?.value ?? 100) / 100;
+  scene = foundry({ planet: PLANETS[$<HTMLSelectElement>("#planet")?.value ?? "hero"], density, stars });
   unmount = mount(canvas, scene.scene, { pixel: 3 });
   fill(Number($<HTMLInputElement>("#lit")?.value ?? 9));
 }
 $("#lit")?.addEventListener("input", (e) => fill(Number((e.target as HTMLInputElement).value)));
 $("#density")?.addEventListener("change", start);
+$("#stars")?.addEventListener("change", start);
 $("#planet")?.addEventListener("change", start);
 $("#pulse")?.addEventListener("click", () => {
   const working = [...lanes.keys()];
