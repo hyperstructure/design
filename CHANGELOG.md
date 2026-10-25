@@ -2,6 +2,16 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.8.0 (2026-10-25)
+
+### Features
+
+- **gl:** Dim the foundry's stars, and twinkle stars out of step ([#19](https://github.com/hyperstructure/design/pull/19))
+
+### Other changes
+
+- Give Dependabot's security updates Conventional Commit titles ([#18](https://github.com/hyperstructure/design/pull/18))
+
 ## 0.7.0 (2026-10-22)
 
 ### Features
