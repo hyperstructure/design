@@ -44,6 +44,26 @@ export function hyperstructureSvg(
 }
 
 /**
+ * fctl-review's avatar on GitHub: the GitHub App fctl's review agents post
+ * their reviews as, beside fctl-sh's, the mark's yellow, so that people tell
+ * a review agent's findings apart from what the other agents answer.
+ * hyperstructure's rings in `ink` on full-bleed `background`, a lime green
+ * that is this avatar's alone, not one of the palette's
+ * (assets/fctl-review/avatar.svg).
+ */
+export const reviewApp = {
+  viewBox: hyperstructure.viewBox,
+  rings: hyperstructure.rings,
+  background: "#d3ffa5",
+  ink: hyperstructure.ink,
+} as const;
+
+/** fctl-review's avatar as an SVG document: the rings on its lime green, named for assistive technology. */
+export function reviewAppSvg(size = 256): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${reviewApp.viewBox}" role="img"><title>fctl-review</title><rect width="256" height="256" fill="${reviewApp.background}"/><path fill="${reviewApp.ink}" fill-rule="evenodd" d="${reviewApp.rings}"/></svg>`;
+}
+
+/**
  * fctl's mark: hyperstructure's symbol, the rings on a yellow square with
  * rounded corners (256×256). Logos, favicons and app icons shown as they are
  * use it rounded; icons that the platform shapes itself (iOS home screens, the

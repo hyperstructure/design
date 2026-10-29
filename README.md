@@ -18,6 +18,7 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark: hyperstructure's symbol on a rounded yellow square |
 | `@hyperstructure/design/assets/icons/*` | fctl's app icons for web app manifests and home screens: `icon-192.png` and `icon-512.png` (rounded, manifest purpose `any`); `icon-maskable-512.png`, `icon-maskable-1024.png` and `apple-touch-icon.png` (yellow to the edges, for platforms that shape icons themselves) |
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
+| `@hyperstructure/design/assets/fctl-review/*` | fctl-review's GitHub avatar, the app fctl's review agents post as: `avatar.svg`, `avatar-512.png` |
 
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
 `#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`. Danger
@@ -28,12 +29,19 @@ hyperstructure's symbol is **Twist**: two rounded squares turning inside each
 other. The organization avatar is the rings in `#0d1117` on full-bleed yellow
 `#ffff5d`; `brand.ts` has it as values (`hyperstructure`, `hyperstructureSvg()`).
 
+fctl-review, the GitHub App fctl's review agents post their reviews as, has
+the rings on lime green `#d3ffa5` for its avatar (`reviewApp`,
+`reviewAppSvg()`), so that people tell its findings apart from what fctl's
+agents answer as fctl-sh, whose avatar is the mark's yellow. The green is
+that avatar's alone, not one of the palette's.
+
 fctl's mark is the same symbol on a yellow square whose corners are rounded to
 a fifth of its side (`mark`, `markSvg()`). Icons that the platform masks (iOS
 home screens, the macOS Dock, Android's maskable icons) fill the square
 instead (`markSvg(size, { square: true })`); the rings stay inside the
-maskable safe zone. `npm run icons` renders `mark.svg`, `favicon.svg` and
-`assets/icons/` from `brand.ts`, and `npm test` checks they are current.
+maskable safe zone. `npm run icons` renders `mark.svg`, `favicon.svg`,
+`assets/icons/` and fctl-review's avatar from `brand.ts`, and `npm test`
+checks they are current.
 
 ## Using it
 

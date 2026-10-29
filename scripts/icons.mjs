@@ -1,8 +1,8 @@
 // Renders fctl's mark from src/brand.ts into the files consumers serve:
 // assets/mark.svg and assets/favicon.svg, and the PNG app icons in
-// assets/icons/ (web app manifests, home screens, the Dock). Run
-// `npm run icons` after changing the mark; `npm test` checks the files are
-// current.
+// assets/icons/ (web app manifests, home screens, the Dock); and
+// fctl-review's GitHub avatar into assets/fctl-review/. Run `npm run icons`
+// after changing them; `npm test` checks the files are current.
 //
 //   node scripts/icons.mjs
 
@@ -10,14 +10,18 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Resvg } from "@resvg/resvg-js";
-import { markSvg } from "../src/brand.ts";
+import { markSvg, reviewAppSvg } from "../src/brand.ts";
 
-/** A PNG of the mark, `size` pixels square; `square` fills the corners. */
-function png(size, square) {
-  const svg = markSvg(size, { square });
+/** A PNG of `svg`, `size` pixels square. */
+function render(svg, size) {
   return new Resvg(svg, { fitTo: { mode: "width", value: size }, font: { loadSystemFonts: false } })
     .render()
     .asPng();
+}
+
+/** A PNG of the mark, `size` pixels square; `square` fills the corners. */
+function png(size, square) {
+  return render(markSvg(size, { square }), size);
 }
 
 /** Every generated file, as [path from the repository root, contents]. */
@@ -35,6 +39,10 @@ export function icons() {
     ["assets/icons/icon-maskable-512.png", png(512, true)],
     ["assets/icons/icon-maskable-1024.png", png(1024, true)],
     ["assets/icons/apple-touch-icon.png", png(180, true)],
+    // fctl-review's avatar, as uploaded to GitHub: full bleed, which GitHub
+    // rounds itself.
+    ["assets/fctl-review/avatar.svg", reviewAppSvg(256)],
+    ["assets/fctl-review/avatar-512.png", render(reviewAppSvg(512), 512)],
   ];
 }
 

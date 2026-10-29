@@ -30,7 +30,8 @@
     "./assets/favicon.svg": "./assets/favicon.svg",
     "./assets/icons/*": "./assets/icons/*",
     "./package.json": "./package.json",
-    "./assets/hyperstructure/*": "./assets/hyperstructure/*"
+    "./assets/hyperstructure/*": "./assets/hyperstructure/*",
+    "./assets/fctl-review/*": "./assets/fctl-review/*"
   },
   "scripts": {
     "dev": "vite",

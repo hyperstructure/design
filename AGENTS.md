@@ -40,7 +40,10 @@ node scripts/release.mjs --dry-run               # the next version and its note
 - hyperstructure's symbol (Twist, `assets/hyperstructure/`) is drawn once:
   `symbol.svg` is the source; `symbol-yellow.svg`, `symbol-rings.svg` and
   `brand.ts` reuse its ring path. The GitHub avatar is the rings in `#0d1117`
-  on `#ffff5d`. Do not redraw it; derive from the path.
+  on `#ffff5d`. Do not redraw it; derive from the path. fctl-review's
+  avatar (the GitHub App fctl's review agents post as) is the same rings on
+  `#d3ffa5`, rendered from `reviewApp` by `npm run icons`: that green is the
+  avatar's alone, not a palette color.
 - fctl's mark is that symbol on a rounded yellow square (`mark` in
   `brand.ts`). `assets/mark.svg`, `assets/favicon.svg` and `assets/icons/`
   are rendered from it by `npm run icons`: change `brand.ts`, rerun it, and
