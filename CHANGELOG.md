@@ -2,6 +2,12 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.9.0 (2026-10-29)
+
+### Features
+
+- Add fctl-review's avatar, the app review agents post as ([#20](https://github.com/hyperstructure/design/pull/20))
+
 ## 0.8.0 (2026-10-25)
 
 ### Features
