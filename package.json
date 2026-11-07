@@ -28,6 +28,7 @@
     "./gl/stream": "./src/gl/stream.ts",
     "./assets/mark.svg": "./assets/mark.svg",
     "./assets/favicon.svg": "./assets/favicon.svg",
+    "./assets/favicon.ico": "./assets/favicon.ico",
     "./assets/icons/*": "./assets/icons/*",
     "./package.json": "./package.json",
     "./assets/hyperstructure/*": "./assets/hyperstructure/*",

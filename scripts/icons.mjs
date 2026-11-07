@@ -1,7 +1,7 @@
 // Renders fctl's mark from src/brand.ts into the files consumers serve:
-// assets/mark.svg and assets/favicon.svg, and the PNG app icons in
-// assets/icons/ (web app manifests, home screens, the Dock); and
-// fctl-review's GitHub avatar into assets/fctl-review/. Run `npm run icons`
+// assets/mark.svg, assets/favicon.svg and assets/favicon.ico, and the PNG
+// app icons in assets/icons/ (web app manifests, home screens, the Dock);
+// and fctl-review's GitHub avatar into assets/fctl-review/. Run `npm run icons`
 // after changing them; `npm test` checks the files are current.
 //
 //   node scripts/icons.mjs
@@ -24,12 +24,39 @@ function png(size, square) {
   return render(markSvg(size, { square }), size);
 }
 
+/**
+ * An ICO of the rounded mark at each of `sizes` (at most 256), each stored as
+ * a PNG, which every current browser and system reads in an ICO.
+ */
+function ico(sizes) {
+  const images = sizes.map((size) => png(size, false));
+  const directory = Buffer.alloc(6 + 16 * images.length);
+  directory.writeUInt16LE(1, 2); // an icon, not a cursor
+  directory.writeUInt16LE(images.length, 4);
+  let offset = directory.length;
+  images.forEach((image, i) => {
+    const entry = 6 + 16 * i;
+    directory.writeUInt8(sizes[i] % 256, entry); // width; 0 means 256
+    directory.writeUInt8(sizes[i] % 256, entry + 1); // height
+    directory.writeUInt16LE(1, entry + 4); // color planes
+    directory.writeUInt16LE(32, entry + 6); // bits per pixel
+    directory.writeUInt32LE(image.length, entry + 8);
+    directory.writeUInt32LE(offset, entry + 12);
+    offset += image.length;
+  });
+  return Buffer.concat([directory, ...images]);
+}
+
 /** Every generated file, as [path from the repository root, contents]. */
 export function icons() {
   const svg = markSvg(256, { title: "fctl" });
   return [
     ["assets/mark.svg", svg],
     ["assets/favicon.svg", svg],
+    // What browsers, feed readers and link previews fetch from /favicon.ico
+    // when a page links no icon they take: the sizes of tabs, bookmarks and
+    // Windows' taskbar.
+    ["assets/favicon.ico", ico([16, 32, 48])],
     // Shown as they are (manifest purpose "any"): rounded, like the mark.
     ["assets/icons/icon-192.png", png(192, false)],
     ["assets/icons/icon-512.png", png(512, false)],
