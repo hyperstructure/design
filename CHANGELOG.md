@@ -2,6 +2,12 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.10.0 (2026-11-07)
+
+### Features
+
+- **assets:** Add a favicon.ico of fctl's mark ([#21](https://github.com/hyperstructure/design/pull/21))
+
 ## 0.9.0 (2026-10-29)
 
 ### Features
