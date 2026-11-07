@@ -40,6 +40,24 @@ function decode(png) {
   return { width, height, pixels: out };
 }
 
+/** The images in an ICO, as [width, height, PNG], checking its directory on the way. */
+function icoImages(ico) {
+  assert.deepEqual([ico.readUInt16LE(0), ico.readUInt16LE(2)], [0, 1], "an ICO of icons");
+  const images = [];
+  for (let i = 0; i < ico.readUInt16LE(4); i++) {
+    const entry = 6 + 16 * i;
+    const [length, offset] = [ico.readUInt32LE(entry + 8), ico.readUInt32LE(entry + 12)];
+    images.push([ico[entry] || 256, ico[entry + 1] || 256, ico.subarray(offset, offset + length)]);
+  }
+  return images;
+}
+
+/** The PNGs in a generated file, by name: itself, or each image of an ICO. */
+function pngs(path, contents) {
+  if (!path.endsWith(".ico")) return [[path, contents]];
+  return icoImages(contents).map(([width, , png]) => [`${path} (${width} px)`, png]);
+}
+
 test("the mark and app icons are current (npm run icons)", () => {
   for (const [path, expected] of icons()) {
     const actual = readFileSync(new URL(`../${path}`, import.meta.url));
@@ -48,11 +66,36 @@ test("the mark and app icons are current (npm run icons)", () => {
       continue;
     }
     // Pixels, not bytes: rasterizers may round differently on other CPUs.
-    const [a, e] = [decode(actual), decode(expected)];
-    assert.deepEqual([a.width, a.height], [e.width, e.height], path);
-    let worst = 0;
-    for (let i = 0; i < e.pixels.length; i++) worst = Math.max(worst, Math.abs(a.pixels[i] - e.pixels[i]));
-    assert.ok(worst <= 2, `${path} differs from the mark by ${worst}/255; run npm run icons`);
+    const [actuals, expecteds] = [pngs(path, actual), pngs(path, expected)];
+    assert.deepEqual(
+      actuals.map(([name]) => name),
+      expecteds.map(([name]) => name),
+      path,
+    );
+    expecteds.forEach(([name, png], i) => {
+      const [a, e] = [decode(actuals[i][1]), decode(png)];
+      assert.deepEqual([a.width, a.height], [e.width, e.height], name);
+      let worst = 0;
+      for (let i = 0; i < e.pixels.length; i++) worst = Math.max(worst, Math.abs(a.pixels[i] - e.pixels[i]));
+      assert.ok(worst <= 2, `${name} differs from the mark by ${worst}/255; run npm run icons`);
+    });
+  }
+});
+
+test("favicon.ico holds the mark at the sizes its directory says", () => {
+  const [, ico] = icons().find(([path]) => path === "assets/favicon.ico");
+  const images = icoImages(ico);
+  assert.deepEqual(
+    images.map(([width, height]) => [width, height]),
+    [
+      [16, 16],
+      [32, 32],
+      [48, 48],
+    ],
+  );
+  for (const [width, height, png] of images) {
+    const image = decode(png);
+    assert.deepEqual([image.width, image.height], [width, height]);
   }
 });
 

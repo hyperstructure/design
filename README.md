@@ -16,6 +16,7 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/gl/conduit` | The foundry squeezed into a bar, behind a row that powers on when hovered (fctl's Agent Floor, in its sidebar) |
 | `@hyperstructure/design/gl/stream` | The stream: the foundry's threads flowing around glyphs made of the planet's matter, which people can stir, throw and knock over (fctl's 404 and 5xx pages) |
 | `@hyperstructure/design/assets/mark.svg`, `favicon.svg` | fctl's mark: hyperstructure's symbol on a rounded yellow square |
+| `@hyperstructure/design/assets/favicon.ico` | The rounded mark at 16, 32 and 48 pixels, for sites to serve at `/favicon.ico`, where browsers, feed readers and link previews look when a page links no icon they take |
 | `@hyperstructure/design/assets/icons/*` | fctl's app icons for web app manifests and home screens: `icon-192.png` and `icon-512.png` (rounded, manifest purpose `any`); `icon-maskable-512.png`, `icon-maskable-1024.png` and `apple-touch-icon.png` (yellow to the edges, for platforms that shape icons themselves) |
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
 | `@hyperstructure/design/assets/fctl-review/*` | fctl-review's GitHub avatar, the app fctl's review agents post as: `avatar.svg`, `avatar-512.png` |
@@ -40,8 +41,8 @@ a fifth of its side (`mark`, `markSvg()`). Icons that the platform masks (iOS
 home screens, the macOS Dock, Android's maskable icons) fill the square
 instead (`markSvg(size, { square: true })`); the rings stay inside the
 maskable safe zone. `npm run icons` renders `mark.svg`, `favicon.svg`,
-`assets/icons/` and fctl-review's avatar from `brand.ts`, and `npm test`
-checks they are current.
+`favicon.ico`, `assets/icons/` and fctl-review's avatar from `brand.ts`, and
+`npm test` checks they are current.
 
 ## Using it
 

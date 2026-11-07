@@ -45,9 +45,10 @@ node scripts/release.mjs --dry-run               # the next version and its note
   `#d3ffa5`, rendered from `reviewApp` by `npm run icons`: that green is the
   avatar's alone, not a palette color.
 - fctl's mark is that symbol on a rounded yellow square (`mark` in
-  `brand.ts`). `assets/mark.svg`, `assets/favicon.svg` and `assets/icons/`
-  are rendered from it by `npm run icons`: change `brand.ts`, rerun it, and
-  never edit those files by hand (`npm test` fails when they are stale).
+  `brand.ts`). `assets/mark.svg`, `assets/favicon.svg`, `assets/favicon.ico`
+  and `assets/icons/` are rendered from it by `npm run icons`: change
+  `brand.ts`, rerun it, and never edit those files by hand (`npm test` fails
+  when they are stale).
   Icons that platforms mask fill the square to the edges.
 - Look at changes in the playground in both themes before they merge: a
   merged `feat` or `fix` is released right away.
