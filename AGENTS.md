@@ -17,6 +17,15 @@ node scripts/lint-commit.mjs "feat(gl): add x"   # a pull request title
 node scripts/release.mjs --dry-run               # the next version and its notes
 ```
 
+## The design docs
+
+[docs/](docs/README.md) describes how fctl's web app is designed: its
+principles and its components (what each shows, how it behaves and moves,
+its copy, its edge cases, the traps found building it). Read them before
+designing a component for fctl or fctl.sh, and change them in the same
+pull request as a change to what they describe, or in one linked to the
+fctl pull request that makes it.
+
 ## Rules
 
 - The palette is fixed: yellow `#ffff5d`, lime `#eaff81` (yellow on light
