@@ -59,9 +59,11 @@ palette, toasts and sequence hint z-50.
   (`lib/viewport.ts`, fctl#350).
 - **Safe areas.** Safe-area insets pad the drawer, the page column and the sidebar's foot, which
   covers notches in landscape and installed apps.
-- **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl` with a `border-line`
-  bottom. Beside the page, the sidebar is `bg-surface/80` with a blur and a `border-line` right
-  edge. On phones it is opaque ([Phones: the drawer, the top bar and the menu button](#phones-the-drawer-the-top-bar-and-the-menu-button)).
+- **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl`, with no border: the
+  page blurs as it scrolls under them, which marks their edge. Beside the page, the sidebar is
+  `bg-surface/80` with a blur and no border either: its lighter surface sets it apart from the
+  canvas. Without the lines the app looks fresher (fctl#490); lines stay for what they divide
+  within a surface (list rows, the sidebar's foot). On phones the sidebar is opaque ([Phones: the drawer, the top bar and the menu button](#phones-the-drawer-the-top-bar-and-the-menu-button)).
 
 
 ## The sidebar
@@ -508,8 +510,8 @@ work").
 
 **Purpose.** On a phone the page gets the whole screen, and the sidebar is one thumb away.
 
-**The top bar** (below 768 px). It is sticky, 56 px, `bg-canvas/80` with a blur and a bottom
-border, and holds the menu button and the large logo.
+**The top bar** (below 768 px). It is sticky, 56 px, `bg-canvas/80` with a blur and no border,
+and holds the menu button and the large logo.
 
 - **The menu button** is 44 px with a 24 px icon, Apple's minimum touch target. Before fctl#137
   it was 34 px in a 48 px bar and hard to hit. The icon's bars line up with the page's text,
