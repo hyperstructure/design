@@ -58,7 +58,7 @@ truncates on one line, the step's words first, then the plan step.
 | background | "Waiting for" + the task, or the status's words ("Waiting for 2 background tasks") | hourglass, blue | no |
 | paused | the reason the session paused | circle-pause, pink | no |
 | stopping | "Stopping" | square | no |
-| stalled | why the work isn't coming through ("The runner went quiet…") | unplug, amber, words in amber | no |
+| stalled | why the work isn't coming through, and since when: "Runner not heard from since 14:02", "Sandbox paused since yesterday at 18:40", "Agent unreachable since 14:02" (`stallLabel` in `web/src/lib/stall.ts`) | unplug, amber, words in amber | no |
 | (your turn) | "Your turn" · "The agent waits for your reply" | reply, blue on blue-soft | no |
 
 Busy kinds shimmer their words and show the comet arc; the others are calm.

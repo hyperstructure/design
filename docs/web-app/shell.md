@@ -61,7 +61,7 @@ palette, toasts and sequence hint z-50.
   covers notches in landscape and installed apps.
 - **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl` with a `border-line`
   bottom. Beside the page, the sidebar is `bg-surface/80` with a blur and a `border-line` right
-  edge. On phones it is opaque (section 5).
+  edge. On phones it is opaque ([Phones: the drawer, the top bar and the menu button](#phones-the-drawer-the-top-bar-and-the-menu-button)).
 
 
 ## The sidebar
@@ -149,7 +149,7 @@ overflow-y-auto`), so search, the views and the foot never scroll out of reach.
   - Pull requests shows how many are ready for review in green (`pr-open`), or else all open
     ones in `ink-4`. Its tooltip reads "2 ready for review, of 5 open", plus "from your
     sessions" while Mine (the pull requests page's filter) is on;
-  - Needs you has a blue pill (section 3), and Admin a `highlight` pill of people waiting for
+  - Needs you has a blue pill ([Needs you, the title count, the app badge and notifications](#needs-you-the-title-count-the-app-badge-and-notifications)), and Admin a `highlight` pill of people waiting for
     early access;
   - the Agent Floor has no number. Its work shows as lit threads when a mouse hovers it.
 - **Long names truncate.** The native tooltip holds the full title with its status, or with the
@@ -565,7 +565,7 @@ header. A session that fails to load has no header and keeps the bar.
 
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
-room, instead of opening a dialog. The palette loses its blurs and its rise (section 7).
+room, instead of opening a dialog. The palette loses its blurs and its rise ([The command palette](#the-command-palette-k)).
 
 **Building one like it.**
 

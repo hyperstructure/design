@@ -52,7 +52,7 @@ The glance at the top of the new view counts files changed with the same rolling
 - `bg-surface`. It opens with `animate-rise` (420 ms `--ease-out`: from 6 px lower, 0.5% smaller, 2 px blurred) and closes at once.
 - It holds the page behind still (`useHoldPage`: `overflow: hidden` on `<html>`, keeping a scrollbar's room with `scrollbar-gutter: stable` so nothing shifts). Overlays opened from one another share the hold.
 - It closes on Escape, its X ("Close (Esc)"), or a press on the backdrop: only when both the press and the release land there, so a text selection dragged past the edge doesn't close it.
-- Under the header: the file list on the left, then the diffs column (the find bar when open, then the scrolling diffs). The scrolling region is `bg-canvas/40`, `overflow-auto overscroll-contain`, `tabIndex=0` so the keys scroll it, and `overflow-anchor: none` (the dialog keeps the reader's place itself, section 6.6). After the last file: "End of the changes" (12 px `text-ink-4`, centered, 32 px above and 48 px below).
+- Under the header: the file list on the left, then the diffs column (the find bar when open, then the scrolling diffs). The scrolling region is `bg-canvas/40`, `overflow-auto overscroll-contain`, `tabIndex=0` so the keys scroll it, and `overflow-anchor: none` (the dialog keeps the reader's place itself, [Holding the reader's place](#holding-the-readers-place-componentssessiondiff-livetsx-uselive)). After the last file: "End of the changes" (12 px `text-ink-4`, centered, 32 px above and 48 px below).
 
 ### The header
 
@@ -81,7 +81,7 @@ Every header button is an `IconButton` (32 px, `rounded-md`, `text-ink-3`, `hove
 ### A file's section and its header
 
 - Each file is a `<section data-file={index}>` labelled by its heading, with a bottom hairline.
-- **Header** (`FileHeader`): 40 px, sticky at the top while its lines scroll under it (`z-[3]`, `bg-surface`, bottom hairline). In order: a 24 px fold button (a chevron that turns 90° in 150 ms; "Hide the lines of src/a.rs", `aria-expanded`, tooltip "Hide its lines"); the change letter; the path as the `h3` in 12.5 px mono, the repository first in `text-ink-4` when the session has several, then the directory in `text-ink-4`, which gives way first (`shrink-[1000]`), then the name in medium `text-ink`, with an `sr-only` "Modified: " before it; a 24 px copy button ("Copy the path", a check and "Copied" for 1.6 s); "from old/path.rs" for a rename (11.5 px mono `text-ink-4`, from 768 px); a spacer; the "Updated" or "New" pill (section 6.8); the counts (11.5 px mono, rolling); "GitHub ↗" (12 px `text-ink-3`, 28 px tall, from 768 px, while the branch is on GitHub).
+- **Header** (`FileHeader`): 40 px, sticky at the top while its lines scroll under it (`z-[3]`, `bg-surface`, bottom hairline). In order: a 24 px fold button (a chevron that turns 90° in 150 ms; "Hide the lines of src/a.rs", `aria-expanded`, tooltip "Hide its lines"); the change letter; the path as the `h3` in 12.5 px mono, the repository first in `text-ink-4` when the session has several, then the directory in `text-ink-4`, which gives way first (`shrink-[1000]`), then the name in medium `text-ink`, with an `sr-only` "Modified: " before it; a 24 px copy button ("Copy the path", a check and "Copied" for 1.6 s); "from old/path.rs" for a rename (11.5 px mono `text-ink-4`, from 768 px); a spacer; the "Updated" or "New" pill ([Signals around the lines](#signals-around-the-lines)); the counts (11.5 px mono, rolling); "GitHub ↗" (12 px `text-ink-3`, 28 px tall, from 768 px, while the branch is on GitHub).
 - **Folding** leaves the header alone; the fold isn't kept. Going to a match or a change in a folded file opens it.
 - **Above the lines**, when the file was renamed or its mode changed and it also has lines: a strip in 12 px `text-ink-3`, "Renamed from `old.rs`" and "Mode 100644 → 100755: executable now". Mode changes are explained in words (`modeChange`): "executable now", "no longer executable", "a symbolic link now", "no longer a symbolic link", or the two modes alone.
 
@@ -99,7 +99,7 @@ Every header button is an `IconButton` (32 px, `rounded-md`, `text-ink-3`, `hove
 - **No newline at end of file**: a 12 px slashed circle after the last line, `text-ink-4`, `role="img"`, labelled.
 - **Side by side** (`layout="split"`): a two-column grid; the right half has a hairline at its left; a half without a line is hatched (`repeating-linear-gradient(135deg, transparent 0 5px, var(--c-line) 5px 6px)`). Side by side, lines always wrap.
 - **Wrapping.** Scrolling (`.diff-scroll`): each file scrolls sideways on its own (`overflow-x: auto`, `white-space: pre`, content `w-max min-w-full`). Wrapping (`.diff-wrap`): `pre-wrap` with `overflow-wrap: anywhere`.
-- **Highlighting** (`useTokens`, `lib/highlight.ts`). Shiki, loaded lazily, grammars per language, in two themes at once (`github-dark-default`, `github-light`) as CSS variables (`--shiki-dark`, `--shiki-light`), so a theme switch needs no new render. The language comes from the file's name, extension or first line (a `#!` line, a lockfile's format; `lib/languages.ts`). Each hunk's lines before (unchanged and taken out) and after (unchanged and added) are highlighted as two pieces of code, so a comment or string that spans lines colors as it does in the file; unchanged lines take their colors from the file as it is now. Hunks are highlighted one after another with a pause between them (a zero timeout) to let the page breathe. A language Shiki doesn't know stays plain text. Lines show plain until their colors come (except in a live new version, section 6.1).
+- **Highlighting** (`useTokens`, `lib/highlight.ts`). Shiki, loaded lazily, grammars per language, in two themes at once (`github-dark-default`, `github-light`) as CSS variables (`--shiki-dark`, `--shiki-light`), so a theme switch needs no new render. The language comes from the file's name, extension or first line (a `#!` line, a lockfile's format; `lib/languages.ts`). Each hunk's lines before (unchanged and taken out) and after (unchanged and added) are highlighted as two pieces of code, so a comment or string that spans lines colors as it does in the file; unchanged lines take their colors from the file as it is now. Hunks are highlighted one after another with a pause between them (a zero timeout) to let the page breathe. A language Shiki doesn't know stays plain text. Lines show plain until their colors come (except in a live new version, [How a new version arrives](#how-a-new-version-arrives)).
 - **Line identity.** Each row carries `data-kind` (`add`, `del`, `context`) and `data-l="h:j"`, its hunk and place in it. `lib/diff.ts`'s `patchLines` numbers the raw patch the same way without parsing the rest, so finding and stepping from change to change work across every file at once, drawn or not.
 
 ### Shared with the rest of the session page
@@ -126,7 +126,7 @@ Every header button is an `IconButton` (32 px, `rounded-md`, `text-ink-3`, `hove
 | Selection used as the query | one line, up to 200 characters | ignored | As editors do |
 | Files drawn | those within 1,600 px of the view (and those gone to) | a placeholder of their estimated height | Many files open quickly |
 
-Room before a file draws (`roomFor`): 20 px a line plus 28 px a hunk header (when there is more than one) plus 8, once its lines are known; 220 px when its diff came without lines (binary, too large, a rename) or the file has no digest; otherwise (additions + deletions + 6) × 20 px, at most 4,000. Estimates keep the scrollbar honest and the reader's place holds when the real lines replace them (section 6.6). On #388's test sessions, 55 files opened in about 0.65 s with a simulated 200 ms network, and "diff" (894 matches) was found in about 75 ms.
+Room before a file draws (`roomFor`): 20 px a line plus 28 px a hunk header (when there is more than one) plus 8, once its lines are known; 220 px when its diff came without lines (binary, too large, a rename) or the file has no digest; otherwise (additions + deletions + 6) × 20 px, at most 4,000. Estimates keep the scrollbar honest and the reader's place holds when the real lines replace them ([Holding the reader's place](#holding-the-readers-place-componentssessiondiff-livetsx-uselive)). On #388's test sessions, 55 files opened in about 0.65 s with a simulated 200 ms network, and "diff" (894 matches) was found in about 75 ms.
 
 There is no control to show the unchanged lines between hunks. That follows from keeping diffs rather than files (inferred: the code doesn't say so).
 
@@ -163,8 +163,8 @@ While the agent works, fctl-agent reads the repositories soon after tool calls t
 1. The file's listed digest changes. The list's row and the header's counts roll; the list row's dot says "Just changed".
 2. The file's query fetches the new diff, showing the previous one until it comes.
 3. A live diff waits up to 450 ms (`WAIT_FOR_COLORS`) for the new version's colors before showing it, so new lines are written in already colored instead of coloring after they arrive; past that it shows without them and colors them later.
-4. `nextLive` (`lib/diff-motion.ts`) matches the new version's rows to those on screen and says how each came (6.2). Rows that stay keep their React keys, so their elements, and the reader's place, stay.
-5. On commit, `play` (`components/diff-play.ts`) plays the rows that came, went or changed (6.3, 6.4). Every file whose diff changed in the same React commit plays together, gathered over a microtask: measured once where they end up, one hold, one wave.
+4. `nextLive` (`lib/diff-motion.ts`) matches the new version's rows to those on screen and says how each came ([Matching one version to the next](#matching-one-version-to-the-next)). Rows that stay keep their React keys, so their elements, and the reader's place, stay.
+5. On commit, `play` (`components/diff-play.ts`) plays the rows that came, went or changed ([Where it plays, and where it doesn't](#where-it-plays-and-where-it-doesnt), [Each animation](#each-animation)). Every file whose diff changed in the same React commit plays together, gathered over a microtask: measured once where they end up, one hold, one wave.
 6. At 920 ms (`SETTLE_MS`) the version settles: rows that went are removed (they finished closing) and every row is plain "kept" again. The lights finish on their own clock and are cleared 200 ms after the last.
 
 ### Matching one version to the next
@@ -187,9 +187,9 @@ Added lines that went beside added lines that came pair up in order as rewrites 
 
 Motion only where the reader sees it. At each version, after holding the reader's place:
 - **Rows that show play**: those in the band, plus those below it that rows opening above them bring into view as they open (the opening rows' heights are added to the band's reach).
-- **Rows above the view** take their room at once, out of sight, and the reader's line stays put (6.6).
+- **Rows above the view** take their room at once, out of sight, and the reader's line stays put ([Holding the reader's place](#holding-the-readers-place-componentssessiondiff-livetsx-uselive)).
 - **Rows below** are left as they are; rows that go there go at the settle.
-- **Code changed out of sight** isn't played. Adjacent rows (side-by-side halves count as one row) group into one change, and each change goes on the waiting list that the "new changes" buttons count (6.7). A file changed while not drawn (far away, its lines not shown yet) waits as its whole section; going to it goes to its header, and its lines then show as they are, without writing in.
+- **Code changed out of sight** isn't played. Adjacent rows (side-by-side halves count as one row) group into one change, and each change goes on the waiting list that the "new changes" buttons count ([Changes out of sight](#changes-out-of-sight)). A file changed while not drawn (far away, its lines not shown yet) waits as its whole section; going to it goes to its header, and its lines then show as they are, without writing in.
 
 ### Each animation
 
@@ -246,7 +246,7 @@ The line the reader reads must not move, whatever the agent does above it.
 - **The anchor** is the first row (line or hunk header) under the header of the file at the top of the view, with its section, its `data-l` and its distance from the top of the diffs. It is picked again on every scroll.
 - **Holding**: a `ResizeObserver` on the column of files calls `hold()`, which scrolls by however far the anchor moved. While rows open and close, `moving(ms)` holds it every frame. So rows that come or go above the anchor, and files above it that draw their lines in place of an estimate, change nothing on screen; changes below the anchor push the rest down, as reading expects. It holds at the very top of the diffs too, which the browser's own scroll anchoring wouldn't; that anchoring is off (`overflow-anchor: none`) so the two don't fight.
 - **Drawn anew.** When the anchor's row is replaced (the layout switched between one below the other and side by side), it finds the line with the same `data-l` in the same section. If that file went (the agent put it back as it was), it picks a new anchor rather than taking the same line of the next file.
-- **A file gone to stays at the top** (the pin): after a jump to a file, its header stays at the top while files above it draw and take their room, until the reader scrolls (wheel, touch, a press, or a scrolling key in the diffs). The pin also places the file opened once the dialog has a size (the first trap in section 11).
+- **A file gone to stays at the top** (the pin): after a jump to a file, its header stays at the top while files above it draw and take their room, until the reader scrolls (wheel, touch, a press, or a scrolling key in the diffs). The pin also places the file opened once the dialog has a size (the first trap in [Edge cases and traps](#edge-cases-and-traps)).
 - **Code that scrolls the diffs itself** (going to a file, a change, a match) calls `pick()` afterwards so the new place is the one held.
 
 ### Changes out of sight
@@ -297,11 +297,11 @@ What the lines can't say alone:
 - Single keys never act while typing in a field, with ⌘, Ctrl or Alt held, or during an IME composition.
 - ⌘ counts as the modifier everywhere, Ctrl only off Apple systems, for a Mac whose browser claims to be something else.
 - The Alt toggles go by the physical key (`e.code`), since ⌥C types "ç" on a Mac; Ctrl+Alt is left alone (AltGr on Windows).
-- The dialog is marked `data-shortcuts="changes"`, so the shortcuts sheet (`?` or ⌘/) opened over it lists "In the changes" and "Finding" first. `lib/shortcuts.ts` lists every key above with its label; the dialog handles them itself, since the app's global shortcuts leave keys in open dialogs to the dialog.
+- The dialog is marked `data-shortcuts="changes"`, so the shortcuts sheet (`?` or ⌘/) opened over it lists "In the changes" and "Finding" first. `lib/shortcuts.ts` lists every key above with its label except F3 and Shift+F3, which `diff-dialog.tsx` takes on its own (so the shortcuts sheet and `aria-keyshortcuts` name only ⌘G and ⌘⇧G); the dialog handles them all itself, since the app's global shortcuts leave keys in open dialogs to the dialog.
 
 ### Going to files and changes
 
-- **A file**: its header goes to the top, and it stays there (6.6). The file in view is otherwise the one whose section is under the top of the view, found by binary search once a frame while scrolling.
+- **A file**: its header goes to the top, and it stays there ([Holding the reader's place](#holding-the-readers-place-componentssessiondiff-livetsx-uselive)). The file in view is otherwise the one whose section is under the top of the view, found by binary search once a frame while scrolling.
 - **A change** is the start of a run of lines added or taken out (`changeStarts`). `n` goes to the first change after the line three lines (60 px, `CHANGE_MARGIN`) under the header at the top of the view, and puts it 60 px under its file's header, so three lines of context show above it. Repeated `n`/`p` step from the change last gone to while the reader hasn't scrolled (within 2 px), else from where they are now.
 - **Going somewhere not drawn yet**: the file is unfolded and forced to draw, and the dialog tries once a frame, for up to 120 frames, until the line exists.
 - **Bringing a match or a change into view** (`bringIntoView`): sideways first in a scrolling diff, so the match clears the sticky gutter by 20 px and sits about a third of the way in; then, unless it already shows clear of the header and 10 px from the edges, up or down to the middle of the view. Further than one and a half views it jumps, as a browser's find does; nearer it glides; with reduced motion it always jumps.
@@ -382,8 +382,8 @@ Additions are a fresh green, as people know additions by: not a brand color, and
 - A native modal dialog labelled "Changes"; sections labelled by their file's heading, which starts with an `sr-only` change ("Modified: src/a.rs"); the find bar a `<search>` landmark; the list an `aside` and the file stepper a `nav`.
 - Lines: marks are images named "Added" and "Removed"; hunk headers say how many unchanged lines lie before them; a missing final newline is named. Rows on their way out are `aria-hidden` and carry no `data-l`, so neither finding nor screen readers meet them. A rewritten line's old text is a pseudo-element, so the code's text is only what it says now, for finding, copying and reading out.
 - State: the file position and the find count are `aria-live="polite"`; toggles are `aria-pressed`, the list and folds `aria-expanded`, the file in view `aria-current`; "Just changed" and "N matches" are spoken where they show as dots and pills; a rolling figure's old value is hidden.
-- The keyboard does everything a pointer does (7.1), and the list is a single Tab stop with arrows inside.
-- Motion follows `prefers-reduced-motion` (6.9).
+- The keyboard does everything a pointer does ([Keys](#keys)), and the list is a single Tab stop with arrows inside.
+- Motion follows `prefers-reduced-motion` ([Reduced motion](#reduced-motion)).
 - Not yet checked: forced colors, and a few labels; see the open questions at the end.
 
 ## Edge cases and traps

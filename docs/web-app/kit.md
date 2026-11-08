@@ -81,7 +81,8 @@ cover a line under them), `--composer-shadow`, and the project icon colors (`--p
 - **One meaning per color.** A session's status: accent working, blue waiting for you, pink paused,
   danger failed, ink shades for the rest.
 - **Small text needs 4.5:1.** On light, brand pink as text is 3.2:1 (`text-pink`, as "Paused" uses
-  it); `violet` is the text-safe pink there (5.0:1), not used yet.
+  it); `violet` is the text-safe pink there (5.0:1), used so far only for the thread of a thought's
+  lines (`border-violet/25` in `components/session/lines.tsx`), not for text.
 
 ## Type, radii and surfaces
 
@@ -186,7 +187,7 @@ and a one-color arc. They run in step: `syncShimmers()` (`web/src/lib/shimmer.ts
 - **Rings are for the keyboard**: `:focus-visible`, not `:focus`. Fields are the exception, since
   you need to see where you type: an Input shows its accent border and a 3 px `accent-soft` halo on
   any focus, a Select's trigger on keyboard focus and while its list is open.
-- **Who has the focus.** A dialog or sheet focuses itself as it opens (9.5), a Select's list leaves
+- **Who has the focus.** A dialog or sheet focuses itself as it opens ([Dialog](#dialog-overlaytsx)), a Select's list leaves
   it on the trigger (`aria-activedescendant`), a popover takes it, and a native dialog gives it back
   to its opener. When a click opened an overlay, the opener gets it back without a ring until it
   loses it (`data-quiet-focus`, as the diff dialog does): it had none before the click.
@@ -290,7 +291,7 @@ its `title`: tooltips in the app are native titles, with the shortcut in bracket
 
 **Traps.** `Button` sets no `type`: in a form, every Button but the submit needs `type="button"`.
 A smaller IconButton can't come from `className` (`cn()` doesn't merge); style a plain button. A
-button over a stretched link (9.15) must not use `disabled:pointer-events-none`, as IconButton does,
+button over a stretched link ([List rows](#list-rows-list-rowts)) must not use `disabled:pointer-events-none`, as IconButton does,
 or a click on it while disabled falls through to the link: use `disabled:cursor-default` and
 `enabled:hover:` fills.
 
@@ -437,7 +438,7 @@ height the description gives up its room too. Its title names it and its descrip
   such as an open `<dialog>` with `open:flex`: the icon picker showed as a 50 px strip. Use
   `min-h-0 flex-auto`. Playwright's WebKit and Chromium lay `flex-1` out fine; a test checks the class.
 - Measure or scroll after `showModal()`, once the dialog has a size. A `position: fixed` element
-  inside is placed from the dialog's corner (section 5).
+  inside is placed from the dialog's corner ([Motion](#motion)).
 - A popover in a modal dialog needs `tabIndex={-1}` on itself (a press on its padding would send the
   focus to the body) and its own Escape handler that stops the key.
 - Chromium's `<input type="search">` in a modal dialog takes the first Escape to clear itself:
@@ -664,17 +665,17 @@ Agent Floor's row do), and call its `invalidate()` after a change so that a stil
 | Block | What it does, and why |
 |---|---|
 | `fieldset { min-width: 0 }` | A fieldset as wide as its container, so a row in it wraps instead of widening the page |
-| `--viewport-shift`, `::backdrop` | Backdrops move with the screen under Safari's phantom keyboard (section 8) |
+| `--viewport-shift`, `::backdrop` | Backdrops move with the screen under Safari's phantom keyboard ([Phones, Safari and the viewport](#phones-safari-and-the-viewport)) |
 | `.prose-fctl`, `.prose-note` | Agent answers and descriptions: 15.5 px, line height 1.7, accent links with a faint underline, code on `raised` and `sunken`; everything wraps anywhere except table cells, which break at words so that a column isn't one letter wide. `.prose-note` is the compact version |
 | `.shiki`, `--c-added`, `.diff*`, `[data-play]` | Code in both themes; diffs with green additions (only for files), red removals and gutters that stay put, writing themselves in as the agent works |
 | `[data-quiet-focus]` | No ring on what gets the focus back from an overlay a click opened |
 | `.title-hot`, `--composer-shadow`, `.rule-fade` | Yellow headline words with a pink full stop (a lime highlighter stroke on light); the home composer's lift, deepening on focus instead of a ring; a hairline fading at both ends |
-| `.text-shimmer`, `.dot-wave`, `.busy-ring`, `.thought-*` | The signs of work (9.11) |
+| `.text-shimmer`, `.dot-wave`, `.busy-ring`, `.thought-*` | The signs of work ([Signs of work](#signs-of-work-dot-wavetsx-misctsx-appcss)) |
 | `::highlight(fctl-find…)` | Find in page: matches marked in yellow (lime on light), the current one filled |
 | `.thread*`, `.step-in`, now line, `.floor-*`, `.eye-reading`, `row-moved`… | The session page's and the sidebar's live motion, each with a still version |
-| listbox, `roll`, `draw`, `zoom-in`, `.lightbox-*`, `.sheet`, `shake`, `pop` | The kit's motion (section 9) |
+| listbox, `roll`, `draw`, `zoom-in`, `.lightbox-*`, `.sheet`, `shake`, `pop` | The kit's motion ([Components](#components)) |
 | `.print-sheet`, `html[data-dragging]` | Printing recovery codes prints only them; a grabbing cursor and no selection while dragging |
-| The reduced-motion switch | Every animation and transition cut to one 0.01 ms run (section 5) |
+| The reduced-motion switch | Every animation and transition cut to one 0.01 ms run ([Motion](#motion)) |
 | `::view-transition-*(root)` | Pages and themes cross-fade in 220 ms |
 | `settings-pages` | Settings' list of pages stays out of the cross-fade so that its highlight can slide: an element given a view transition name is drawn above the whole page and would cover the labels it passes |
 | `.stream-screen*` | The not-found and error pages, with plain text where WebGL is missing |

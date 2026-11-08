@@ -76,7 +76,9 @@ away, in place.
   earlier ones are behind "Show 3 earlier turns".
 - The pill names the one background task the agent waits for, and opens
   into the list of all of them.
-- A long message clamps to five lines with "Show all".
+- fctl's own long messages (a review's findings passed on) clamp to five
+  lines with "Show all". What a person wrote always shows whole: what to skip
+  of someone's words is the reader's call, not the page's.
 
 What counts as the gist is a design decision, made per component: the
 outcome and what the work was (retrospective), the verb and its object
@@ -128,7 +130,7 @@ never decoration that loops for its own sake.
 - Arrivals rise and settle with a little spring (`--ease-spring`); exits
   leave quickly with `--ease-out`. New steps roll in from below while the old
   roll away above. Widths glide rather than jump.
-- Durations are short: 140 to 440 ms for state changes, 1.1 to 1.6 s for the
+- Durations are short: 140 to 440 ms for state changes, 1.1 to 1.8 s for the
   loops that mean "at work" (the comet arc, the dot wave, the thinking sweep).
 - Everything that loops is in step with its siblings: the app restarts each
   shimmer, wave and comet on the document's clock as it appears, so two

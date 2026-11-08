@@ -23,7 +23,8 @@ From `tokens.css`:
 Rough durations: 140 to 220 ms for something leaving; 200 to 440 ms for
 something arriving or opening; 1.1 to 1.8 s per cycle for a loop that
 means "at work"; 2 to 2.6 s for a highlight that fades ("this is what
-changed"); 4 s for the shimmer's pass over a label.
+changed"); 4 s for the shimmer's cycle over a label (a 2 s pass, then 2 s at
+rest).
 
 ## Shared building blocks (tokens.css)
 
@@ -35,8 +36,8 @@ changed"); 4 s for the shimmer's pass over a label.
 - **`animate-pulse-soft`** (2.4 s loop): a gentle opacity pulse for a
   single dot that means "this one is at hand": the plan's current step, a
   call's background work.
-- **`text-shimmer`** (4 s loop, app.css): a soft light passes over a label's
-  text, left to right. Labels of work in progress: "Thinking", "Running the
+- **`text-shimmer`** (a 4 s loop, app.css): a soft light passes over a label's
+  text, left to right, in 2 s, then rests 2 s. Labels of work in progress: "Thinking", "Running the
   tests", a run's line while it goes on.
 
 ## Signs of work (loops)

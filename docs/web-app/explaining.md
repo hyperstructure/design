@@ -149,7 +149,7 @@ the install keeps the runner the machine enrolled."
 | Driver not ready | Amber dot and an amber line with the host's own reason, backticked commands in the code font, and what follows: "Its docker driver isn't ready: {reason}. No new sessions start on it until it is." |
 | Disabled | Red dot, "disabled". |
 | Waiting for approval | Out of the list, in an amber card above the form; a count in a highlight pill on the tab; an amber "2 waiting for approval" link in the header for admins; a notice on the Agent Floor. |
-| Short of disk | Not on this tab: the instance admin's runner list, the Agent Floor's summary and the session page say it (section 3). Whether the workspace's list should too is open. |
+| Short of disk | Not on this tab: the instance admin's runner list, the Agent Floor's summary and the session page say it ([Why sessions wait: runners elsewhere](#why-sessions-wait-runners-elsewhere)). Whether the workspace's list should too is open. |
 
 The approval card (an hourglass in a 28 px amber circle): "A runner waits for your approval", then "Until an admin
 approves it, it runs nothing and gets none of {workspace}'s code, secrets or tokens. Approve only machines you know:
@@ -300,7 +300,7 @@ and who can connect: "Connecting takes an admin of your Linear workspace: Linear
 there and choose the teams it may see." Members read "Acme's admins connect it: ask one who is an admin of your
 Linear workspace too." Below, **"Once Linear is connected"**: three steps (each project chooses its teams in its
 Tickets tab; people link their Linear account once, in Settings; in Linear they assign or mention fctl) beside the
-delegated-ticket preview (section 9). Connected, each Linear workspace lists the projects that take its tickets, and
+delegated-ticket preview ([A project's Tickets tab](#a-projects-tickets-tab)). Connected, each Linear workspace lists the projects that take its tickets, and
 until one does, points at those that could, as dashed chips: "No project takes its tickets yet: choose Linear in a
 project's Tickets tab."
 

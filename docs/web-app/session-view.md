@@ -89,8 +89,9 @@ reader reads a word of the transcript.
 ### The ask card
 
 What someone asked opens the turn, in a card: avatar, name, the time,
-where it came from (the web, the CLI, Linear, GitHub), and the message
-(Markdown, clamped to five lines with "Show all"), with its attachments. A
+where it came from when it wasn't the web (" · from the CLI", " · from the
+Claude app"), and the message, whole, with its line breaks, and its
+attachments; a note fctl added (a schedule's) sits under a hairline. A
 copy button sits at the card's corner where a pointer rests on it (not on
 touch screens: nothing rests there, and selecting the text works). In the
 light theme the card lifts off the page with a soft shadow; the thread hangs
