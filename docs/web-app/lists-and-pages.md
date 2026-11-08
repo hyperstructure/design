@@ -294,7 +294,7 @@ Row actions follow how often the row is used:
 
 **The hero.**
 
-- 360 px tall (272 on a phone, so the task box and the sessions start higher), a WebGL foundry scene in which each active session is a thread of light, colored by status (working, waiting, paused, failed), pulsing as its events arrive, following the pointer, and fading into the canvas at the bottom.
+- 360 px tall (272 on a phone, so the task box and the sessions start higher), a WebGL foundry scene in which each active session is a thread of light, colored by status (working, waiting, paused, failed), pulsing as its events arrive, following the pointer, and fading into the canvas at the bottom, with no line under it.
 - Over it, in the page column, a greeting by the time of day ("Working late", "Good morning", "Good afternoon", "Good evening", then the name the person chose for agents to call them), and 80 ms after it one summary line: "3 agents are working · 1 waiting for you", or "2 sessions are waiting for you", or "All quiet. Start something.", then in `ink-4` " · in 2 workspaces · 4 runners online, 1 draining, 1 low on disk". The working count is in accent; a session whose agent waits on its own background work counts as working.
 
 **The task box.**

@@ -31,14 +31,18 @@ switch people can flip back, and let them compare on real sessions.
 
 1. **The header** (sticky): the session's orb, its title, its status
    ("Working", "Waiting · Waiting for a background task"), and its actions.
-   While the agent works, a soft line of the accent runs along the header's
-   lower edge, out of nowhere and back into it (a 1 px gradient sweeping,
-   still where motion is reduced).
+   It has no border: the transcript blurs as it scrolls under it. While the
+   agent works, a soft line of the accent runs along the header's lower
+   edge, out of nowhere and back into it (a 1 px gradient sweeping), the
+   only line there; where motion is reduced it holds still, brightest in
+   the middle, as the other [signs of work](motion.md#signs-of-work-loops)
+   do.
 2. **The turn bar** (sticky, under the header): once the reader scrolls
    past the start of the turn they're in, a bar slides out from under the
    header with who asked and what ("Ada · Fix the flaky login test") and a
    "Turns" button that lists every turn. A click on the bar goes back to the
-   turn's start.
+   turn's start. Like the header, and the find bar that takes its place
+   while the reader searches, it has no border.
 3. **The cover**: the session's title (large), its description, who started
    it and when, its branch, and **the session at a glance** (below).
 4. **The turns**, one after another, with the gap between two marked when
@@ -47,7 +51,10 @@ switch people can flip back, and let them compare on real sessions.
    the newest work, over the message box.
 6. **The details rail** on the right on a computer (a sheet on a phone, `d`
    toggles it): changes, pull requests, the plan, the turns, the
-   retrospective, memory, work figures, the session's facts.
+   retrospective, memory, work figures, the session's facts. It is
+   `bg-surface/40`, a shade lighter than the canvas, with no border at its
+   edge, and its sections are divided by space and their headings, not by
+   lines.
 
 ## The cover and the glance
 

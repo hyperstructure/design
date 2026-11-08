@@ -53,7 +53,7 @@ A label that appears mid-shimmer joins the shimmer where it is.
 | dot wave | a call in progress, "Working" | a wave of light runs diagonally through a 3×3 grid of dots, 1.4 s; dots carry their `--i` index for delay |
 | busy ring | the now line's icon tile | a faint track and a comet (conic gradient, brightest at its head) turning every 1.1 s; fades in and out over 300 ms with `data-busy` |
 | thinking sweep | the thinking mark | a 13% bright head on a 36% tail sweeps along the trace in 1.5 s, eased; the trace dims to 55% beneath |
-| header light | the session header's lower edge | a soft line of the accent sweeps in from nowhere and back out, 3.6 s |
+| header light | the session header's lower edge, which has no border | a soft line of the accent sweeps in from nowhere and back out, 3.6 s; still, it lies along the whole edge at half strength, brightest in the middle |
 | ribbon light | the turn under way, in the cover's ribbon | a light runs through its stretch, 1.8 s |
 | floor packets | the Agent Floor's row in the sidebar | packets run down the icon's traces into its core, whose light flashes as they land, 1.8 s |
 | reading eye | a review agent's icon while it reviews | its pupil reads along a line and darts back to the next, 2.4 s |
