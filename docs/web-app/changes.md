@@ -355,7 +355,7 @@ Additions are a fresh green, as people know additions by: not a brand color, and
 | `--diff-del-word` | 0.25 | 0.2 | words that changed in it |
 | `--diff-del-mark` | `#ff6b6b` | `#cc1f1f` | `−` marks |
 | `--diff-hunk` | rgb(0 126 255 / 0.075) | rgb(0 126 255 / 0.055) | hunk headers |
-| `--diff-bg` | `--c-sunken` (`#121212`) | `--c-surface` (`#ffffff`) in the dialog; `#f1f1f1` in the transcript | what lines sit on |
+| `--diff-bg` | `--c-sunken` (`#050505`) | `--c-surface` (`#ffffff`) in the dialog; `#f1f1f1` in the transcript | what lines sit on |
 | `--diff-caret` | accent `#ffff5d` | accent `#171717` (ink) | the caret |
 | `--diff-caret-glow` | accent at 55% | accent at 25% | its glow |
 | `--diff-lit` | highlight at 15% | highlight `#eaff81` at 60% | the wash |
@@ -364,7 +364,7 @@ Additions are a fresh green, as people know additions by: not a brand color, and
 | `::highlight(fctl-diff-find-current)` | highlight, `highlight-ink` text | highlight with 14% ink, a 2 px ink underline | the current match |
 
 - Gutter numbers on added and removed lines mix 70% of the green or the mark's red with `ink-4`; context numbers are `ink-4`.
-- **Lines on white.** In the light theme the dialog's diffs sit on white (`.diff-on-surface`), as code on a white page reads; the transcript's edits keep the sunken grey in their bordered boxes. In the dark theme they keep the sunken well (`#121212`) under `#1c1c1c` headers. The light theme's green is a different, deeper hue at stronger tints, so it reads on white.
+- **Lines on white.** In the light theme the dialog's diffs sit on white (`.diff-on-surface`), as code on a white page reads; the transcript's edits keep the sunken grey in their bordered boxes. In the dark theme they keep the sunken well (`#050505`) under `#121212` headers. The light theme's green is a different, deeper hue at stronger tints, so it reads on white.
 - **Lights on white.** The lime is faint on white, so the wash is 60% strong, the bar takes 32% ink, and the current match is underlined in ink.
 - **Opaque tinted surfaces** (gutters, hunk headers): the diff's background as `background-color` with the tint as a `background-image` over it, so code scrolling under them never shows through:
 

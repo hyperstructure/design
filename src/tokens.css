@@ -121,11 +121,15 @@
 :root,
 :root[data-theme="dark"] {
   color-scheme: dark;
-  /* Brand: blackish #171717, whiteish #fafafa, yellow #ffff5d, hot pink #ff00d8, blue #007eff. */
-  --c-canvas: #171717;
-  --c-surface: #1c1c1c;
-  --c-raised: #232323;
-  --c-sunken: #121212;
+  /* Brand: blackish #171717, whiteish #fafafa, yellow #ffff5d, hot pink #ff00d8, blue #007eff.
+     The page is darker than blackish, near black, so that the brand colors and the ink stand out
+     on it rather than on grey. Each step up (surface, raised) is as much lighter as before, so a
+     box still shows on the page and a menu on a box; sunken is a smaller step below the page, as
+     near black leaves little room under it. Blackish stays the ink on yellow. */
+  --c-canvas: #0a0a0a;
+  --c-surface: #121212;
+  --c-raised: #1a1a1a;
+  --c-sunken: #050505;
   --c-ink: #fafafa;
   --c-ink-2: #c6c6c6;
   --c-ink-3: #8d8d8d;

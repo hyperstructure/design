@@ -9,7 +9,7 @@ dithered WebGL scenes, and the marks and app icons. Used by
 |---|---|
 | `@hyperstructure/design/tokens.css` | Colors (dark and light themes), fonts, easings, radii, keyframes, base styles, as a Tailwind 4 `@theme` |
 | `@hyperstructure/design/fonts.css` | Inter (with optical sizes), JetBrains Mono, and Instrument Serif for display headlines (`font-serif`) |
-| `@hyperstructure/design/brand` | The palette and the mark as values (`palette`, `mark`, `markSvg()`) |
+| `@hyperstructure/design/brand` | The palette, each theme's backgrounds and the mark as values (`palette`, `themes`, `mark`, `markSvg()`) |
 | `@hyperstructure/design/gl/core` | A small WebGL2 runtime: `mount()`, shader helpers, `cssColor()` |
 | `@hyperstructure/design/gl/foundry` | The foundry scene: a dithered planet with threads of light |
 | `@hyperstructure/design/gl/orb` | A tiny dithered planet for a session's state |
@@ -25,7 +25,8 @@ How fctl's web app uses all this, component by component, with the
 principles and the reasons behind its design: [docs/](docs/README.md).
 
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
-`#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`. Danger
+`#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`. The dark
+theme's page is near black (`#0a0a0a`), darker than blackish. Danger
 (destructive actions, errors, failures) is red `#ff4d4d` (`#cc1f1f` on light
 backgrounds), which is not a brand color and is used for nothing else.
 

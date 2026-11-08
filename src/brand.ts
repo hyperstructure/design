@@ -17,6 +17,16 @@ export const palette = {
 } as const;
 
 /**
+ * Each theme's backgrounds, as tokens.css has them (`--c-canvas`, `--c-surface`, `--c-raised`,
+ * `--c-sunken`), for what can't read the tokens: a page's `theme-color`, an app manifest, a picture
+ * of a theme drawn in the other one. The dark theme's page is darker than blackish.
+ */
+export const themes = {
+  dark: { canvas: "#0a0a0a", surface: "#121212", raised: "#1a1a1a", sunken: "#050505" },
+  light: { canvas: palette.whiteish, surface: "#ffffff", raised: "#ffffff", sunken: "#f1f1f1" },
+} as const;
+
+/**
  * hyperstructure's symbol ("Twist"): two rounded squares turning inside each
  * other. On GitHub it is the dark rings on full-bleed yellow
  * (assets/hyperstructure/symbol-yellow.svg).
