@@ -556,7 +556,14 @@ is back on, keeping what the reader reads in place as things above change.
   height and count on clamping".
 - Anything that moves the page for the reader (finding) calls the returned `letGo()` first, or what
   it opens grows the page and the page is taken back down.
-- Another session starts at the bottom again.
+- Another session starts at the bottom again, from wherever the last one was. The router leaves a
+  session page's scroll to the hook (`scrollRestoration: ({ location }) => routerScrolls(...)` in
+  fctl's `router.tsx`): it scrolled the window to the top as the next session came in, and the hook
+  scrolled it to the bottom a frame later. On an iPhone, the next session then sometimes showed well
+  above its bottom, no longer followed, as the hook took that for the reader's scroll; from the
+  Agent Floor, whose page is usually at its top, the router's scroll moved nothing and the session
+  always opened at its bottom. Other pages still open at their top, or back where the reader left
+  them.
 
 ### Earlier activity (loadOlder in live.ts, load-in-view.ts, keep-place.ts)
 
