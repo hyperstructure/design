@@ -741,12 +741,13 @@ without posting.
 in a rail on a computer and in a sheet elsewhere.
 
 **Layout.** From 1024 px, a 340 px column at the right, sticky, as tall as the screen, scrolling on
-its own, on `bg-surface/40` behind a hairline. `d` shows or hides it; narrower, `d` opens the sheet,
-and with the sheet open it puts it away, sliding, as Escape does. The sheet also opens from a header
-button, and on phones from the title. Each section is a `RailSection`: a hairline under it, 20 px
-at the sides, 16 px above and below, a 12.5 px medium title in `ink-3`, in sentence case. Facts are
-`Row`s: the key in `ink-4` at the left, the value in `ink-2` at the right, truncating. The rail is
-keyed by the session, so what it opened resets for another one.
+its own, on `bg-surface/40` with no border, its shade alone setting it apart. `d` shows or hides it;
+narrower, `d` opens the sheet, and with the sheet open it puts it away, sliding, as Escape does. The
+sheet also opens from a header button, and on phones from the title. Each section is a
+`RailSection`, divided from the next by space and its title, not a line: 20 px at the sides, 16 px
+above and below, a 12.5 px medium title in `ink-3`, in sentence case. Facts are `Row`s: the key in
+`ink-4` at the left, the value in `ink-2` at the right, truncating. The rail is keyed by the
+session, so what it opened resets for another one.
 
 **Lists don't scroll inside the rail.** The rail scrolls itself, and a scroll inside a scroll traps
 the wheel; long lists show their first few, with the rest a click away.
@@ -850,7 +851,9 @@ scrolls under it softly; the rail at the right. Sticky elements move with `--vie
 Safari's phantom keyboard. While the session connects with nothing to show, three skeleton shapes
 stand in for the transcript.
 
-**The header**, on a translucent canvas with a strong blur and a hairline under it:
+**The header**, on a translucent canvas with a strong blur and no border (the transcript blurs as
+it scrolls under it; while the agent works, its [light](motion.md#signs-of-work-loops) is the only line
+at its foot):
 
 - **Computer.** The orb (44 px; its color is the session's state, its motion the agent's activity),
   the title (21 px, display weight), the description (13.5 px, one line, whole in a tooltip), then
