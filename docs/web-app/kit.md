@@ -68,8 +68,10 @@ The tokens are semantic and defined per theme in `src/tokens.css`. Dark is the d
 **The dark page is near black.** Its canvas, `#0a0a0a`, is darker than the brand's blackish
 (`#171717`, which stays the ink on yellow): on blackish the app read as grey and dim beside the
 other apps on a phone, and the yellow, the scenes and the ink stand out more on near black. Each
-surface is as much lighter than the one under it as before (2.5 to 4 points of CIE lightness), so
-a card still shows on the page and a menu on a card. Not pure
+step up is as much lighter than the one under it as before (2.7 points of CIE lightness from
+canvas to surface, 3.8 from surface to raised), so a card still shows on the page and a menu on a
+card. Sunken is a smaller step below the page (1.4 points, 2.3 before), as near black leaves little
+room under it: what's sunken has a border or sits on a surface, which shows it. Not pure
 black: OLED screens smear pure black as it scrolls, and a sunken well needs a shade below the
 page. `brand.ts` has the backgrounds as values (`themes`) for what can't read the tokens: the
 `theme-color`, the app manifest, a picture of one theme drawn in the other.

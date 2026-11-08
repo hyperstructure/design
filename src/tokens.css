@@ -123,8 +123,9 @@
   color-scheme: dark;
   /* Brand: blackish #171717, whiteish #fafafa, yellow #ffff5d, hot pink #ff00d8, blue #007eff.
      The page is darker than blackish, near black, so that the brand colors and the ink stand out
-     on it rather than on grey. Each step up is lighter by about as much as the one before, so a
-     box still shows on the page and a menu on a box. Blackish stays the ink on yellow. */
+     on it rather than on grey. Each step up (surface, raised) is as much lighter as before, so a
+     box still shows on the page and a menu on a box; sunken is a smaller step below the page, as
+     near black leaves little room under it. Blackish stays the ink on yellow. */
   --c-canvas: #0a0a0a;
   --c-surface: #121212;
   --c-raised: #1a1a1a;
