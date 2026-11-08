@@ -38,6 +38,10 @@ uses the semantic tokens from [`src/tokens.css`](../src/tokens.css) (`canvas`,
 `surface`, `raised`, `sunken`, `ink` to `ink-4`, `line`, `line-strong`,
 `hover`, `accent`, `pink`, `blue`, `danger`, …), never raw colors.
 
+- **The dark page is near black** (`#0a0a0a`), darker than blackish, so
+  that the colors and the ink stand out on it rather than on grey; its
+  surfaces step up from there ([the kit](web-app/kit.md#color)).
+
 - **Red is for danger only**: destructive actions, errors, failures. A
   stopped session is grey, a cut-off turn amber, a failed one red.
 - **Signs of work are one color and calm**: the accent (yellow; ink on light

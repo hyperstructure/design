@@ -44,14 +44,14 @@ The tokens are semantic and defined per theme in `src/tokens.css`. Dark is the d
 
 | Token | Dark | Light | For |
 |---|---|---|---|
-| `canvas` | #171717 | #fafafa | The page |
-| `surface` | #1c1c1c | #ffffff | Cards, dialogs, sheets |
-| `raised` | #232323 | #ffffff | Menus, listboxes, popovers, toasts, secondary buttons, keycaps |
-| `sunken` | #121212 | #f1f1f1 | What you type into or read code in (inputs at 60%, code boxes, diffs) |
+| `canvas` | #0a0a0a | #fafafa | The page |
+| `surface` | #121212 | #ffffff | Cards, dialogs, sheets |
+| `raised` | #1a1a1a | #ffffff | Menus, listboxes, popovers, toasts, secondary buttons, keycaps |
+| `sunken` | #050505 | #f1f1f1 | What you type into or read code in (inputs at 60%, code boxes, diffs) |
 | `ink` | #fafafa | #171717 | Primary text |
 | `ink-2` | #c6c6c6 | #3d3d3d | Body text, labels, quieter controls |
-| `ink-3` | #8d8d8d | #6b6b6b | Descriptions, hints, icons; 5.4:1 and 5.1:1, fine for text |
-| `ink-4` | #5e5e5e | #a3a3a3 | Placeholders, disabled text, faint icons; about 2.5:1, not for text that must be read |
+| `ink-3` | #8d8d8d | #6b6b6b | Descriptions, hints, icons; 6.0:1 and 5.1:1, fine for text |
+| `ink-4` | #5e5e5e | #a3a3a3 | Placeholders, disabled text, faint icons; about 3:1 and 2.5:1, not for text that must be read |
 | `line` | ink 7.5% | ink 8% | Hairlines between things |
 | `line-strong` | ink 14% | ink 15% | Borders of controls and overlays |
 | `hover` | ink 5% | ink 6% | The fill under the pointer; translucent, so it shows on any surface |
@@ -64,6 +64,15 @@ The tokens are semantic and defined per theme in `src/tokens.css`. Dark is the d
 | `amber` (+ `-soft`) | #eaff81 | #6b6b00 | Caution: warnings, limits |
 | `danger` (+ `-soft`) | #ff4d4d | #cc1f1f | Destructive actions, errors, failures |
 | `pr-*`, `checks-*` | GitHub's | GitHub's | Pull request states and checks only |
+
+**The dark page is near black.** Its canvas, `#0a0a0a`, is darker than the brand's blackish
+(`#171717`, which stays the ink on yellow): on blackish the app read as grey and dim beside the
+other apps on a phone, and the yellow, the scenes and the ink stand out more on near black. Each
+surface is as much lighter than the one under it as before (2.5 to 4 points of CIE lightness), so
+a card still shows on the page and a menu on a card. Not pure
+black: OLED screens smear pure black as it scrolls, and a sunken well needs a shade below the
+page. `brand.ts` has the backgrounds as values (`themes`) for what can't read the tokens: the
+`theme-color`, the app manifest, a picture of one theme drawn in the other.
 
 `app.css` adds the app's own: `added` (#4ade80, #15803d on light) for lines added in diffs, the
 diff washes, `--thread` and `--hover-solid` (an opaque hover over the canvas, for icons that must

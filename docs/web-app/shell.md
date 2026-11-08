@@ -854,7 +854,7 @@ changes, and starting a session opens its page.
   theme before anything renders, so there is no flash and the Content Security Policy needn't
   allow inline scripts.
 - **A chosen theme** is kept (`fctl-theme`). Choosing sets `data-theme` on `<html>` and the
-  `theme-color` meta tag (`#171717` or `#fafafa`), so the browser's and the installed app's
+  `theme-color` meta tag (the canvas, `#0a0a0a` or `#fafafa`), so the browser's and the installed app's
   title bars match. The page cross-fades unless motion is reduced.
 - **Where to change it.**
   - The person's menu offers "Light theme" or "Dark theme", naming the result, with the
