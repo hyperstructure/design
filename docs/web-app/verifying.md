@@ -55,9 +55,10 @@ the pull request side (which screenshots to take, how to publish them).
 
 - A phone: a 390 × 844 viewport, `isMobile` and `hasTouch` (touch changes
   hover and tap behavior). A computer: 1280 or 1440 wide.
-- Both themes: `colorScheme: "dark" | "light"` on the context, and the app's
-  own choice in `localStorage` (`fctl:theme`). Preferences such as the
-  session view (`fctl:session-view`) go in through `addInitScript`.
+- Both themes: `colorScheme: "dark" | "light"` on the context, which the app
+  follows unless a choice is kept in `localStorage` (`fctl-theme`). Preferences
+  such as the session view (`fctl:session-view`) go in through
+  `addInitScript`.
 - Forced colors (Windows' contrast themes): `page.emulateMedia({
   forcedColors: "active" })` in Chromium. Check that focus rings and
   dividers survive.
