@@ -2,6 +2,16 @@
 
 What changed in each release of @hyperstructure/design, from its Conventional Commits (`scripts/release.mjs` writes this file).
 
+## 0.11.0 (2026-11-08)
+
+### Features
+
+- **tokens:** Darken the dark theme's backgrounds to near black ([#24](https://github.com/hyperstructure/design/pull/24))
+
+### Documentation
+
+- Describe how fctl's web app is designed, component by component ([#22](https://github.com/hyperstructure/design/pull/22))
+
 ## 0.10.0 (2026-11-07)
 
 ### Features
