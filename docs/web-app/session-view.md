@@ -34,8 +34,9 @@ switch people can flip back, and let them compare on real sessions.
    It has no border: the transcript blurs as it scrolls under it. While the
    agent works, a soft line of the accent runs along the header's lower
    edge, out of nowhere and back into it (a 1 px gradient sweeping), the
-   only line there; where motion is reduced it doesn't show, and the status
-   says the agent works.
+   only line there; where motion is reduced it holds still, brightest in
+   the middle, as the other [signs of work](motion.md#signs-of-work-loops)
+   do.
 2. **The turn bar** (sticky, under the header): once the reader scrolls
    past the start of the turn they're in, a bar slides out from under the
    header with who asked and what ("Ada · Fix the flaky login test") and a

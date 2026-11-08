@@ -96,7 +96,9 @@ The order runs from views that span everything, to places, to settings and ident
 foot. The code describes it as "the Agent Floor, what needs you and the pull requests ready for
 review at the top; then each workspace with its projects, each with its icon, its sessions at
 work and those that ended in the last hour". Only the middle nav scrolls (`min-h-0 flex-1
-overflow-y-auto`), so search, the views and the foot never scroll out of reach.
+overflow-y-auto`), so search, the views and the foot never scroll out of reach. A hairline
+(`border-t border-line`) sits over the foot, where the nav scrolls away under it; the folded
+rail has one there too, and one between workspaces.
 
 ### Sizes, type and colors
 
