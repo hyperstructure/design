@@ -21,6 +21,9 @@ dithered WebGL scenes, and the marks and app icons. Used by
 | `@hyperstructure/design/assets/hyperstructure/*` | hyperstructure's symbol: `symbol.svg`, `symbol-yellow.svg` (the GitHub avatar), `symbol-rings.svg` (`currentColor`), `avatar-512.png` |
 | `@hyperstructure/design/assets/fctl-review/*` | fctl-review's GitHub avatar, the app fctl's review agents post as: `avatar.svg`, `avatar-512.png` |
 
+How fctl's web app uses all this, component by component, with the
+principles and the reasons behind its design: [docs/](docs/README.md).
+
 The palette: yellow `#ffff5d` (lime `#eaff81` on light backgrounds), hot pink
 `#ff00d8`, blue `#007eff`, blackish `#171717`, whiteish `#fafafa`. Danger
 (destructive actions, errors, failures) is red `#ff4d4d` (`#cc1f1f` on light
