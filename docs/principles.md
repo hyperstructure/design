@@ -97,10 +97,12 @@ whether they differ. Give each fact one home.
   this moment. The transcript is the record of what it did. So a thought
   that streams in, a call being written, and "the agent is at work between
   steps" show only in the pill; they enter the transcript once they're done.
-- The cover's title gives way to the header's as it scrolls under it, so
-  the title is on screen once.
 - A turn's end says how long the turn took. The ask card doesn't say it
   again.
+- One exception: the header names the session wherever the reader is, the
+  top of the page included, where the cover's large title says it too. A
+  header that hid its title while the cover's showed looked like it was
+  missing something, on a phone most of all, where it kept only the status.
 
 ## 5. Steady, not flickery
 

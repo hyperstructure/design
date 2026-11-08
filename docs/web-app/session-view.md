@@ -54,8 +54,11 @@ switch people can flip back, and let them compare on real sessions.
 The cover answers "what is this session and how far did it get?" before the
 reader reads a word of the transcript.
 
-- **The title** is the session's, large. As it scrolls under the header, the
-  header's own title fades in, so the title is always on screen exactly once.
+- **The title** is the session's, large. The header shows it too, at the top
+  of the page as everywhere else: a header that hid its title while the
+  cover's showed, and faded it in as the cover's scrolled under it, looked
+  as if its title were missing. Screen readers hear it once, from the
+  header's `h1`; the cover's is `aria-hidden`.
 - **The figures**: turns, the agent's time, steps, files changed with lines
   added and removed (`+120 −34`, green and red). The counts roll to their new
   value as the session moves (the same rolling number as everywhere).
