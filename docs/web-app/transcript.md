@@ -713,8 +713,13 @@ shows while it is sent.
 
 ### The question card (question.tsx)
 
-What the agent asks the people following it (`fctl ask`) sits above the composer until someone
-answers. A card in the info blue (a soft blue wash from its top, a blue border, a round icon): "The
+What the agent asks the people following it (`fctl ask`) shows until someone answers. Where the
+window has room for it (at least 768 px wide and 512 px tall), it floats above the composer, on a
+translucent surface with a deep shadow, so it stays in view wherever the reader is in the
+transcript. On a phone, either way up, a long question with its answers would cover most of the
+transcript there, so it ends the transcript instead, on a plain surface, and scrolls away with it:
+a reader at the bottom sees it just above the composer, and one who scrolls up gets the transcript
+back. A card in the info blue (a soft blue wash from its top, a blue border, a round icon): "The
 agent asks you" and how long ago ("4m"), the question at 15 px, its offered answers as pill
 buttons, and how to answer: "Or write your own answer below. Any reply answers it.", "Your next
 message answers it.", or, for people who can't message, "The people who can message the agent
@@ -838,11 +843,12 @@ lines on red, changed words a shade stronger, marks announced as "Added" and "Re
 ## The classic view: header and layout (routes/session.tsx)
 
 **Layout.** A sticky header; the transcript in a centered column at most 760 px wide with 24 px
-sides; a sticky footer holding the question card and the composer, on a gradient of the canvas
-(solid at the bottom, still 95% at its middle, clear at the top, with 24 px of room above the
-composer), padded above the phone's home indicator, so the transcript scrolls under it softly;
-the rail at the right. Sticky elements move with `--viewport-shift` for Safari's phantom keyboard.
-While the session connects with nothing to show, three skeleton shapes stand in for the transcript.
+sides; a sticky footer holding the composer, and on a computer the question card above it, on a
+gradient of the canvas (solid at the bottom, still 95% at its middle, clear at the top, with 24
+px of room above the composer), padded above the phone's home indicator, so the transcript
+scrolls under it softly; the rail at the right. Sticky elements move with `--viewport-shift` for
+Safari's phantom keyboard. While the session connects with nothing to show, three skeleton shapes
+stand in for the transcript.
 
 **The header**, on a translucent canvas with a strong blur and a hairline under it:
 
