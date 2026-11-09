@@ -193,8 +193,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 
 - **Off, then on again**: the tab shows the intro with *Put it on again…*, and the form keeps its direction, powers and
   rhythm. Its log, notes, plan and open asks stay; while it's off, its asks leave *Needs you*.
-- **Paused by fctl**: the reason is the control plane's sentence ("It acts as Ada, who no longer manages Shop: someone
-  who does takes it over."), shown as the header's line and logged.
+- **Paused by fctl**: the reason is the control plane's sentence ("It acts as its owner, who no longer manages Shop:
+  someone who does takes it over."), shown as the header's line and logged. It says "its owner" rather than a name, and
+  people's lines in the log name them as it's read ("{who} resumed it"), so that a name leaves with its account.
 - **Someone else's subscription**: changing how much it works, resuming or taking it over says it runs on yours from
   then on, as schedules do (a banner in the settings dialog before Save).
 - **Many asks at once**: it keeps at most 10 open (asking more is refused until it takes one back), so all show, newest
