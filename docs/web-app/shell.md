@@ -582,8 +582,9 @@ Screen neither edge leaves the page.
   as it replaces, the app's own page loads (signing in or out, going to Linear) replace rather
   than assign (`goTo`), and a link that loads a page in the same window (signing in with
   Google, installing the GitHub App) loads it in place (`linksInPlace`, after the router's
-  links have taken their clicks). With no page to go to, the swipe doesn't start, and the
-  touch is the page's.
+  links have taken their clicks). A link to a place on the same page moves there in place of
+  where it was, keeping the router's state, which a page load would lose. With no page to go
+  to, the swipe doesn't start, and the touch is the page's.
 - **Where.** In WebKit on a touch screen (`GestureEvent` exists and `navigator.maxTouchPoints`
   is above 0), opened from the Home Screen (`display-mode: standalone` or
   `navigator.standalone`). That app has no back button to lose: people move about it with the
