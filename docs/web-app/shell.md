@@ -379,6 +379,13 @@ Needs sort by rank, then newest first, by when each began to need the person.
   agent for its last steps. The agent then waits until its idle timeout, 10 minutes by default,
   in case someone has more for it. Without this rule, it sat in Needs you, the tab title and
   the app icon all that time.
+- **An answer isn't new work** (fctl#496). What counts is when someone last asked the session
+  for more (`requested_at`), not when they last wrote to it: a message that answers the agent's
+  question (a click on one of its answers, or anything typed while it asks) only lets it carry on
+  with what it asked for. An agent that asks after the merge, whether to re-run a failed deploy,
+  say, and hears back has finished once its turn ends, rather than showing "Waiting for your
+  reply" until its idle timeout. Someone who asks for more after the merge still gets the reply,
+  even when they also answer a question the agent asks about it.
 - **"Waits for you"** means idle with no reason, or with "Waiting for a message". Waiting on the
   agent's own background tasks doesn't count.
 
