@@ -16,7 +16,7 @@ Paths are in hyperstructure/fctl unless they say otherwise. Tokens and utilities
   blur.
 - The global focus ring is a 2 px `accent` outline, 2 px away.
 
-The rationale below comes from code comments, commit messages (fctl#496) and notes earlier
+The rationale below comes from code comments, commit messages (fctl#NNN) and notes earlier
 agents left. Where something is a reading of the code rather than a stated decision, it says so.
 
 
