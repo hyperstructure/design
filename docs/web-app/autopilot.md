@@ -138,9 +138,12 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
 **The log**, grouped by day ("Today", "Yesterday", "Nov 3"), newest first, each entry an icon (or the person's avatar
 for what a person did; an accent-soft circle for what the autopilot wrote down; red for a problem), its line (Markdown,
 so `NAME`s show as code) and the time. A session it concerns shows under its line as a chip with the session's live
-status dot, number, title and status word. Its **wakes** don't get rows: they divide the log, a thin line with the
-mark, "Woke for a new note", the session it woke in, and the time, so what it did from one check-in to the next reads
-as a block. *Show earlier* pages back.
+status dot, number, title and status word. A line about another project than its own names it ("Changed playground's
+description", "Set the secret `KEY` in blog"; its own goes without saying, "the project's"), and that project, or one it
+created, shows under the line as a chip with the project's icon, name and slug, a link to it. Its **wakes** don't get
+rows: they divide the log, a thin line with the mark, "Woke for a new note" ("Woke as it was resumed" for a resume
+alone), the session it woke in, and the time, so what it did from one check-in to the next reads as a block. *Show
+earlier* pages back.
 
 Everything polls while the tab is open: every 4 s while its session works, 15 s otherwise (the log 5 s and 20 s).
 
@@ -149,15 +152,17 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 (`components/session/autopilot.tsx`.)
 
 - **Its own session's turns open with a wake card** instead of an ask card: its mark, "fctl woke the autopilot", when,
-  then what for in a sentence ("For a new note and session #41.") with chips for the notes, answers and the sessions
-  that moved (links). Its first turn says "It was put on autopilot: it reads its brief, then plans the work." with the
-  direction quoted. "What fctl told it" (or "Its briefing, and what fctl told it") opens the whole message in mono, in a
-  sunken box. The turn bar and the list of turns title these turns "Woke for …" with the mark, not the briefing's first
-  line.
+  then what for in a sentence ("For a new note and session #41.", or for a resume alone "People resumed it: it reads
+  what's new, then goes on.") with chips for the notes, answers and the sessions that moved (links). Its first turn says
+  "It was put on autopilot: it reads its brief, then plans the work." with the direction quoted. "What fctl told it" (or
+  "Its briefing, and what fctl told it") opens the whole message in mono, in a sunken box. The turn bar and the list of
+  turns title these turns as its log does ("Woke for …", "Woke as it was resumed") with the mark, not the briefing's
+  first line.
 - **What it did shows in its transcript as it does it**: a milestone ("Started a session") with, hanging on the
   thread, the session it started as a card: status dot, title, `project#n`, status word, its pull requests, what it
   asks in blue, kept live (5 s while it works, 30 s otherwise). A session started this way looks like a session, not
-  like a log line: agents starting agents should read as native as a person starting one.
+  like a log line: agents starting agents should read as native as a person starting one. A project a workspace's
+  autopilot creates hangs on its milestone the same way, as a card with the project's icon tile, name and slug.
 - **The sessions it starts** open with its task in an ask card whose author is the autopilot: its mark, "{slug}'s
   autopilot", "for {owner}", when; fctl's note of who started it under a hairline, smaller. The cover says "Started by
   {slug}'s autopilot, for {owner}" (a link to its tab) where others say who started them; the details rail has an
@@ -184,7 +189,7 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 ## Edge cases
 
 - **Off, then on again**: the tab shows the intro with *Put it on again…*, and the form keeps its direction, powers and
-  rhythm. Its log, notes and plan stay.
+  rhythm. Its log, notes, plan and open asks stay; while it's off, its asks leave *Needs you*.
 - **Paused by fctl**: the reason is the control plane's sentence ("It acts as Ada, who no longer manages Shop: someone
   who does takes it over."), shown as the header's line and logged.
 - **Someone else's subscription**: changing how much it works, resuming or taking it over says it runs on yours from
