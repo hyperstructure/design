@@ -45,6 +45,9 @@ and file paths here are relative to that repository.
   place, the list of files beside it, finding in diffs, and how the agent's
   edits arrive live: written in behind a caret, lines turning red as they go,
   what changed staying lit, without moving what the reader looks at.
+- [Autopilots](web-app/autopilot.md): a project that runs itself (experimental): the Autopilot tab's
+  intro and form, the cockpit (where it stands, what it asks, steering, its direction, plan, sessions and log),
+  and how it shows in sessions, lists, *Needs you* and notifications: autonomy shown, never blocking on people.
 - [Motion](web-app/motion.md): every animation, what it says and how it's
   built, with the patterns behind them (rolls, glides, odometers, comets,
   synced loops) and how reduced motion is handled.
