@@ -580,13 +580,20 @@ leaves the app.
 - **How.** A page can stop the swipe only by cancelling the touch as it starts (`preventDefault`
   on `touchstart`), which also takes away everything else the browser would have done with it.
   The app does that itself:
-  - **A tap** clicks what it touched, as a finger's click would (`pointerType` touch, `detail`
-    1), at once in `touchend`, so that what needs a person's action still works. A text field
-    takes the focus, and the keyboard comes up.
-  - **A swipe** scrolls the nearest thing that scrolls its way, or the page, but never the page
-    under a dialog or a popover, nor anything where `touch-action` keeps fingers off. It glides
-    on after the finger lets go, slowing as an iPhone's scroll views do (0.998 of its speed per
-    ms), and a new touch stops it.
+  - **A tap** sends what a finger's would after the touch's events, at once in `touchend`, so
+    that what needs a person's action still works: the mouse goes down and up, and it clicks
+    (`pointerType` touch, `detail` 1). Unless a `mousedown` handler keeps the focus where it is
+    (as Select does), the focus moves as a press moves it: a text field takes it and the
+    keyboard comes up, and a tap elsewhere takes it from one. Dialogs that close on a press
+    and a click beside them close. A press held longer than 500 ms clicks nothing: on a link or
+    on text, Safari would have shown its menu or selected the text instead.
+  - **A swipe** scrolls the nearest thing that scrolls the way it first moves most, or else the
+    other way, so that a page that scrolls only up and down follows a swipe that starts out
+    partly sideways. Never the page under a dialog or a popover, nor anything where
+    `touch-action` keeps fingers off. It glides on after the finger lets go, slowing as an
+    iPhone's scroll views do (0.998 of its speed per ms), until a new touch stops it. That
+    touch is the app's wherever it is, and clicks nothing, as under the browser's own
+    scrolling.
   - **What the page does with the touch itself** comes first: the drawer's drag, a lifted row
     (`data-dragging`), and anything that cancels the touch's moves or end, as the lightbox and
     sheets do.
