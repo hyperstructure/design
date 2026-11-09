@@ -38,7 +38,9 @@ mark before the word (lit while it works, pink while paused) and a blue count of
 
 ### Before it's on: the intro
 
-The shape every feature intro has ([pages that explain](explaining.md#the-shape-they-share)):
+The shape every feature intro has ([pages that explain](explaining.md#the-shape-they-share)), with one exception: the
+*Experimental* pill sits above the headline, where that shape puts nothing, so people know what they're trying before
+they read on:
 
 - The pill, then the headline that names the outcome: **"A project that runs itself"**.
 - The lead, from this place's facts: "Give {project} a direction, and an agent takes it from there: it plans the work,
@@ -129,9 +131,9 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
   (which tells it at once).
 - **Its plan**: "1 of 4" from its checklist and a thin accent progress bar, the Markdown checklist, "Updated 12m ago".
   Empty: "It writes one as it starts: what it will do, in order. It keeps it current as the work goes."
-- **Its sessions**: "1 working · 5 in all", each a row with its status dot, number (with its project's slug when it's
-  another's), title, and in blue what it asks, else its pull requests' states. The working ones and five more, then
-  "Show 3 more".
+- **Its sessions**: "1 working · 8 in all", each a row with its status dot, number (with its project's slug when it's
+  another's), title, and in blue what it asks, else its pull requests' states. Five rows in all, those at work or
+  waiting for a message first (all of them when there are more), then "Show 3 more" for the rest of the 20 newest.
 - **How it works**: the configuration as sentences: "Checks in every hour, and runs up to 3 sessions at once",
   "Starts and steers sessions; change settings, set up schedules", "Thinks with Opus at high effort".
 
@@ -194,7 +196,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   who does takes it over."), shown as the header's line and logged.
 - **Someone else's subscription**: changing how much it works, resuming or taking it over says it runs on yours from
   then on, as schedules do (a banner in the settings dialog before Save).
-- **Many asks at once**: all show, newest first; the count is on the tab, in the heading and in *Needs you*.
+- **Many asks at once**: it keeps at most 10 open (asking more is refused until it takes one back), so all show, newest
+  first. The tab shows them to everyone who reads the project, and says who answers them to those who can't; *Needs
+  you* lists them for those who can. The count is on the tab, in the heading and in *Needs you*.
 - **A burst of answers** reaches it as one wake (5 s gathered), so its log reads "Woke for 2 answers", not two wakes.
 - **An old session of its own**: wakes go to its current session; an earlier one's requests are refused, and its page
   still shows its wakes and actions.
@@ -208,6 +212,8 @@ wait on the agent or the agent wait on people.
 
 ## Known gaps
 
-- The cockpit polls rather than listening on the feed: changes take up to 15 s to show while it rests.
+- The tab polls rather than listening on the feed: changes show within 4 s while it works and up to 15 s while it
+  rests (its log, 5 and 20 s). *Needs you* polls every 30 s, and so do the session cards in its transcript while their
+  session rests, so a new ask, or a session that starts working again, can take half a minute to show there.
 - A workspace's autopilot lives on its home project's tab; the workspace page only links to it.
 - Asks can't carry images uploaded by people in answers: answers are text.
