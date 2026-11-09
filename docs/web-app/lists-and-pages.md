@@ -370,7 +370,7 @@ Row actions follow how often the row is used:
 - The workspace as a breadcrumb link (18 px avatar and name, 13 px `ink-3`).
 - The 48 px icon tile beside the 38 px name, which wraps anywhere, so a name without spaces can't widen a phone.
 - The description (15 px `ink-3`, 672 px max).
-- A facts line (12.5 px `ink-3`, wrapping): the primary repository in mono as a GitHub link, then "+2 more" to the Repositories tab (or "No repository"); the default branch after a branch icon; "42 sessions · 3 active", the active count in accent.
+- A facts line (12.5 px `ink-3`, wrapping): the primary repository in mono as a GitHub link, then "+2 more" to Settings' Repositories page (`?tab=repositories`) (or "No repository"); the default branch after a branch icon; "42 sessions · 3 active", the active count in accent.
 - For owners and maintainers the tile is a button ("Change Shop's icon") that grows 4 % on hover and shows a 20 px pencil badge on hover or keyboard focus (never on touch, where the tile still opens the picker). Toasts: "Shop has its icon", "Shop shows the icon that fits it".
 - Loading: a 320 × 40 title bar and a shorter line under it. Unreadable: one error banner, "This project does not exist, or you cannot see it."
 
