@@ -83,6 +83,8 @@ each project the sessions the person is likely to switch between.
  [invitation card]                      "Workspaces" nav (scrolls)
  [A] Acme                    + v        workspace: its page, new project, fold
    [i] Web app             o 2          project: icon, name, sessions at work
+    | (A) Autopilot      At work        its autopilot, while it is on or paused
+    | ----------------------
     | o Retry failed uploads            its sessions, hanging from a thread
     | o Fix the flaky test     [pr][ck]
  + New workspace
@@ -111,6 +113,7 @@ rail has one there too, and one between workspaces.
 | Project row | 32 px | 13.5 px | 16 px project icon |
 | Session line | 28 px | 13 px | status dot, 8 px at 75 % |
 | The page's project's own link | 28 px | 13 px | 14 px |
+| A project's autopilot | 28 px | 13 px | 14 px autopilot mark |
 
 - **Spacing.** Rows are 1 px apart (`gap-px`), workspaces 16 px apart, and the container has
   12 px side padding.
@@ -140,6 +143,20 @@ rail has one there too, and one between workspaces.
   hide theirs, sessions the person hid, and the sessions of folded workspaces. The query asks
   for up to 100 sessions that haven't ended or ended within the hour. Until it returns, the
   sidebar shows what other cached lists already hold.
+- **A project's autopilot, on every page** (fctl#498). While a project's autopilot is on or
+  paused, an *Autopilot* line heads the project's lines, above its Pull requests link when it
+  has one, so it holds its place as the project opens and closes; a divider sets it apart from
+  the sessions, whose own lines carry its mark. It opens the autopilot's own session, the one
+  fctl wakes it in, and is lit (`HERE`) there and on the project's Autopilot tab. Until it has a
+  session, and for a workspace's autopilot to all but the workspace's admins (who alone may open
+  its session), it opens the tab. Its end says where it stands, in the status colors: *At work*
+  or *Waking* in `accent` while its session works, with the comet running round its mark's dim
+  ring; when it wakes next while it rests, an alarm clock and the time (or the day, a day or
+  more off) in `ink-4`; *Paused* in `pink`, with the line dimmed to `ink-4`. What it asks you
+  takes that place: a blue question icon and count, a link of its own to the Autopilot tab, where
+  people answer. The tooltip says it in a sentence ("Resting: it wakes at 22:56, unless something
+  needs it sooner."), and screen readers hear the same. Its own session stays off the session
+  lists, so this line is the way to it from anywhere.
 - **The project the page is about.** That is the project of its own page, of a session's page,
   or of the pull requests page scoped to it. It opens into its own Pull requests link with a
   count, a divider, then its sessions. For a session no list holds, the sidebar reads the
@@ -165,10 +182,10 @@ The whole app uses one small color language for status. Red means danger only (A
 
 | Meaning | Token | In the sidebar |
 |---|---|---|
-| Working | `accent` (yellow; ink in the light theme), pinging | session dot, project count, the rail's dot and its Agent Floor icon |
+| Working | `accent` (yellow; ink in the light theme), pinging | session dot, project count, the rail's dot and its Agent Floor icon, an autopilot's comet and *At work* |
 | Starting, preparing, stopping | `ink-2` or `ink-3`, pinging | session dot |
 | The person's turn | `blue` | dot, Needs you pill and icon, "asks you" icon, rail dot |
-| Paused on a usage limit | `pink` | dot, need reason |
+| Paused on a usage limit | `pink` | dot, need reason, an autopilot's *Paused* |
 | Failed | `danger` | dot, need reason |
 | Ended | `ink-4` dot and title | session line |
 | Pull request ready | `pr-open` (GitHub's green) | Pull requests count, rail badge |

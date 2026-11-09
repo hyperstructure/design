@@ -181,8 +181,11 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 
 - **Session rows** (`components/session/row.tsx`): the autopilot's mark in a small round tile where the starter's
   avatar goes, titled "Started by {slug}'s autopilot, for {owner}". Its own sessions stay off session lists.
-- **The sidebar**: its sessions carry its mark at the end of their row, where nothing else (a question, a pull
-  request) sits.
+- **The sidebar**: an *Autopilot* line heads its project's lines while it is on or paused, on every page, and opens
+  its own session (its tab until it has one): its mark, whose comet runs while it works, then *At work*, when it wakes
+  next, *Paused*, or in blue how many things it asks you, a link to the tab
+  ([the shell](shell.md#what-it-shows-and-how-much)). Its sessions carry its mark at the end of their row, where
+  nothing else (a question, a pull request) sits.
 - **Needs you**: what autopilots ask comes first, each with its project's mark badged with the autopilot's, "{project}'s
   autopilot", when, and in blue the question or "Needs the secret NAME", linking to the tab. The sessions an autopilot
   started stay out while it's on, unless the reader follows them: the autopilot looks after them. Paused or off, it
