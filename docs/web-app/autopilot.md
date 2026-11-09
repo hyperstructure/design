@@ -46,8 +46,8 @@ they read on:
 - The lead, from this place's facts: "Give {project} a direction, and an agent takes it from there: it plans the work,
   starts sessions to do it, and sets up what they need. It acts as you, on your Claude subscription, and asks you when
   only a person can decide."
-- Four points, each with its verb first in ink: **Plans and delegates.** (up to 3 sessions at a time, each with its own
-  pull request) **Sets up what the work needs.** (settings, repositories, schedules, secrets, as far as you let it)
+- Four points, each with its verb first in ink: **Plans and delegates.** (up to 3 sessions at a time, each with a pull
+  request it merges once checks pass, so the next builds on it) **Sets up what the work needs.** (settings, repositories, schedules, secrets, as far as you let it)
   **Keeps going.** (wakes when a session finishes or you steer it, every hour at least; a fresh session if its own
   stops) **Asks without waiting.** (decisions and credentials come here; secrets never into a transcript).
 - The preview (300 px, hidden on phones): a card "At work · Checks in every hour" with the comet on its mark and a
@@ -75,9 +75,11 @@ Inline in the tab, raised, scrolled into view, the direction focused. Top to bot
    radio cards, "{project}" ("It works in this project's sessions, settings and repositories.") and "All of
    {workspace}" ("Every project of the workspace, from this one: it starts sessions in any and creates new ones.").
 4. **What it may do**: a list of checkboxes, each a label and a line. The first, *Start and steer sessions*, is checked
-   and disabled ("Always"), on a sunken background: what it always does is shown, not hidden. Then the powers. Under the
-   list, what it never does: "Never: people and their roles, access tokens, runners, GitHub accounts, deleting
-   projects."
+   and disabled ("Always"), on a sunken background: what it always does is shown, not hidden. Then the powers, *Merge
+   pull requests* first ("Its sessions merge their own once checks pass and the work is done, so the next builds on it.
+   Repositories' rules still apply."): fctl's note on each session's task asks it to, or to leave merging to people.
+   Under the list, what it never does: "Never: people and their roles, access tokens, runners, GitHub accounts,
+   deleting projects."
 5. **It checks in** (Every 15 minutes … Once a day; "At least: it wakes sooner when something needs it.") and **It
    runs** (1 to 8 sessions at once; "Each on your subscription and a runner's slot."), side by side.
 6. **Its own sessions think with**: model and effort, the project's by default, with the advice that planning takes
@@ -135,7 +137,8 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
   another's), title, and in blue what it asks, else its pull requests' states. Five rows in all, those at work or
   waiting for a message first (all of them when there are more), then "Show 3 more" for the rest of the 20 newest.
 - **How it works**: the configuration as sentences: "Checks in every hour, and runs up to 3 sessions at once",
-  "Starts and steers sessions; change settings, set up schedules", "Thinks with Opus at high effort".
+  "Starts and steers sessions, which merge their pull requests; change settings, set up schedules" (or "which leave
+  merging to people"), "Thinks with Opus at high effort".
 
 **The log**, grouped by day ("Today", "Yesterday", "Nov 3"), newest first, each entry an icon (or the person's avatar
 for what a person did; an accent-soft circle for what the autopilot wrote down; red for a problem), its line (Markdown,
@@ -204,8 +207,11 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 - **A burst of answers** reaches it as one wake (5 s gathered), so its log reads "Woke for 2 answers", not two wakes.
 - **An old session of its own**: wakes go to its current session; an earlier one's requests are refused, and its page
   still shows its wakes and actions. One fctl replaces (12 hours on) stops as the fresh one starts.
-- **A workspace's autopilot, read by a member who isn't an admin**: its own session and brief are the admins', so the
-  header doesn't link to it; its sessions and log show those in projects the reader sees. Its admins see it all.
+- **A workspace's autopilot, read by a member who isn't an admin**: what it does reaches projects they may not see, so
+  its plan, notes, asks, sessions, log and own session are the admins' (`can.read`). The tab shows them the header,
+  without a link to its session, and beside *How it works* a card, *What it does*: "It works across {workspace}, in
+  projects you may not see, so its plan, sessions, asks and log are for the workspace's admins, who steer it. Its
+  sessions in your projects show there, with its mark." Its admins see it all.
 
 ## Building one like it
 
