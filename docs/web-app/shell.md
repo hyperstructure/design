@@ -16,7 +16,7 @@ Paths are in hyperstructure/fctl unless they say otherwise. Tokens and utilities
   blur.
 - The global focus ring is a 2 px `accent` outline, 2 px away.
 
-The rationale below comes from code comments, commit messages (fctl#NNN) and notes earlier
+The rationale below comes from code comments, commit messages (fctl#496) and notes earlier
 agents left. Where something is a reading of the code rather than a stated decision, it says so.
 
 
@@ -379,6 +379,11 @@ Needs sort by rank, then newest first, by when each began to need the person.
   agent for its last steps. The agent then waits until its idle timeout, 10 minutes by default,
   in case someone has more for it. Without this rule, it sat in Needs you, the tab title and
   the app icon all that time.
+- **An answer isn't new work** (fctl#496). When the last message only answered the agent's
+  question (`answered_at` equals `messaged_at`: a click on one of its answers, or anything typed
+  while it asked), the session counts as done too, whenever that came. An agent that asks after
+  the merge, whether to re-run a failed deploy, say, and hears back has finished once its turn
+  ends, rather than showing "Waiting for your reply" until its idle timeout.
 - **"Waits for you"** means idle with no reason, or with "Waiting for a message". Waiting on the
   agent's own background tasks doesn't count.
 
