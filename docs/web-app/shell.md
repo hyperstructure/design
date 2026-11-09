@@ -579,8 +579,11 @@ Screen neither edge leaves the page.
   Cancelling the touch as it starts (fctl#492) didn't stop it in the app on the Home Screen or
   in Chrome, and `touch-action` only holds back swipes that don't start at the edge. So there
   each page takes the place of the last in the browser's history: the router's history pushes
-  as it replaces, and the page loads after signing in or out (`goTo`) replace rather than
-  assign. With no page to go to, the swipe doesn't start, and the touch is the page's.
+  as it replaces, the app's own page loads (signing in or out, going to Linear) replace rather
+  than assign (`goTo`), and a link that loads a page in the same window (signing in with
+  Google, installing the GitHub App) loads it in place (`linksInPlace`, after the router's
+  links have taken their clicks). With no page to go to, the swipe doesn't start, and the
+  touch is the page's.
 - **Where.** In WebKit on a touch screen (`GestureEvent` exists and `navigator.maxTouchPoints`
   is above 0), opened from the Home Screen (`display-mode: standalone` or
   `navigator.standalone`). That app has no back button to lose: people move about it with the
@@ -588,8 +591,8 @@ Screen neither edge leaves the page.
 - **What keeps its history.** Browsers' tabs, whose back buttons and swipes go through it as
   before; the app installed on Android, whose back gesture and button go through it; and a
   Mac's app in the Dock, which has no touch screen.
-- **What still leaves pages behind.** Signing in with GitHub or Google goes through their
-  pages, which stay in the history, with the sign-in page, until the app is opened afresh.
+- **What still leaves pages behind.** Another site's own pages, such as a consent screen
+  clicked through on the way back from signing in, until the app is opened afresh.
 - **Scroll.** Each page still opens at its top: the router resets the scroll by each
   location's own key, which a replace makes anew.
 
@@ -975,8 +978,8 @@ what the code does now. Fix one when you're near it, and don't copy it.
   its "/" keycap on touch screens.
 - **The resize handle's focus** shows as a 1 px background line, which forced colors drop.
 - **Edge swipes on an iPhone** in the app on the Home Screen haven't been tried on one since
-  fctl#493, which leaves them no page to go to. Pages left behind by signing in through
-  GitHub or Google still give them one until the app is opened afresh.
+  fctl#493, which leaves them no page to go to. Another site's own pages, left behind on the
+  way back from it, still give them one until the app is opened afresh.
 
 
 ## Checking it
