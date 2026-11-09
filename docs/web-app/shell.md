@@ -594,8 +594,9 @@ Screen neither edge leaves the page.
   Mac's app in the Dock, which has no touch screen.
 - **What still leaves pages behind.** Another site's own pages, such as a consent screen
   clicked through on the way back from signing in, until the app is opened afresh.
-- **Scroll.** Each page still opens at its top: the router resets the scroll by each
-  location's own key, which a replace makes anew.
+- **Scroll.** Pages open where they did: at their top, as the router resets the scroll by
+  each location's own key, which a replace makes anew, and a session's at its newest work,
+  which it scrolls to itself.
 
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
