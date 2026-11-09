@@ -1,9 +1,9 @@
 # Pages that explain and invite
 
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
-explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews, Schedules and Tickets
-tabs, connecting Claude, GitHub and Linear, two-factor sign-in, memory and retrospectives, and the hints, warnings
-and empty states around them.
+explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
+its tickets, connecting Claude, GitHub and Linear, two-factor sign-in, memory and retrospectives, and the hints,
+warnings and empty states around them.
 
 Written from the code on `main` (`web/src`, whose comments carry most of the reasons), the project's docs, ADRs and
 tests, and the notes earlier agents left. Paths are relative to `web/src` unless they say otherwise. Sizes are CSS
@@ -299,10 +299,10 @@ the agent reports back in the issue." Not connected, a card says so plainly ("Ac
 and who can connect: "Connecting takes an admin of your Linear workspace: Linear asks them to install fctl's app
 there and choose the teams it may see." Members read "Acme's admins connect it: ask one who is an admin of your
 Linear workspace too." Below, **"Once Linear is connected"**: three steps (each project chooses its teams in its
-Tickets tab; people link their Linear account once, in Settings; in Linear they assign or mention fctl) beside the
-delegated-ticket preview ([A project's Tickets tab](#a-projects-tickets-tab)). Connected, each Linear workspace lists the projects that take its tickets, and
-until one does, points at those that could, as dashed chips: "No project takes its tickets yet: choose Linear in a
-project's Tickets tab."
+settings, under Tickets; people link their Linear account once, in Settings; in Linear they assign or mention fctl)
+beside the delegated-ticket preview ([A project's tickets](#a-projects-tickets)). Connected, each Linear workspace lists
+the projects that take its tickets, and until one does, points at those that could, as dashed chips: "No project takes
+its tickets yet: choose Linear in a project's settings, under Tickets."
 
 **Building one like it.** Say what the connection gives and never reaches; show what follows connecting before
 anyone connects; say when another connection isn't needed; end the round trip on a choice made here.
@@ -452,16 +452,20 @@ yours, and it's yours to change." Deleting says what stays: "The sessions it sta
 **Building one like it.** Offer complete, good ideas, filtered to what the project can use; turn settings into a
 sentence of fields; show the computed result (the next runs) live; say whose subscription every run uses.
 
-## A project's Tickets tab
+## A project's tickets
 
 (components/project/tickets.tsx; lib/tickets.ts)
 
 **Purpose.** Choose where the project's agents read and write tickets (none, GitHub Issues or Linear); for Linear,
 which teams delegate work to fctl and how tickets move.
 
-**The choice.** "Where agents track their work", with a lead that states the boundary: "The project's ticket tracker
-is where its agents read what a ticket asks, file what they find and answer the people there. Agents reach this one
-alone: fctl holds its credentials, and their GitHub tokens reach issues only where it says." Three radio cards (arrow
+**Where it is.** A page of the project's Settings (`?tab=tickets`, where Linear's sign-ins come back to), since it is
+a choice its maintainers make once; everyone in the project reads it, and links their Linear account from it. It lays
+out by its column's width (a container), which it shares with the list of Settings' pages.
+
+**The choice.** The page's title, "Tickets", over a lead that names the outcome and states the boundary: "Where agents
+track their work: they read what a ticket asks, file what they find and answer the people there. Agents reach this
+tracker alone: fctl holds its credentials, and their GitHub tokens reach issues only where it says." Three radio cards (arrow
 keys move between them), each an icon tile, a name, a check-mark circle and a summary: "None" ("Agents read and write
 no tickets, GitHub's issues included."), "GitHub Issues" ("Agents read, open and comment on issues in the project's
 repositories."), "Linear" ("Delegate issues to fctl in Linear: each starts a session, which reports back there.").
@@ -491,7 +495,7 @@ Without a Linear app the Linear card fades and says "This instance has no Linear
 sessions take it within the hour." or "Choose a team first.") and [Cancel] [Save]. Back from installing Linear's app,
 Linear is chosen again, "as it was when the browser left for it".
 
-**Delegating a ticket**, once Linear is saved: four steps whose words follow the settings. "In Linear, assign one of
+**Delegating a ticket**, a part of the page once Linear is saved: four steps whose words follow the settings. "In Linear, assign one of
 ENG's issues to fctl, or mention @fctl in a comment on one." / "fctl starts a session in Web for whoever asked, on
 their Claude subscription, and starts the ticket." / "Its steps show in the ticket as it works, its pull requests link
 to it, and each of its replies lands in the ticket's thread. The ticket moves to In Review when its pull request is
@@ -591,9 +595,10 @@ progress while people compare; tick steps from real state; warn inside the step 
 - The switches in a project's settings describe the loop and what off means: "Each session's agent starts with the
   notes earlier agents and people left, adds what a future agent should know, and marks notes that turned out wrong
   stale. People read and change them under Memory. Off, agents neither read nor add notes, and the ones there stay."
-- Each tab opens with what it holds ("Notes this project's agents keep for the agents after them: what they learned
-  that the repository doesn't say."); off, a banner says so and who turns it on: "This project's agents keep no
-  memory: they don't start with these notes or add any. Turn it on under Settings."
+- Both are parts of the project's Memory tab. Each opens with what it holds ("Notes this project's agents keep for the
+  agents after them: what they learned that the repository doesn't say."); off, a banner says so and who turns it on,
+  and for those who can, turns it on from there: "This project's agents keep no memory: they don't start with these
+  notes or add any. Turn it on"
 - Empty states teach: "No notes yet", "As this project's agents learn what its repository doesn't say, they note it
   here for the agents after them. You can add one too." / "No retrospectives yet", "Agents record one as they finish a
   piece of work. They show here, and on each session's page." Off, they say what turning it on brings: "Once its
@@ -617,7 +622,7 @@ progress while people compare; tick steps from real state; warn inside the step 
 - **Access tokens.** A live summary like enrollment tokens': "Runs sessions in Web; their agents review and comment on
   GitHub, and push nothing. It never reaches your account, your workspaces' people and settings, or your other
   tokens." Created: "Copy it now: it is shown once." and an example of using it.
-- **A project's settings.** Switch rows whose sentence is the whole contract: "When a check of the pull request's
+- **A project's settings** (pages of its Settings tab). Switch rows whose sentence is the whole contract: "When a check of the pull request's
   newest commit fails, the agent fixes what its changes broke and pushes: up to three times in a row while nobody
   messages it." Instance gaps show in amber under the switch they affect ("This instance's admins haven't allowed it
   yet (Admin → Settings)."). Placeholders are good values ("Run `npm test` before you commit. Keep components
