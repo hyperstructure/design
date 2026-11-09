@@ -196,7 +196,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 ## Edge cases
 
 - **Off, then on again**: the tab shows the intro with *Put it on again…*, and the form keeps its direction, powers and
-  rhythm. Its log, notes, plan and open asks stay; while it's off, its asks leave *Needs you*.
+  rhythm. Its log, notes, plan and open asks stay; while it's off, its asks leave *Needs you*. A workspace's autopilot
+  stays the workspace's: the form doesn't offer *What it runs*, and says "It ran all of {workspace} before, and what it
+  kept reaches every project: it stays the workspace's."
 - **Paused by fctl**: the reason is the control plane's sentence ("It acts as its owner, who no longer manages Shop:
   someone who does takes it over."), shown as the header's line and logged. It says "its owner" rather than a name, and
   people's lines in the log name them as it's read ("{who} resumed it"), so that a name leaves with its account.
