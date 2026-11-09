@@ -984,10 +984,10 @@ what the code does now. Fix one when you're near it, and don't copy it.
   its "/" keycap on touch screens.
 - **The resize handle's focus** shows as a 1 px background line, which forced colors drop.
 - **Edge swipes on an iPhone** have not been tried on one. Cancelling a touch as it starts is
-  how others stop Safari's swipes (since iOS 13.4), but WebKit's source has its own back swipe
-  gesture not wait for the page's touch events, and the installed app may differ from Safari.
-  If a swipe from the edge still goes back there, the app does its taps and scrolls at the
-  edges for nothing.
+  how others stop Safari's swipes (since iOS 13.4). But in WebKit's source, its own back swipe
+  gesture doesn't wait for the page's touch events, so a cancelled touch may not stop it, and
+  the installed app may differ from Safari. If a swipe from the edge still goes back there, the
+  app does its taps and scrolls at the edges for nothing.
 
 
 ## Checking it
