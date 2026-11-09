@@ -551,9 +551,10 @@ header. A session that fails to load has no header and keeps the bar.
 
 - **Where it starts.** A finger within 32 px of the left edge (plus the notch's inset in
   landscape) drags the closed drawer in. The band keeps it from fighting code and diffs that
-  scroll sideways. It is meant to start just inside the edge zone phones keep for going back;
-  that was assumed, not tried on a real phone. The open drawer drags out by itself or the
-  shade.
+  scroll sideways. On an iPhone it starts from the very edge, which the app keeps from Safari
+  (edge swipes, below). Android's back gesture takes the very edge whatever
+  the page does, so there the band is meant to start just inside it, which was assumed, not
+  tried on a real phone. The open drawer drags out by itself or the shade.
 - **When a touch becomes a drag.** After 8 px of movement, mostly sideways, toward where the
   drawer goes.
 - **Letting go.** The drawer opens if it is more than half out, or goes the way it was flicked
@@ -567,6 +568,40 @@ header. A session that fails to load has no header and keeps the bar.
 - **Cost.** A non-passive `touchmove` listener exists only during a touch that could drag, so
   ordinary scrolling never waits for this code.
 
+**Edge swipes** (`edge-swipes.ts`, fctl#492). Safari goes back when a finger swipes in from the
+left edge of the screen and forward from the right, as every browser on an iPhone does (all of
+them are WebKit). That fought the drawer's drag from the left edge, so on a phone neither edge
+leaves the app.
+
+- **Where.** In WebKit on a touch screen (`GestureEvent` exists and `navigator.maxTouchPoints`
+  is above 0) narrower or shorter than 768 px: a phone held either way, or a tablet's narrow
+  window. A touch that starts within 24 px of the left or right edge, about as far in as Safari
+  takes one for going back.
+- **How.** A page can stop the swipe only by cancelling the touch as it starts (`preventDefault`
+  on `touchstart`), which also takes away everything else the browser would have done with it.
+  The app does that itself:
+  - **A tap** clicks what it touched, as a finger's click would (`pointerType` touch, `detail`
+    1), at once in `touchend`, so that what needs a person's action still works. A text field
+    takes the focus, and the keyboard comes up.
+  - **A swipe** scrolls the nearest thing that scrolls its way, or the page, but never the page
+    under a dialog or a popover, nor anything where `touch-action` keeps fingers off. It glides
+    on after the finger lets go, slowing as an iPhone's scroll views do (0.998 of its speed per
+    ms), and a new touch stops it.
+  - **What the page does with the touch itself** comes first: the drawer's drag, a lifted row
+    (`data-dragging`), and anything that cancels the touch's moves or end, as the lightbox and
+    sheets do.
+- **What stays the browser's.** Touches on a video's controls or a slider, which only the
+  browser's own handling works. A touch that starts while the browser's own scroll still
+  glides, which can't be cancelled, so a swipe then may still go back. And every swipe outside
+  WebKit: Android's back gesture takes the touch before the page could cancel it, and Chrome's
+  own swipe navigation stops at `overscroll-behavior-x: none` on the root, which `app.css` sets
+  for coarse pointers at the same sizes.
+- **What is lost at the edges.** Long presses (no callout, no text selection), a text field's
+  caret placed where the finger tapped, and the browser's rubber band at the end of a scroll.
+- **Cost.** The `touchstart` listener is not passive, on the whole document, so the browser
+  waits for it before it scrolls any touch: it returns at once away from the edges. Its
+  `touchmove` and `touchend` listeners are passive, and exist only during a touch it took.
+
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
 room, instead of opening a dialog. The palette loses its blurs and its rise ([The command palette](#the-command-palette-k)).
@@ -577,6 +612,8 @@ room, instead of opening a dialog. The palette loses its blurs and its rise ([Th
 - [ ] A drawer that navigates leaves at once. It slides only when closed without navigating.
 - [ ] Edge gestures start in a narrow band, and give way to scrolling, dialogs and other
       gestures.
+- [ ] A touch cancelled to keep it from the browser still does what the browser would have
+      done with it: it taps, scrolls and glides.
 - [ ] Let a page with a sticky header of its own take over the top bar's job.
 
 
@@ -946,6 +983,11 @@ what the code does now. Fix one when you're near it, and don't copy it.
 - **The ⌘K keycap on phones.** The search button shows it there. The pull requests page hides
   its "/" keycap on touch screens.
 - **The resize handle's focus** shows as a 1 px background line, which forced colors drop.
+- **Edge swipes on an iPhone** have not been tried on one. Cancelling a touch as it starts is
+  how others stop Safari's swipes (since iOS 13.4), but WebKit's source has its own back swipe
+  gesture not wait for the page's touch events, and the installed app may differ from Safari.
+  If a swipe from the edge still goes back there, the app does its taps and scrolls at the
+  edges for nothing.
 
 
 ## Checking it
@@ -957,7 +999,11 @@ Look at both themes and at a phone width ([verifying](verifying.md) has the reci
 - the shell runs on vite alone if `page.route` answers `/api/v1/auth/me` and leaves the rest
   pending. Shoot the sidebar on `/w/<slug>` with a tall viewport, and use
   `locator('aside').first()`, since a session's rail is an `<aside>` too;
-- judge blurs in Chromium or a real Safari: headless WebKit on Linux draws them as if clear.
+- judge blurs in Chromium or a real Safari: headless WebKit on Linux draws them as if clear;
+- edge swipes need `GestureEvent` and `navigator.maxTouchPoints`, which neither headless browser
+  has on Linux: stand them in with `addInitScript`. Playwright's WebKit only taps, so drive
+  swipes in Chromium with CDP's `Input.dispatchTouchEvent`, and check which `touchstart`s were
+  cancelled with a listener on `window`, which hears them last.
 
 
 ## Principles at work here
