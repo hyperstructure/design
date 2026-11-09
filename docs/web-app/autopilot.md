@@ -181,7 +181,8 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   request) sits.
 - **Needs you**: what autopilots ask comes first, each with its project's mark badged with the autopilot's, "{project}'s
   autopilot", when, and in blue the question or "Needs the secret NAME", linking to the tab. The sessions an autopilot
-  started stay out unless the reader follows them: the autopilot looks after them.
+  started stay out while it's on, unless the reader follows them: the autopilot looks after them. Paused or off, it
+  doesn't, so they come back as any session its owner started.
 - **Notifications**: an ask notifies the people who follow its own session (its owner does): "{project}'s autopilot —
   It asks you" with the question, opening the tab.
 - **The workspace's settings**: an *Autopilots* section with the pill, a switch ("Let projects have an autopilot") and
