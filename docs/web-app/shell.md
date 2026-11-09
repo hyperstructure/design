@@ -551,10 +551,11 @@ header. A session that fails to load has no header and keeps the bar.
 
 - **Where it starts.** A finger within 32 px of the left edge (plus the notch's inset in
   landscape) drags the closed drawer in. The band keeps it from fighting code and diffs that
-  scroll sideways. On an iPhone it starts from the very edge, which the app keeps from Safari
-  (edge swipes, below). Android's back gesture takes the very edge whatever
-  the page does, so there the band is meant to start just inside it, which was assumed, not
-  tried on a real phone. The open drawer drags out by itself or the shade.
+  scroll sideways. In a browser's tab the browser takes a swipe from the very edge for going
+  back, as Android's back gesture does whatever the page does, so the band lets a finger start
+  just inside it. In the app on an iPhone's or iPad's Home Screen there is no page to go back
+  to (edge swipes, below), and the drawer comes in from the very edge. The open drawer drags
+  out by itself or the shade.
 - **When a touch becomes a drag.** After 8 px of movement, mostly sideways, toward where the
   drawer goes.
 - **Letting go.** The drawer opens if it is more than half out, or goes the way it was flicked
@@ -568,49 +569,29 @@ header. A session that fails to load has no header and keeps the bar.
 - **Cost.** A non-passive `touchmove` listener exists only during a touch that could drag, so
   ordinary scrolling never waits for this code.
 
-**Edge swipes** (`edge-swipes.ts`, fctl#492). Safari goes back when a finger swipes in from the
-left edge of the screen and forward from the right, as every browser on an iPhone does (all of
-them are WebKit). That fought the drawer's drag from the left edge, so on a phone neither edge
-leaves the app.
+**Edge swipes** (`lib/history.ts`, fctl#493). iOS goes back when a finger swipes in from
+the left edge of the screen and forward from the right, in the app on the Home Screen as in
+Safari and Chrome. That fought the drawer's drag, so in the app on an iPhone's or iPad's Home
+Screen neither edge leaves the page.
 
+- **How.** WebKit starts the swipe whenever there is a page to go back or forward to
+  (`ViewGestureController::canSwipeInDirection`), whatever the page does with the touch.
+  Cancelling the touch as it starts (fctl#492) didn't stop it in the app on the Home Screen or
+  in Chrome, and `touch-action` only holds back swipes that don't start at the edge. So there
+  each page takes the place of the last in the browser's history: the router's history pushes
+  as it replaces, and the page loads after signing in or out (`goTo`) replace rather than
+  assign. With no page to go to, the swipe doesn't start, and the touch is the page's.
 - **Where.** In WebKit on a touch screen (`GestureEvent` exists and `navigator.maxTouchPoints`
-  is above 0) narrower or shorter than 768 px: a phone held either way, or a tablet's narrow
-  window. A touch that starts within 24 px of the left or right edge, about as far in as Safari
-  takes one for going back.
-- **How.** A page can stop the swipe only by cancelling the touch as it starts (`preventDefault`
-  on `touchstart`), which also takes away everything else the browser would have done with it.
-  The app does that itself:
-  - **A tap** sends what a finger's would after the touch's events, at once in `touchend`, so
-    that what needs a person's action still works: the mouse goes down and up, and it clicks
-    (`pointerType` touch, `detail` 1). Unless a `mousedown` handler keeps the focus where it is
-    (as Select does), the focus moves as a press moves it: a text field takes it and the
-    keyboard comes up, and a tap elsewhere takes it from one. Dialogs that close on a press
-    and a click beside them close. A slow press still clicks, as Safari's does on what is
-    clickable, but one held longer than 500 ms on a link clicks nothing: Safari would have
-    shown the link's menu instead.
-  - **A swipe** scrolls the nearest thing that scrolls the way it first moves most, or else the
-    other way, so that a page that scrolls only up and down follows a swipe that starts out
-    partly sideways. Something already at its end the way the finger takes it hands the swipe
-    on to what is around it, as the browser's scrolling does, unless its
-    `overscroll-behavior` keeps its scrolling to itself. Never the page under a dialog or a
-    popover, nor anything where `touch-action` keeps fingers off. It glides on after the
-    finger lets go, slowing as an iPhone's scroll views do (0.998 of its speed per ms), until
-    a new touch stops it. That touch is the app's wherever it is, and clicks nothing, as under
-    the browser's own scrolling.
-  - **What the page does with the touch itself** comes first: the drawer's drag, a lifted row
-    (`data-dragging`), and anything that cancels the touch's moves or end, as the lightbox and
-    sheets do.
-- **What stays the browser's.** Touches on a video's controls or a slider, which only the
-  browser's own handling works. A touch that starts while the browser's own scroll still
-  glides, which can't be cancelled, so a swipe then may still go back. And every swipe outside
-  WebKit: Android's back gesture takes the touch before the page could cancel it, and Chrome's
-  own swipe navigation stops at `overscroll-behavior-x: none` on the root, which `app.css` sets
-  for coarse pointers at the same sizes.
-- **What is lost at the edges.** Long presses (no callout, no text selection), a text field's
-  caret placed where the finger tapped, and the browser's rubber band at the end of a scroll.
-- **Cost.** The `touchstart` listener is not passive, on the whole document, so the browser
-  waits for it before it scrolls any touch: it returns at once away from the edges. Its
-  `touchmove` and `touchend` listeners are passive, and exist only during a touch it took.
+  is above 0), opened from the Home Screen (`display-mode: standalone` or
+  `navigator.standalone`). That app has no back button to lose: people move about it with the
+  sidebar and links.
+- **What keeps its history.** Browsers' tabs, whose back buttons and swipes go through it as
+  before; the app installed on Android, whose back gesture and button go through it; and a
+  Mac's app in the Dock, which has no touch screen.
+- **What still leaves pages behind.** Signing in with GitHub or Google goes through their
+  pages, which stay in the history, with the sign-in page, until the app is opened afresh.
+- **Scroll.** Each page still opens at its top: the router resets the scroll by each
+  location's own key, which a replace makes anew.
 
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
@@ -622,8 +603,8 @@ room, instead of opening a dialog. The palette loses its blurs and its rise ([Th
 - [ ] A drawer that navigates leaves at once. It slides only when closed without navigating.
 - [ ] Edge gestures start in a narrow band, and give way to scrolling, dialogs and other
       gestures.
-- [ ] A touch cancelled to keep it from the browser still does what the browser would have
-      done with it: it taps, scrolls and glides.
+- [ ] Leave the system's edge swipes nowhere to go rather than fight them for the touch: on
+      iOS a page can't take the touch from them.
 - [ ] Let a page with a sticky header of its own take over the top bar's job.
 
 
@@ -993,11 +974,9 @@ what the code does now. Fix one when you're near it, and don't copy it.
 - **The ⌘K keycap on phones.** The search button shows it there. The pull requests page hides
   its "/" keycap on touch screens.
 - **The resize handle's focus** shows as a 1 px background line, which forced colors drop.
-- **Edge swipes on an iPhone** have not been tried on one. Cancelling a touch as it starts is
-  how others stop Safari's swipes (since iOS 13.4). But in WebKit's source, its own back swipe
-  gesture doesn't wait for the page's touch events, so a cancelled touch may not stop it, and
-  the installed app may differ from Safari. If a swipe from the edge still goes back there, the
-  app does its taps and scrolls at the edges for nothing.
+- **Edge swipes on an iPhone** in the app on the Home Screen haven't been tried on one since
+  fctl#493, which leaves them no page to go to. Pages left behind by signing in through
+  GitHub or Google still give them one until the app is opened afresh.
 
 
 ## Checking it
@@ -1010,10 +989,9 @@ Look at both themes and at a phone width ([verifying](verifying.md) has the reci
   pending. Shoot the sidebar on `/w/<slug>` with a tall viewport, and use
   `locator('aside').first()`, since a session's rail is an `<aside>` too;
 - judge blurs in Chromium or a real Safari: headless WebKit on Linux draws them as if clear;
-- edge swipes need `GestureEvent` and `navigator.maxTouchPoints`, which neither headless browser
-  has on Linux: stand them in with `addInitScript`. Playwright's WebKit only taps, so drive
-  swipes in Chromium with CDP's `Input.dispatchTouchEvent`, and check which `touchstart`s were
-  cancelled with a listener on `window`, which hears them last.
+- the app on an iPhone's Home Screen needs `GestureEvent`, `navigator.maxTouchPoints` and
+  `(display-mode: standalone)`, which no headless browser has on Linux: stand them in with
+  `addInitScript`, and check that `history.length` stays as it was as links open pages.
 
 
 ## Principles at work here
