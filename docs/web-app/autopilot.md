@@ -203,7 +203,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   you* lists them for those who can. The count is on the tab, in the heading and in *Needs you*.
 - **A burst of answers** reaches it as one wake (5 s gathered), so its log reads "Woke for 2 answers", not two wakes.
 - **An old session of its own**: wakes go to its current session; an earlier one's requests are refused, and its page
-  still shows its wakes and actions.
+  still shows its wakes and actions. One fctl replaces (12 hours on) stops as the fresh one starts.
+- **A workspace's autopilot, read by a member who isn't an admin**: its own session and brief are the admins', so the
+  header doesn't link to it; its sessions and log show those in projects the reader sees. Its admins see it all.
 
 ## Building one like it
 
