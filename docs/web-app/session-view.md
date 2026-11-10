@@ -205,9 +205,9 @@ writing to it:
 
 - While it waits for its subscription's limit to reset, the line over the
   message box (where "… is typing" goes, which wins when both would show)
-  says so, quietly, with a link-styled button: "Ada's Claude subscription
-  is at its limit; messages wait for it. **Continue on mine**" ("This
-  Claude subscription…" when it is yours and you have another connection).
+  says so, quietly, with a link-styled button: "Ada's subscription is at
+  its limit. **Continue on mine**" ("This subscription…" when it is yours
+  and you have another connection), short enough for a phone's width.
 - The ⋯ menu has *Continue on my subscription* whenever it rests (paused,
   idle, stopping, stopped) on someone else's subscription, or on yours
   while you have more than one connection, for whoever may message it.
