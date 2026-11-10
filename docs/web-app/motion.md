@@ -119,10 +119,21 @@ its position from the right, and roll a slot when its character changes.
 Keep the format's width stable (one decimal from 1K: "4.0K").
 
 **Comet along a path.** Two copies of the path with `pathLength="100"`, each
-with one dash (`stroke-dasharray: L 100`) whose end is the head; animate
-`stroke-dashoffset` from `L` to `L − 136` so both ends travel together from
+with one dash (`stroke-dasharray: L 200`) whose end is the head; animate
+`stroke-dashoffset` from `L + 1` to `L − 137` so both ends travel together from
 before the start to past the end. The shorter dash is the bright head, the
-longer at lower opacity is the tail.
+longer at lower opacity is the tail. Three traps, each a glitch at the
+loop's seam:
+
+- The gap must be longer than the whole run (the path's length plus the
+  dash's, plus the margins). With a shorter one, the next dash is already on
+  the path as the loop ends or starts again, and the comet seems to bounce
+  back (the autopilot's ring did, with `0.22 1` on a run of 1.3).
+- Start and end a little beyond the path's ends, not right at them: with
+  round caps, a dash of no length at an end still draws its cap as a dot.
+- Give offsets built with `calc()` units (`calc((var(--L) - 137) * 1px)`):
+  Chromium doesn't animate a `calc()` of plain numbers, and jumps from one
+  end to the other halfway through.
 
 **Sync loops.** Infinite animations that mean the same thing should start
 at the document's time zero, whenever their element appears: listen for
