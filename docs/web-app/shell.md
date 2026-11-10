@@ -352,7 +352,8 @@ remaining animation to 0.01 ms.
 **Building one like it.**
 
 - [ ] Views that span everything first, then places, with settings and identity at the foot.
-      Only the middle scrolls.
+      Only the middle scrolls: on a phone the views with the places, so an open list of what
+      needs you doesn't squeeze them.
 - [ ] The person sets the order. Rows hold their places as their state changes, and finished
       things leave on a known schedule.
 - [ ] Paint at once from a validated, versioned, per-user copy, and never claim "empty" before
