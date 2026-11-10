@@ -209,8 +209,10 @@ writing to it:
   its limit. **Continue on mine**" ("This subscription…" when it is yours
   and you have another connection), short enough for a phone's width.
 - The ⋯ menu has *Continue on my subscription* whenever it rests (paused,
-  idle, stopping, stopped) on someone else's subscription, or on yours
-  while you have more than one connection, for whoever may message it.
+  idle, stopping, stopped) on someone else's subscription, or on another
+  of your connections than the one its workspace's sessions use now (the
+  one you chose for it, else your default), for whoever may message it.
+  Never where the server would only refuse.
   Not for review agents' sessions, nor for an autopilot's own, which move
   with the autopilot.
 - Both ask first: "Continue it on your subscription?" "It runs on Ada's
