@@ -80,7 +80,7 @@ each project the sessions the person is likely to switch between.
  Agent Floor                            "Views" nav
  Needs you                  (3)  >      opens in place into its list
  Pull requests                   2      how many are ready for review, in green
- [invitation card]                      "Workspaces" nav (scrolls)
+ [invitation card]                      "Workspaces" nav (scrolls; on phones with the views)
  [A] Acme                    + v        workspace: its page, new project, fold
    [i] Web app             o 2          project: icon, name, sessions at work
     | (A) Autopilot      At work        its autopilot, while it is on or paused
@@ -97,8 +97,11 @@ each project the sessions the person is likely to switch between.
 The order runs from views that span everything, to places, to settings and identity at the
 foot. The code describes it as "the Agent Floor, what needs you and the pull requests ready for
 review at the top; then each workspace with its projects, each with its icon, its sessions at
-work and those that ended in the last hour". Only the middle nav scrolls (`min-h-0 flex-1
-overflow-y-auto`), so search, the views and the foot never scroll out of reach. A hairline
+work and those that ended in the last hour". Search and the foot never scroll out of reach. On
+a computer or tablet only the middle nav scrolls (`md:min-h-0 md:overflow-y-auto`), so the views
+stay too. On a phone the views scroll with the workspaces instead (one scrolling column around
+both, `max-md:overflow-y-auto`): Needs you, open, can be as tall as half the drawer, which left
+the workspaces a sliver to scroll in (fctl#501). A hairline
 (`border-t border-line`) sits over the foot, where the nav scrolls away under it; the folded
 rail has one there too, and one between workspaces.
 
