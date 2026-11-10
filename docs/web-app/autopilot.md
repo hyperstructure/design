@@ -149,7 +149,9 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
 - **How it works**: the configuration as sentences: "Checks in every hour, and runs up to 3 sessions at once",
   "Starts and steers sessions, which merge their pull requests; change settings, set up schedules" (or "which leave
   merging to people"), "Stays on Ada's subscription when others change or resume it" ("your" for its owner) where its
-  owner keeps it, "Thinks with Opus at high effort".
+  owner keeps it, "Thinks with Opus at high effort", and when a fresh session takes over from its own: "A fresh session
+  takes over after 12 hours", or "at 250K tokens of context, or after 12 hours", then, quieter, how full its session is
+  now (" · its session holds 180K").
 
 **The log**, grouped by day ("Today", "Yesterday", "Nov 3"), newest first, each entry an icon (or the person's avatar
 for what a person did; an accent-soft circle for what the autopilot wrote down; red for a problem), its line (Markdown,
@@ -218,6 +220,14 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 - **Someone else's subscription**: changing how much it works, resuming or taking it over says it runs on yours from
   then on, as schedules do (a banner in the settings dialog before Save), and the toast after says what the control
   plane decided.
+- **A fresh session takes over**: the settings dialog (*How it works*), after *Its own sessions think with*, has a
+  Select: "After 12 hours" ("Whatever its context holds"), "At 150K / 250K / 400K tokens of context" and "At another
+  size" (each "Or after 12 hours"), the last with a Tokens Input beside it (typed as 200K, 200000 or 0.2M). Its line
+  says why it matters, then how full its session is: "Each wake reads its whole conversation again, uncached after an
+  hour's rest. A fresh session starts from its plan and log, and costs far less at each wake. Its session holds 180K
+  tokens now." Changing it changes how much it spends, so it takes it over as changing its model does. A size it can't
+  read says so in the toast ("Not changed: type a size from 100K to 1M tokens, like 200K"). The put-on form leaves it
+  out: a new autopilot hands off only after 12 hours until someone chooses a size.
 - **Kept on its owner's subscription**: its owner's settings dialog ends with *When others change it*, a bordered
   checkbox, "Keep it on my subscription", and its line: "Those who steer it, the project's maintainers and owners (a
   workspace's: its admins), then change how much it works and resume it on your Claude plan, rather than taking it
