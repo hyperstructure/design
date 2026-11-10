@@ -158,7 +158,10 @@ for what a person did; an accent-soft circle for what the autopilot wrote down; 
 so `NAME`s show as code) and the time. A session it concerns shows under its line as a chip with the session's live
 status dot, number, title and status word. A line about another project than its own names it ("Changed playground's
 description", "Set the secret `KEY` in blog"; its own goes without saying, "the project's"), and that project, or one it
-created, shows under the line as a chip with the project's icon, name and slug, a link to it. Its **wakes** don't get
+created, shows under the line as a chip with the project's icon, name and slug, a link to it. A schedule it ran names
+the schedule ("Ran the schedule “Nightly deps” now"), the name underlined as a link to it on the Schedules tab, which
+opens it with its runs, and the session the run started shows under the line as any session does: what a schedule run
+did is a click away. A deleted schedule's name stays, unlinked. Its **wakes** don't get
 rows: they divide the log, a thin line with the mark, "Woke for a new note" ("Woke as it was resumed" for a resume
 alone), the session it woke in, and the time, so what it did from one check-in to the next reads as a block. *Show
 earlier* pages back.
@@ -180,7 +183,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   thread, the session it started as a card: status dot, title, `project#n`, status word, its pull requests, what it
   asks in blue, kept live (5 s while it works, 30 s otherwise). A session started this way looks like a session, not
   like a log line: agents starting agents should read as native as a person starting one. A project a workspace's
-  autopilot creates hangs on its milestone the same way, as a card with the project's icon tile, name and slug.
+  autopilot creates hangs on its milestone the same way, as a card with the project's icon tile, name and slug. So does
+  the session a schedule it ran started, under "Ran the schedule “Nightly deps” now", whose underlined name opens the
+  schedule and its runs.
 - **The sessions it starts** open with its task in an ask card whose author is the autopilot: its mark, "{slug}'s
   autopilot", "for {owner}", when; fctl's note of who started it under a hairline, smaller. The cover says "Started by
   {slug}'s autopilot, for {owner}" (a link to its tab) where others say who started them; the details rail has an
