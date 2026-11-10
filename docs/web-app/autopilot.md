@@ -107,9 +107,13 @@ the status's tone from its top left corner:
 | Paused | **Paused** (pink; the card's border too) | "{name} paused it 2m ago: {reason} It wakes again once someone resumes it." / "It paused: the direction is done…" |
 
 Under it, the facts: whose subscription ("your" when it's yours), how many check-ins and the last, and a link to its
-session. Controls: *Wake now* and *Pause* while on, *Resume* (primary) while paused, and ⋯ (Change how it works…, Watch
-its session, Take off autopilot… in red). A problem (its owner can't run it any more, the plan is at its limit) shows
-in an amber strip across the card's foot.
+session. Controls: *Wake now* and *Pause* while on, *Resume* (primary) while paused, and ⋯ (Change how it works…, *Run
+it on your subscription…* for those it doesn't run for, Watch its session, Take off autopilot… in red). *Run it on your
+subscription…* asks first: "From now on it runs on your Claude subscription and acts as you: its own sessions and those
+it starts. {owner} no longer runs it." [Cancel] [Run it on mine]. A problem (its owner can't run it any more, the plan
+is at its limit) shows in an amber strip across the card's foot. The card clips nothing (no `overflow-hidden`): its ⋯
+menu hangs past its foot, over what follows, and the wash and the strip round their own corners. Clipped, the card cut
+the menu off at its foot, and *Take off autopilot…* couldn't be reached.
 
 **It asks you** (with a blue count): a card per ask, the blue gradient of the session view's question card.
 
@@ -139,7 +143,8 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
   waiting for a message first (all of them when there are more), then "Show 3 more" for the rest of the 20 newest.
 - **How it works**: the configuration as sentences: "Checks in every hour, and runs up to 3 sessions at once",
   "Starts and steers sessions, which merge their pull requests; change settings, set up schedules" (or "which leave
-  merging to people"), "Thinks with Opus at high effort".
+  merging to people"), "Stays on Ada's subscription when others change or resume it" ("your" for its owner) where its
+  owner keeps it, "Thinks with Opus at high effort".
 
 **The log**, grouped by day ("Today", "Yesterday", "Nov 3"), newest first, each entry an icon (or the person's avatar
 for what a person did; an accent-soft circle for what the autopilot wrote down; red for a problem), its line (Markdown,
@@ -206,7 +211,18 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   someone who does takes it over."), shown as the header's line and logged. It says "its owner" rather than a name, and
   people's lines in the log name them as it's read ("{who} resumed it"), so that a name leaves with its account.
 - **Someone else's subscription**: changing how much it works, resuming or taking it over says it runs on yours from
-  then on, as schedules do (a banner in the settings dialog before Save).
+  then on, as schedules do (a banner in the settings dialog before Save), and the toast after says what the control
+  plane decided.
+- **Kept on its owner's subscription**: its owner's settings dialog ends with *When others change it*, a bordered
+  checkbox, "Keep it on my subscription", and its line: "Those who steer it, the project's maintainers and owners (a
+  workspace's: its admins), then change how much it works and resume it on your Claude plan, rather than taking it
+  over, and it goes on acting as you. Only for a project whose people you all trust." Checking it shows a warn banner
+  under it before Save: "Any of them can then run it as hard as they choose on your plan: up to 8 sessions at once,
+  checking in every 15 minutes." Turning it on is a sensitive action. Others don't see the checkbox; their banner says
+  "It runs on {owner}'s Claude subscription, which they keep it on when others change it: your changes run on theirs.",
+  *Resume*'s title says it stays on the owner's, and *Run it on your subscription…* is how they take it over. Once its
+  owner can no longer run it (the reasons fctl pauses it for), a resume or change takes it over as before; a new owner
+  starts without it.
 - **Many asks at once**: it keeps at most 10 open (asking more is refused until it takes one back), so all show, newest
   first. The tab shows them to everyone who reads the project, and says who answers them to those who can't, except a
   workspace's autopilot's, which only its admins see (below); *Needs you* lists them for those who can answer. The
