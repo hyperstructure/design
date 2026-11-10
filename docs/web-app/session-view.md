@@ -211,15 +211,20 @@ writing to it:
 - The ⋯ menu has *Continue on my subscription* whenever it rests (paused,
   idle, stopping, stopped) on someone else's subscription, or on another
   of your connections than the one its workspace's sessions use now (the
-  one you chose for it, else your default), for whoever may message it.
+  one you chose for it, else your default, else your newest), for whoever
+  may message it.
   Never where the server would only refuse.
   Not for review agents' sessions, nor for an autopilot's own, which move
   with the autopilot.
-- Both ask first: "Continue it on your subscription?" "It runs on Ada's
-  Claude subscription. It starts again on yours, the connection you chose
-  for this workspace in Settings → Claude, and Claude continues the same
-  conversation. Messages from then on run on yours too." [Cancel]
-  [Continue on mine]. The session starts again at once; what the server
+- Both ask first, with the same title either way: "Continue it on your
+  subscription?" "It runs on Ada's Claude subscription." (on your own
+  session: "It runs on another of your Claude connections.") Then "It
+  starts again on yours" ("It resumes on yours" for a stopped one), "the
+  connection you chose for this workspace in Settings → Claude, and Claude
+  continues the same conversation. Messages from then on run on yours
+  too." [Cancel] [Continue on mine]. The connection it moves to is the one
+  the workspace's sessions use: the one you chose for it, else your
+  default, else your newest. The session starts again at once; what the server
   refuses (your plan at its limit too, it runs on that connection already)
   comes back as a toast that says what to do.
 
