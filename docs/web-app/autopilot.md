@@ -110,7 +110,10 @@ Under it, the facts: whose subscription ("your" when it's yours), how many check
 session. Controls: *Wake now* and *Pause* while on, *Resume* (primary) while paused, and ⋯ (Change how it works…, *Run
 it on your subscription…* for those it doesn't run for, Watch its session, Take off autopilot… in red). *Run it on your
 subscription…* asks first: "From now on it runs on your Claude subscription and acts as you: its own sessions and those
-it starts. {owner} no longer runs it." [Cancel] [Run it on mine]. A problem (its owner can't run it any more, the plan
+it starts. {owner} no longer runs it." [Cancel] [Run it on mine]. It wakes at once to move: its own session (unless at
+work) and the sessions it started that wait or rest go on the new owner's connection, where Claude continues their
+conversations, and the log says "Woke as it was moved to another Claude subscription". Its owner choosing or connecting
+another connection moves it the same way. A problem (its owner can't run it any more, the plan
 is at its limit) shows in an amber strip across the card's foot. The card clips nothing (no `overflow-hidden`): its ⋯
 menu hangs past its foot, over what follows, and the wash and the strip round their own corners. Clipped, the card cut
 the menu off at its foot, and *Take off autopilot…* couldn't be reached.

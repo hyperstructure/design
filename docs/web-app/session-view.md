@@ -195,6 +195,32 @@ in from both sides and the exact time on hover.
   of the accent spreads out from the message box once (*invite*, 1.6 s), and
   the now line rolls to "Your turn".
 
+## Whose subscription
+
+A session runs on the Claude subscription of whoever started it (or last
+resumed or took it over), and a message keeps it there: the rail's
+*Billing* says whose ("Your Claude subscription", "Ada's Claude
+subscription"). Moving it is a choice of its own, never a side effect of
+writing to it:
+
+- While it waits for its subscription's limit to reset, the line over the
+  message box (where "… is typing" goes, which wins when both would show)
+  says so, quietly, with a link-styled button: "Ada's Claude subscription
+  is at its limit; messages wait for it. **Continue on mine**" ("This
+  Claude subscription…" when it is yours and you have another connection).
+- The ⋯ menu has *Continue on my subscription* whenever it rests (paused,
+  idle, stopping, stopped) on someone else's subscription, or on yours
+  while you have more than one connection, for whoever may message it.
+  Not for review agents' sessions, nor for an autopilot's own, which move
+  with the autopilot.
+- Both ask first: "Continue it on your subscription?" "It runs on Ada's
+  Claude subscription. It starts again on yours, the connection you chose
+  for this workspace in Settings → Claude, and Claude continues the same
+  conversation. Messages from then on run on yours too." [Cancel]
+  [Continue on mine]. The session starts again at once; what the server
+  refuses (your plan at its limit too, it runs on that connection already)
+  comes back as a toast that says what to do.
+
 ## Only the conversation
 
 The speech-bubbles button in the header (in the ⋯ menu on a phone) leaves
