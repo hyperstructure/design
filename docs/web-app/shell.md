@@ -59,6 +59,10 @@ palette, toasts and sequence hint z-50.
   (`lib/viewport.ts`, fctl#350).
 - **Safe areas.** Safe-area insets pad the drawer, the page column and the sidebar's foot, which
   covers notches in landscape and installed apps.
+- **Safari's status bar over the page.** The drawer and the top bar pad their tops by
+  `--safe-top`, which is 0 except when Safari lays the installed app on an iPhone out under the
+  status bar after the app switcher: their background then fills behind the bar, and what they
+  hold starts below it (`lib/viewport.ts`, fctl#514).
 - **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl`, with no border: the
   page blurs as it scrolls under them, which marks their edge. Beside the page, the sidebar is
   `bg-surface/80` with a blur and no border either: its lighter surface sets it apart from the
