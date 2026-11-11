@@ -266,6 +266,16 @@ and a one-color arc. They run in step: `syncShimmers()` (`web/src/lib/shimmer.ts
   otherwise), and what is pinned to the screen moves by it: dialogs
   (`top-(--viewport-shift) -bottom-(--viewport-shift)`), the sheet, the lightbox (translated, so
   that its fixed buttons go along), the toaster and every `::backdrop`. New ones need the same.
+- **Safari's status bar over the page.** The installed app on an iPhone can also come back laid
+  out under the status bar, until it is closed: the layout viewport starts at the screen's top,
+  and the bar covers whatever is pinned there (WebKit bug 301994 has other web apps' reports).
+  `--safe-top` in `app.css` says how much of the page's top the bar covers: Safari's top safe
+  area, or, where that stays 0 though the layout viewport is as tall as the screen, the bar's
+  height as `watchViewport()` last saw it above the page (`--status-bar`, kept in
+  `localStorage`). It is 0 everywhere else. Sticky bars and the drawer pad their tops by it, so
+  that their background fills behind the bar (`box-content h-14 pt-(--safe-top)`); dialogs start
+  below it (`top-[calc(var(--viewport-shift)+var(--safe-top))]`, their max height less it), and
+  the lightbox's buttons sit under it. New elements pinned to the top need the same.
 
 ## Components
 
@@ -677,6 +687,7 @@ Agent Floor's row do), and call its `invalidate()` after a change so that a stil
 |---|---|
 | `fieldset { min-width: 0 }` | A fieldset as wide as its container, so a row in it wraps instead of widening the page |
 | `--viewport-shift`, `::backdrop` | Backdrops move with the screen under Safari's phantom keyboard ([Phones, Safari and the viewport](#phones-safari-and-the-viewport)) |
+| `--safe-top` | How much of the page's top the status bar covers: 0, but when Safari lays the iPhone app out under the bar ([Phones, Safari and the viewport](#phones-safari-and-the-viewport)) |
 | `.prose-fctl`, `.prose-note` | Agent answers and descriptions: 15.5 px, line height 1.7, accent links with a faint underline, code on `raised` and `sunken`; everything wraps anywhere except table cells, which break at words so that a column isn't one letter wide. `.prose-note` is the compact version |
 | `.shiki`, `--c-added`, `.diff*`, `[data-play]` | Code in both themes; diffs with green additions (only for files), red removals and gutters that stay put, writing themselves in as the agent works |
 | `[data-quiet-focus]` | No ring on what gets the focus back from an overlay a click opened |

@@ -336,7 +336,7 @@ What the lines can't say alone:
 | 1024 px | the list becomes a 288 px column beside the diffs, shown or hidden as kept; key hints show at its foot; the details rail (with Changes) shows beside the session |
 
 - The default to wrap is read once, as the dialog opens; a choice made with `w` wins after, at every width, in that browser.
-- Heights use `dvh`, so mobile browsers' toolbars don't hide the bottom. The dialog's top and bottom follow `--viewport-shift`, which corrects for Safari on iOS keeping a keyboard that isn't there (`lib/viewport.ts`).
+- Heights use `dvh`, so mobile browsers' toolbars don't hide the bottom. The dialog's top and bottom follow `--viewport-shift`, which corrects for Safari on iOS keeping a keyboard that isn't there (`lib/viewport.ts`). On phones, where it fills the screen, its top pads by `--safe-top`, so that its header stays below the status bar when Safari lays the app out under it.
 - Touch lets go of a pinned file and of the find bar's place like a wheel does. `overscroll-contain` on the diffs and the list keeps a scroll from reaching the page.
 - On phones the details (with Changes) are a sheet; the dialog opens over it, and closing the dialog doesn't close the sheet (`own` in `lib/dialog.ts`).
 

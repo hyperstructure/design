@@ -848,7 +848,8 @@ sides; a sticky footer holding the composer, and on a computer the question card
 gradient of the canvas (solid at the bottom, still 95% at its middle, clear at the top, with 24
 px of room above the composer), padded above the phone's home indicator, so the transcript
 scrolls under it softly; the rail at the right. Sticky elements move with `--viewport-shift` for
-Safari's phantom keyboard. While the session connects with nothing to show, three skeleton shapes
+Safari's phantom keyboard, and the header and the rail pad their tops by `--safe-top`, for when
+Safari lays the iPhone app out under the status bar. While the session connects with nothing to show, three skeleton shapes
 stand in for the transcript.
 
 **The header**, on a translucent canvas with a strong blur and no border (the transcript blurs as
