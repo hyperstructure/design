@@ -100,15 +100,16 @@ the status's tone from its top left corner:
 
 | State | Word (tone) | The sentence |
 |---|---|---|
-| Its session works | **At work** (accent; the dot pings, the comet runs round its mark) | "It works in its session #7 now." |
+| Its session works | **At work** (accent; the dot pings, the comet runs round its mark) | "It works in its session #7 now." / with a fresh session asked for: "It works in its session #7 now. A fresh session takes over once this turn ends." |
 | Its session starts | **Waking** (accent) | "Its session #7 is starting." |
 | It asks something | **Waiting for you** (blue) | "It asks you 2 things, and goes on with what it can meanwhile. It checks in at 14:20, unless something needs it sooner." |
-| Resting | **On** (blue) | "It checks in at 14:20, unless something needs it sooner." / "It wakes at 14:05, as it asked…" / "It wakes now for what's new." |
+| Resting | **On** (blue) | "It checks in at 14:20, unless something needs it sooner." / "It wakes at 14:05, as it asked…" / "It wakes now for what's new." / "A fresh session takes over now." |
 | Paused | **Paused** (pink; the card's border too) | "{name} paused it 2m ago: {reason} It wakes again once someone resumes it." / "It paused: the direction is done…" |
 
 Under it, the facts: whose subscription ("your" when it's yours), how many check-ins and the last, and a link to its
 session. Controls: *Wake now* and *Pause* while on, *Resume* (primary) while paused, and ⋯ (Change how it works…, *Run
-it on your subscription…* for those it doesn't run for, Watch its session, Take off autopilot… in red). *Run it on your
+it on your subscription…* for those it doesn't run for, Watch its session, *Hand off to a fresh session* while on with
+a session, Take off autopilot… in red). *Run it on your
 subscription…* asks first: "From now on it runs on your Claude subscription and acts as you: its own sessions and those
 it starts. {owner} no longer runs it." [Cancel] [Run it on mine]. It wakes at once to move, and the log says "Woke as
 it was moved to another Claude subscription". Its own session (unless at work) goes on the new owner's connection, where
@@ -175,7 +176,9 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
 - **Its own session's turns open with a wake card** instead of an ask card: its mark, "fctl woke the autopilot", when,
   then what for in a sentence ("For a new note and session #41.", or for a resume alone "People resumed it: it reads
   what's new, then goes on.") with chips for the notes, answers and the sessions that moved (links). Its first turn says
-  "It was put on autopilot: it reads its brief, then plans the work." with the direction quoted. "What fctl told it" (or
+  "It was put on autopilot: it reads its brief, then plans the work." with the direction quoted; a fresh session that
+  takes over from the last (after 12 hours, past its handoff size, or as people asked) says "A fresh session takes
+  over: it reads its brief, then goes on from its plan and log." instead. "What fctl told it" (or
   "Its briefing, and what fctl told it") opens the whole message in mono, in a sunken box. The turn bar and the list of
   turns title these turns as its log does ("Woke for …", "Woke as it was resumed") with the mark, not the briefing's
   first line.
@@ -254,6 +257,12 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   tokens now." Changing it changes how much it spends, so it takes it over as changing its model does. A size it can't
   read says so in the toast ("Not changed: type a size from 100K to 1M tokens, like 200K"). The put-on form leaves it
   out: a new autopilot hands off only after 12 hours until someone chooses a size.
+- **A fresh session when people choose**: *Hand off to a fresh session* (⋯, no dialog: nothing is lost, the plan and
+  log carry the work) starts a fresh session of its own, say after a release so that it works from what fctl and its
+  briefing say now. Between its turns it takes over at once ("A fresh session takes over now"); while its session
+  works, the turn finishes first ("A fresh session takes over once this turn ends", in the toast and the header's
+  sentence until then), and what wakes it meanwhile waits for the fresh session. Its log says who asked ("Ada asked for
+  a fresh session to take over"), then "Woke as someone asked for a fresh session".
 - **Kept on its owner's subscription**: its owner's settings dialog ends with *When others change it*, a bordered
   checkbox, "Keep it on my subscription", and its line: "Those who steer it, the project's maintainers and owners (a
   workspace's: its admins), then change how much it works and resume it on your Claude plan, rather than taking it
