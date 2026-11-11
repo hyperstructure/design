@@ -190,6 +190,27 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   autopilot", "for {owner}", when; fctl's note of who started it under a hairline, smaller. The cover says "Started by
   {slug}'s autopilot, for {owner}" (a link to its tab) where others say who started them; the details rail has an
   Autopilot row.
+- **Its own session's details** (the rail on a computer, the sheet on a phone; `components/session/pilot.tsx`) lead
+  with the autopilot, as its tab shows it, so that following it in its session takes no trips to the tab:
+  - **Where it stands**: a card the rail's width, with the tab header's tone (its wash from the top left corner, a pink
+    border while paused): its mark in a 32 px tile (the comet runs while it works), "Autopilot" ("{workspace}'s
+    autopilot" for a workspace's), a link to its tab, and under it the phase's word beside its dot (pinging while it
+    works). Then the phase's sentence, said of the session the reader is in: "It works in this session now.", "This
+    session is starting." In an earlier session of its own the sentence names the current one ("It works in its
+    session #20 now."), and a quieter line says "This is an earlier session of its own: fctl wakes it in #20 now.", the
+    number a link. What it asks follows, up to three, each a blue row (the question, or "Needs the secret NAME", with a
+    key) that opens the tab to answer, then "2 more on its tab". Those who steer it get *Wake now* and *Pause*, or
+    *Resume*, the tab header's buttons. ↗ in the corner opens the tab too, for its direction, notes and log. A problem
+    is an amber strip across the card's foot.
+  - **Its plan**: "Updated 2m ago" at the heading's end, then the bar and "1 of 4" as the agent's own plan shows them
+    in the rail, then the Markdown at 12.5 px, clamped to ten lines with *Show all*. The cut fades out with a mask
+    rather than an overlay of the card's color, so it fades the same on the rail's lighter shade and in the sheet.
+  - **Its sessions**: "1 working · 8 in all" at the heading's end, and the tab's list: five rows, those at work or
+    waiting for a message first, then "Show 3 more".
+
+  Below them the details go on as any session's, without what such a session doesn't keep: **Changes** shows only once
+  it changed something (it plans and steers; its sessions change the code), and the **retrospective** and **memory**
+  sections stay out, as its sessions record and read those. Its turns, work figures and facts stay.
 - **The now line** doesn't say *Your turn* where it isn't the reader's: its own session at rest says **Resting** —
   "fctl wakes it when something needs it"; a session it started that waits says **The autopilot's turn** — "It hears
   that the agent waits". Both in ink, with the mark, not the blue of *your move*.
@@ -265,7 +286,7 @@ wait on the agent or the agent wait on people.
 
 ## Known gaps
 
-- The tab polls rather than listening on the feed: changes show within 4 s while it works and up to 15 s while it
+- The tab, and its own session's details, poll rather than listen on the feed: changes show within 4 s while it works and up to 15 s while it
   rests (its log, 5 and 20 s). *Needs you* polls every 30 s, and so do the session cards in its transcript while their
   session rests, so a new ask, or a session that starts working again, can take half a minute to show there.
 - A workspace's autopilot lives on its home project's tab; the workspace page only links to it.

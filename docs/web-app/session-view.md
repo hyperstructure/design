@@ -51,7 +51,9 @@ switch people can flip back, and let them compare on real sessions.
    the newest work, over the message box.
 6. **The details rail** on the right on a computer (a sheet on a phone, `d`
    toggles it): changes, pull requests, the plan, the turns, the
-   retrospective, memory, work figures, the session's facts. It is
+   retrospective, memory, work figures, the session's facts. An
+   autopilot's own session leads with its autopilot instead, and leaves
+   out what it doesn't keep ([autopilots](autopilot.md#in-sessions)). It is
    `bg-surface/40`, a shade lighter than the canvas, with no border at its
    edge, and its sections are divided by space and their headings, not by
    lines.
