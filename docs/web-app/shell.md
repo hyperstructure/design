@@ -979,7 +979,7 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
-| `fctl:app-log`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most); in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account), a 401 or 403 from the server, or Clear; the app closes |
+| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account), someone else signing in, or Clear; the app closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
@@ -1004,6 +1004,9 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
   (`lib/redact.ts`).
 - **Tabs.** They share the log, each adding to what is stored; they keep no heartbeat, as they
   run side by side.
+- **Whose.** The log notes the account it is kept for, and goes when someone else signs in. A
+  sign-in that ends leaves it (a signed-out browser gets a 401 on every load, and the log may
+  tell why); signing out clears it.
 - **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
   page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
   is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
