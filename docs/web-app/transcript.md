@@ -298,8 +298,8 @@ headers show only when numbered and there are several. Output shows its first 24
 96 more lines" under them, scrolls past 480 px, turns red (text and a 25% red border) on error,
 and says "No output" in italics when empty.
 
-**Images a call read** (`lib/kept-images.ts`). Screenshots the agent read show as 96 px tall thumbnails under the call
-(under the run's line while it is folded). The session keeps them for 7 days; after that the
+**Images a call read** (`lib/kept-images.ts`). Screenshots the agent read show as 96 px tall thumbnails, up to 288 px
+wide (`Thumbnail`), under the call (under the run's line while it is folded). The session keeps them for 7 days; after that the
 thumbnail goes and the facts say "deleted after 7 days". A thumbnail that fails to load hides
 itself. A plain click opens it over the page in the transcript's one lightbox, which steps through
 all the session's pictures in page order; a click with a modifier key is left to the browser (a
@@ -347,7 +347,7 @@ fctl), their name, and, where the pointer rests on the message, the time and whe
 ("18:40 · from the CLI", "· from the Claude app"). Under it a bubble from the text column: 14.5 px
 at line height 1.6, `bg-raised/50`, a hairline border, radius 18 px (`rounded-xl` in the tokens'
 scale) with the top left corner at 6 px, pointing at the author. Line breaks are kept as typed; long words break anywhere. Attached
-files follow: images 144 px tall, opening in the lightbox; videos as chips that play in a lightbox
+files follow: images 144 px tall and up to 320 px wide (`Thumbnail`), opening in the lightbox; videos as chips that play in a lightbox
 of their own (its arrow keys belong to the player); other files as chips that download.
 
 **States.** Sent but not stored yet: 70% opacity, "Sending…" in place of the time, images from
@@ -404,7 +404,7 @@ put on and taken off (struck through), opening into what it posted, with "Open i
 | Question asked | "Asked you", the question, the answers it offered as plain chips | info |
 | Note kept | "Remembered for later agents · Memory" (a link to the note), the note in Markdown | ok, bookmark |
 | Note marked stale | "Marked a note stale" or "Marked a note a duplicate", then "A newer note takes its place.", "It repeats another note." (a link) or the reason | muted, archive |
-| Screenshot published | "Published <name> · anyone with the link can open it until Nov 8", the image (144 px tall), "1440×900 · 245 KB", "Copy Markdown", "Delete" for people who manage the session | info |
+| Screenshot published | "Published <name> · anyone with the link can open it until Nov 8", the image (144 px tall, up to 320 px wide), "1440×900 · 245 KB", "Copy Markdown", "Delete" for people who manage the session | info |
 | Review posted | A card: "Review posted on GitHub: 2 issues" or "Review posted: nothing to point out", "1 earlier finding marked fixed", "Sent to the agent that opened the pull request", "View on GitHub ↗" | review icon |
 | Summary added | A card: "Summary added to fctl#12's description", what fctl leaves as people wrote it, and the summary as GitHub's alert (Note, Warning, Caution by risk) | |
 
@@ -935,6 +935,11 @@ activity". The others:
   check both.
 - **Test mocks**: the transcript's tests mock the UI module's exports; a component using a new
   export renders "This event couldn't be shown" there until the mock lists it.
+- **A percentage in a thumbnail's `max-width` leaves its frame too wide.** With `h-24 w-auto
+  max-w-[min(100%,18rem)]`, the frame (a flex item) sized itself to the image as tall as the row,
+  2160×450 at 460 px, ignoring the cap, which holds a percentage; the image inside then took the
+  288 px cap and left the rest of the frame empty. `Thumbnail` sets the width and height in pixels
+  from the image's size and leaves the percentage to `max-width: 100%` alone.
 
 
 ## Principles at work here
