@@ -979,7 +979,7 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
-| `fctl:app-log`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most); in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account) or Clear; the app closes |
+| `fctl:app-log`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most); in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account), a 401 or 403 from the server, or Clear; the app closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
@@ -1007,8 +1007,11 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
 - **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
   page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
   is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
-  most once a minute, so that a reload that doesn't help isn't tried again and again; the log
-  says when it held back.
+  most once a minute, so that a reload that doesn't help isn't tried again and again, and never
+  where sessionStorage can't note it; the log says when it held back.
+- **In bounds.** The same entry again counts on the one it repeats (`Error: boom (×3)`), and
+  errors are kept ten a minute at most, so that a handler failing on every frame doesn't push
+  out the starts and returns the log is for.
 - **WebGL.** `GLCanvas` and the error pages' stream let a scene's context go as its canvas
   leaves the page (`WEBGL_lose_context`), rather than when the browser collects it, and log what
   happens to it. A canvas still on the page keeps it: React's development mode mounts a scene
