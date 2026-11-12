@@ -257,9 +257,11 @@ says whose subscription it runs on, and a plan at its limit shows there.
   (amber, a gauge), **Claude Max** and **Claude Ultra** "Usually enough" (`ink-3`, a check). Each is as wide as its
   words, 32 px apart, and moves to the next line whole where they don't fit: on a phone, Pro alone, then Max and
   Ultra side by side.
-- The plan of the reader's connection that new sessions run on (`planOf`: Ultra by its login's tier) has a small
-  *Your plan* pill beside its name, its line no taller than the name's, so that the verdicts stay level. No
-  connection, or one whose plan Claude didn't say: no pill.
+- The plan of the connection the reader's sessions in the workspace run on (`connectionIn`: the working one chosen for
+  the workspace, else their default; `planOf`: Ultra by its login's tier) has a small *Your plan* pill beside its
+  name, its line no taller than the name's, so that the verdicts stay level. No working connection, or one whose plan
+  Claude didn't say: no pill. On the tab, none until the project's workspace has loaded, so the pill doesn't jump
+  from the default's plan to the chosen one's.
 
 ## Edge cases
 
