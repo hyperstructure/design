@@ -630,6 +630,27 @@ Screen neither edge leaves the page.
   each location's own key, which a replace makes anew, and a session's at its newest work,
   which it scrolls to itself.
 
+**Where it opens again** (`lib/reopen.ts`, fctl#525). iOS ends an app on the Home Screen that
+has been in the background a while, and the next time it comes to the front it starts afresh at
+its start page, the Agent Floor. So in the app on an iPhone's or iPad's Home Screen the page it
+is on is kept, and a fresh start at the Agent Floor goes back to it, as an app that iOS never
+ended would be.
+
+- **What is kept.** The signed-in app's pages, with the tab or list they show (`tab`, `state`,
+  `scope`, `q`, `workspace`), and when the app was last on screen with one: as it opens a page
+  and as it goes to the background. Not signing in, a device to approve, or what a one-off link
+  brought (`?github=installed`, a place found). Every way of signing out forgets it, and so does
+  a sign-in that ended.
+- **When it goes back.** Only on a fresh start (sessionStorage is empty: the app's own page
+  loads, such as Back home on the error page, go where they go), at the start page itself, a
+  minute or more after the app was last on screen. Closing the app from the app switcher as it
+  is used and opening it again comes sooner and starts at the Agent Floor: iOS tells a page
+  nothing as it ends it, so time is all that tells the two apart, and an app closed after
+  longer in the background opens on its page.
+- **Notifications.** A tap on one that starts the app opens its page instead: before going
+  back, the app looks, for at most half a second, for the click the service worker keeps.
+- **How.** Before the first page shows, which keeps the Agent Floor from showing first.
+
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
 room, instead of opening a dialog. The palette loses its blurs and its rise ([The command palette](#the-command-palette-k)).
@@ -979,6 +1000,7 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
+| `fctl:left`; sessionStorage `fctl:running` | on an iPhone's or iPad's Home Screen, the page the app was on and when it was last on screen; that this run started | the next page, or sign-out or a 401 or 403 from the server; the app closes |
 | `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), someone else signing in, or Clear |
 | sessionStorage `fctl:log-running`, `fctl:recovered-at` | that this run started, and when it last reloaded to recover | the app or browser tab closes |
 
