@@ -1007,9 +1007,9 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
 sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it
-clears the app log and keeps it for no one, and loads `/login` as a whole new page, which starts
-a new log with that page. That page, and another tab still open, may add to the log after it,
-about the account that signed out: those lines go as anyone signs in next.
+clears the app log and keeps it for no one, and loads `/login` as a whole new page of the same
+run. Another tab still open may add to the log after it, about the account that signed out: as
+anyone signs in next, the log keeps only the lines of the run that signed in.
 
 
 ## The app log, and coming back from the background
@@ -1032,8 +1032,10 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
   tab writes, rather than what its own tab read before.
 - **Whose.** The log notes the account it is kept for, and goes when someone else signs in. A
   sign-in that ends leaves it (a signed-out browser gets a 401 on every load, and the log may
-  tell why); signing out clears it and keeps it for no one (`forgetLog`), so that what is logged
-  after goes as anyone signs in. Clear empties it and keeps whose it is.
+  tell why); signing out clears it and keeps it for no one (`forgetLog`). Each entry notes its
+  run (a tab's ID in sessionStorage, which outlasts its own page loads), and the next sign-in
+  keeps only the lines of the run that signs in: its start and the sign-in page, not what other
+  tabs logged since. Clear empties it and keeps whose it is.
 - **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
   page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
   is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
