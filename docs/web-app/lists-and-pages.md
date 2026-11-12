@@ -502,7 +502,7 @@ Row actions follow how often the row is used:
 
 ## Settings (routes/settings.tsx, lib/settings.ts)
 
-**Why pages.** Settings was one column of thirteen sections, about 5,000 px tall on a computer and 7,400 px on a phone. It is now ten short pages in three groups, each a `?tab=` as other pages' tabs are: Profile, Email addresses, Workspaces, Claude, Linear (where the instance has a Linear app); Notifications, Appearance; Security, Access tokens, Your data. Rare and risky parts moved behind a step: the password changes in a dialog, so the page no longer shows two empty password fields, and advice that applied to every row is said once under the list.
+**Why pages.** Settings was one column of thirteen sections, about 5,000 px tall on a computer and 7,400 px on a phone. It is now eleven short pages in three groups, each a `?tab=` as other pages' tabs are: Profile, Email addresses, Workspaces, Claude, Linear (where the instance has a Linear app); Notifications, Appearance, App log; Security, Access tokens, Your data. Rare and risky parts moved behind a step: the password changes in a dialog, so the page no longer shows two empty password fields, and advice that applied to every row is said once under the list.
 
 **One container query decides the layout.**
 
@@ -522,7 +522,7 @@ Row actions follow how often the row is used:
 
 - A profile card first: 44 px avatar, the name at 15.5 px, "Profile · {address}".
 - The three groups as inset cards (18 px corners, rows split by hairlines). Rows at least 58 px tall: a 32 px icon tile, the page's name (14.5 px), its gist (what it says now: 12.5 px `ink-4`, amber where it needs the person) and a chevron. A row fills on `active:` when tapped.
-- Gists: "{address} and 2 more"; "3 workspaces"; "Not connected yet", "Needs reconnecting", "2 connections"; "Linked in Romanesco"; "On in this browser"; "Dark · 24-hour clock"; "Two-factor sign-in on · 2 passkeys", "Few recovery codes left"; "None yet", "2 tokens"; "Export it, or delete your account". A gist still loading leaves the name alone; the 58 px row barely moves when it arrives.
+- Gists: "{address} and 2 more"; "3 workspaces"; "Not connected yet", "Needs reconnecting", "2 connections"; "Linked in Romanesco"; "On in this browser"; "Dark · 24-hour clock"; "Kept in this browser, to copy into a report"; "Two-factor sign-in on · 2 passkeys", "Few recovery codes left"; "None yet", "2 tokens"; "Export it, or delete your account". A gist still loading leaves the name alone; the 58 px row barely moves when it arrives.
 
 **A page.**
 
@@ -544,6 +544,7 @@ Row actions follow how often the row is used:
 
 - **Appearance.** The theme is two radio cards, each a 16:10 picture of the app in that theme's own colors (sidebar, page, primary button), the real radio `sr-only` so the card draws the focus ring; switching cross-fades, except under reduced motion.
 - **Two-factor setup.** A wide dialog: a 200 px QR code (dark on white in both themes, drawn ring by ring) beside the steps; "Can't scan it? Type in a key instead"; a six-box code field that submits itself on the sixth digit, shakes on a wrong code and says what to check on the second ("check that your phone sets its clock automatically"). On a touch screen it offers "Open in your app" and doesn't raise the keyboard. Recovery codes come with Copy all, Download and Print (a page of only the codes), and "Done" waits for "I saved my recovery codes".
+- **App log** (`components/settings/app-log.tsx`, `lib/app-log.ts`). What the app did in this browser lately, for a report when it misbehaves: Copy the log (the browser and screen first, then one line per entry, oldest first, times to the second), Clear, and the count, over the log in a mono `pre` that opens scrolled to its end and wraps on phones. Its gist in the list: "Kept in this browser, to copy into a report". It is the page to ask for when the app on an iPhone's Home Screen comes back black ([the shell](shell.md#the-app-log-and-coming-back-from-the-background)).
 - **Your data.** What the export holds as eleven short items in two columns from 576 px; the export link disabled until its weekly turn ("You can export it once a week: again from {day}, {time}."); then the danger zone. Deleting the account lists exactly what goes and what stays ("Repositories on GitHub are not touched."), offers "Want a copy first? Export your data.", and asks to type the address.
 
 **Old addresses still land.** `askedTab` takes the address's tab first, then a hash from before Settings had pages (`#claude`, `#connect-claude`), then the way back from Linear (`?linear=`) and from Google (`?linked=`, `?error=`; Google's return address can't carry a tab). A mistyped `/settings/passkeys` suggests Security, and ⌘K finds a page by its keywords ("2fa", "passkeys", "pat").

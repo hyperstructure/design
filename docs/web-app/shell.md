@@ -1001,11 +1001,56 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
 | `fctl:left`; sessionStorage `fctl:running` | on an iPhone's or iPad's Home Screen, the page the app was on and when it was last on screen; that this run started | the next page, or sign-out or a 401 or 403 from the server; the app closes |
+| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most, each with its run's ID) and the account it is kept for, or after a sign-out the run that signed out; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), which keeps the log for its own run alone, or someone else signing in; Clear empties it and keeps whose it is |
+| sessionStorage `fctl:log-running`, `fctl:recovered-at` | this run's ID (a random one), and when it last reloaded to recover | the app or browser tab closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
-sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it loads
-`/login` as a whole new page.
+sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it
+clears the app log and keeps it for a new run of its own, and loads `/login` as a whole new page
+of that run. Another tab still open may add to the log after it, about the account that signed
+out: as anyone signs in next, the log keeps only the lines of the run that signed out.
+
+
+## The app log, and coming back from the background
+
+The app on an iPhone's Home Screen has come back from the background black, and stayed so until
+it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watched it happen.
+`lib/app-log.ts` keeps what each run goes through, in localStorage, for Settings → App log.
+
+- **What it keeps.** How each run started (a fresh run or a page load of its own, the navigation
+  type, where it runs, the page, the build, the viewports); in an installed app, how the run
+  before ended, from its heartbeat every 2 seconds on screen (it stopped on screen, or ended in
+  the background); each trip to the background and back, with how long it was away and the
+  viewports then (Safari's broken ones read like a visual height of -59); the main thread stuck
+  for over 3 seconds on screen; errors and unhandled rejections, the error page's errors and
+  React's crashes; WebGL losing a scene's context, getting it back or giving none; a page
+  unloading, the page cache, freezing and going offline. Nothing that looks like a secret
+  (`lib/redact.ts`).
+- **Tabs.** They share the log, each adding to what is stored; they keep no heartbeat, as they
+  run side by side. Settings → App log reads the stored log as it opens, and again as another
+  tab writes, rather than what its own tab read before.
+- **Whose.** The log notes the account it is kept for, and goes when someone else signs in. A
+  sign-in that ends leaves it (a signed-out browser gets a 401 on every load, and the log may
+  tell why). Each entry notes its run (a tab's random ID in sessionStorage, which outlasts the
+  run's own page loads). Signing out clears the log and keeps it for its tab's run alone, under a
+  new ID (`forgetLog`): a duplicated tab copies sessionStorage, and with it the ID it had. The
+  next sign-in, in whichever tab, keeps only that run's lines, its start and the sign-in page,
+  not what other tabs logged about the account that signed out. Clear empties it and keeps
+  whose it is.
+- **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
+  page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
+  is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
+  most once a minute, so that a reload that doesn't help isn't tried again and again, and never
+  where sessionStorage can't note it; the log says when it held back.
+- **In bounds.** The same entry again counts on the one it repeats (`Error: boom (×3)`), and
+  errors are kept ten a minute at most, so that a handler failing on every frame doesn't push
+  out the starts and returns the log is for.
+- **WebGL.** `GLCanvas` and the error pages' stream let a scene's context go as its canvas
+  leaves the page (`WEBGL_lose_context`), rather than when the browser collects it, and log what
+  happens to it. A canvas still on the page keeps it: React's development mode mounts a scene
+  again on the same canvas. One that never got a context (`data-webgl="unavailable"`) is left
+  alone, as asking for its context again would create one, which may cost another scene its own.
 
 
 ## Known gaps
