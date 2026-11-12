@@ -1000,6 +1000,7 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
+| `fctl:left`; sessionStorage `fctl:running` | on an iPhone's or iPad's Home Screen, the page the app was on and when it was last on screen; that this run started | the next page, or sign-out or a 401 or 403 from the server; the app closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
