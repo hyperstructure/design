@@ -44,8 +44,9 @@ instance requires two-factor sign-in and the person hasn't set it up. `AppShell`
 page and can be resized and folded. Below it, the sidebar is a drawer, a top bar holds the menu
 button, and nothing folds.
 
-**Stacking order.** Sticky bars are z-10, the shade z-20, the drawer z-30, menus z-40, and the
-palette, toasts and sequence hint z-50.
+**Stacking order.** Sticky bars are z-10, the shade z-20, the drawer z-30, menus z-40, the
+palette, toasts and sequence hint z-50, and the band over the status bar (`body::before` in
+`app.css`, only while the page is under the bar) 60.
 
 **Details that hold it together.**
 
@@ -61,8 +62,11 @@ palette, toasts and sequence hint z-50.
   covers notches in landscape and installed apps.
 - **Safari's status bar over the page.** The drawer and the top bar pad their tops by
   `--safe-top`, which is 0 except when Safari lays the installed app on an iPhone out under the
-  status bar after the app switcher: their background then fills behind the bar, and what they
-  hold starts below it (`lib/viewport.ts`, fctl#514).
+  status bar after the app switcher (`lib/viewport.ts`, fctl#514). iOS then frosts the page's
+  top, blurring what is under the bar and a little below it, so `--safe-top` covers that fade
+  too, and a band of `canvas` lies over it all, above the drawer and the shade: the drawer
+  starts below the band, and the top bar's logo and the drawer's head stay sharp. The band
+  sits 36 px lower than the status bar's own, which iOS draws while the page is below it.
 - **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl`, with no border: the
   page blurs as it scrolls under them, which marks their edge. Beside the page, the sidebar is
   `bg-surface/80` with a blur and no border either: its lighter surface sets it apart from the
