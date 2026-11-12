@@ -538,6 +538,14 @@ one that moved (a message that was sending, sent) is found again by its address.
 `useLightbox` gives a lightbox of its own to render. Thumbnails are real links (`cursor-zoom-in`):
 `plainClick(e)` lets a plain click open the lightbox and leaves a modified one to open a tab.
 
+**Thumbnail** (`thumbnail.tsx`). The picture in such a link, in a frame (border, radius,
+`overflow-hidden`) that takes its size: as tall as its row (96 px for images an agent read, 144 px
+for messages' and published ones) and as wide as the image's proportions make it, up to a widest
+(288 or 320 px). A wider image shows whole at that width, shorter than the row, and a taller one
+narrower, down to a third of the row on the short side: past that, the image is cut about its
+middle (`object-cover`). One whose size is known takes its room before it loads; any other is as
+tall as the row until it loads. On a screen narrower than it, the frame narrows and cuts the image.
+
 **Anatomy.** A full-screen transparent `<dialog>`; the backdrop black at 75% with a blur, fading
 in; the picture zooming in from 97%, within the screen less 8 rem of height, with a border and a
 deep shadow. Round translucent pills: the X at the top right, "2 of 5" at the top left (mono,
