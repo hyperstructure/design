@@ -274,13 +274,13 @@ and a one-color arc. They run in step: `syncShimmers()` (`web/src/lib/shimmer.ts
   `--safe-top` in `app.css` says how much of the page's top to keep clear: the bar, as Safari's
   top safe area says or, where that stays 0 though the layout viewport is as tall as the screen,
   as `watchViewport()` last saw it above the page (`--status-bar`, kept in `localStorage`), and
-  on an iPhone's or iPad's Home Screen the band's fade below it (`--status-bar-fade`, 36 px),
-  only while a bar covers the page. It is 0 everywhere else. A band of `canvas` covers it
-  (`body::before`, above the drawer and the palette's shade), as the status bar's own band
-  does while the page is below it, so that the frosting falls on one plain color. Sticky bars
-  and the drawer pad their tops by it (`box-content h-14 pt-(--safe-top)`); dialogs start below
-  it (`top-[calc(var(--viewport-shift)+var(--safe-top))]`, their max height less it), and the
-  lightbox's buttons sit under it. New elements pinned to the top need the same.
+  on an iPhone's or iPad's Home Screen the band's fade below it (`--status-bar-fade`, 36 px: the
+  fade's 34 and 2 to be clear of it), only while a bar covers the page. It is 0 everywhere else.
+  A band of `canvas` covers it (`body::before`, above the drawer and the palette's shade), as the
+  status bar's own band does while the page is below it, so that the frosting falls on one plain
+  color. Sticky bars and the drawer pad their tops by it (`box-content h-14 pt-(--safe-top)`);
+  dialogs start below it (`top-[calc(var(--viewport-shift)+var(--safe-top))]`, their max height
+  less it), and the lightbox's buttons sit under it. New elements pinned to the top need the same.
 
 ## Components
 
