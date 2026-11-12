@@ -1001,15 +1001,15 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
 | `fctl:left`; sessionStorage `fctl:running` | on an iPhone's or iPad's Home Screen, the page the app was on and when it was last on screen; that this run started | the next page, or sign-out or a 401 or 403 from the server; the app closes |
-| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), which keeps the log for no one, or someone else signing in; Clear empties it and keeps whose it is |
-| sessionStorage `fctl:log-running`, `fctl:recovered-at` | that this run started, and when it last reloaded to recover | the app or browser tab closes |
+| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most, each with its run's ID) and the account it is kept for, or after a sign-out the run that signed out; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), which keeps the log for its own run alone, or someone else signing in; Clear empties it and keeps whose it is |
+| sessionStorage `fctl:log-running`, `fctl:recovered-at` | this run's ID (a random one), and when it last reloaded to recover | the app or browser tab closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
 sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it
-clears the app log and keeps it for no one, and loads `/login` as a whole new page of the same
-run. Another tab still open may add to the log after it, about the account that signed out: as
-anyone signs in next, the log keeps only the lines of the run that signed in.
+clears the app log and keeps it for a new run of its own, and loads `/login` as a whole new page
+of that run. Another tab still open may add to the log after it, about the account that signed
+out: as anyone signs in next, the log keeps only the lines of the run that signed out.
 
 
 ## The app log, and coming back from the background
@@ -1032,10 +1032,12 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
   tab writes, rather than what its own tab read before.
 - **Whose.** The log notes the account it is kept for, and goes when someone else signs in. A
   sign-in that ends leaves it (a signed-out browser gets a 401 on every load, and the log may
-  tell why); signing out clears it and keeps it for no one (`forgetLog`). Each entry notes its
-  run (a tab's ID in sessionStorage, which outlasts its own page loads), and the next sign-in
-  keeps only the lines of the run that signs in: its start and the sign-in page, not what other
-  tabs logged since. Clear empties it and keeps whose it is.
+  tell why). Each entry notes its run (a tab's random ID in sessionStorage, which outlasts the
+  run's own page loads). Signing out clears the log and keeps it for its tab's run alone, under a
+  new ID (`forgetLog`): a duplicated tab copies sessionStorage, and with it the ID it had. The
+  next sign-in, in whichever tab, keeps only that run's lines, its start and the sign-in page,
+  not what other tabs logged about the account that signed out. Clear empties it and keeps
+  whose it is.
 - **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
   page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
   is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
