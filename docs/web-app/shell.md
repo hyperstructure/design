@@ -630,6 +630,24 @@ Screen neither edge leaves the page.
   each location's own key, which a replace makes anew, and a session's at its newest work,
   which it scrolls to itself.
 
+**Where it opens again** (`lib/reopen.ts`, fctl#525). iOS ends an app on the Home Screen that
+has been in the background a while, and the next time it comes to the front it starts afresh at
+its start page, the Agent Floor. So in the app on an iPhone's or iPad's Home Screen the page it
+is on is kept, and a fresh start at the Agent Floor goes back to it, as an app that iOS never
+ended would be.
+
+- **What is kept.** The signed-in app's pages, with the tab or list they show (`tab`, `state`,
+  `scope`, `q`, `workspace`), and when the app was last on screen with one: as it opens a page
+  and as it goes to the background. Not signing in, a device to approve, or what a one-off link
+  brought (`?github=installed`, a place found). Signing out forgets it.
+- **When it goes back.** Only on a fresh start (sessionStorage is empty: the app's own page
+  loads, such as Back home on the error page, go where they go), at the start page itself, a
+  minute or more after the app was last on screen. Closing the app from the app switcher and
+  opening it again comes sooner and starts at the Agent Floor: iOS tells a page nothing as it
+  ends it, so time is all that tells the two apart.
+- **How.** Before the router reads the address, which keeps the Agent Floor from showing
+  first.
+
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
 room, instead of opening a dialog. The palette loses its blurs and its rise ([The command palette](#the-command-palette-k)).
