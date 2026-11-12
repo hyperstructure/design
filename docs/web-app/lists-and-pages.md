@@ -522,7 +522,7 @@ Row actions follow how often the row is used:
 
 - A profile card first: 44 px avatar, the name at 15.5 px, "Profile · {address}".
 - The three groups as inset cards (18 px corners, rows split by hairlines). Rows at least 58 px tall: a 32 px icon tile, the page's name (14.5 px), its gist (what it says now: 12.5 px `ink-4`, amber where it needs the person) and a chevron. A row fills on `active:` when tapped.
-- Gists: "{address} and 2 more"; "3 workspaces"; "Not connected yet", "Needs reconnecting", "2 connections"; "Linked in Romanesco"; "On in this browser"; "Dark · 24-hour clock"; "Two-factor sign-in on · 2 passkeys", "Few recovery codes left"; "None yet", "2 tokens"; "Export it, or delete your account". A gist still loading leaves the name alone; the 58 px row barely moves when it arrives.
+- Gists: "{address} and 2 more"; "3 workspaces"; "Not connected yet", "Needs reconnecting", "2 connections"; "Linked in Romanesco"; "On in this browser"; "Dark · 24-hour clock"; "Kept in this browser, to copy into a report"; "Two-factor sign-in on · 2 passkeys", "Few recovery codes left"; "None yet", "2 tokens"; "Export it, or delete your account". A gist still loading leaves the name alone; the 58 px row barely moves when it arrives.
 
 **A page.**
 

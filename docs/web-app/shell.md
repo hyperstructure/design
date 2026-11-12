@@ -979,12 +979,15 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
-| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account), someone else signing in, or Clear; the app closes |
+| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), someone else signing in, or Clear |
+| sessionStorage `fctl:log-running`, `fctl:recovered-at` | that this run started, and when it last reloaded to recover | the app or browser tab closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
-sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it loads
-`/login` as a whole new page.
+sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it
+clears the app log, and loads `/login` as a whole new page, which starts a new log with that
+page. Another tab still open may add to the log after it: lines about that tab's run, which go
+with the rest when someone else signs in.
 
 
 ## The app log, and coming back from the background
