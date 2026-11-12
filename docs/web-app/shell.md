@@ -639,14 +639,17 @@ ended would be.
 - **What is kept.** The signed-in app's pages, with the tab or list they show (`tab`, `state`,
   `scope`, `q`, `workspace`), and when the app was last on screen with one: as it opens a page
   and as it goes to the background. Not signing in, a device to approve, or what a one-off link
-  brought (`?github=installed`, a place found). Signing out forgets it.
+  brought (`?github=installed`, a place found). Every way of signing out forgets it, and so does
+  a sign-in that ended.
 - **When it goes back.** Only on a fresh start (sessionStorage is empty: the app's own page
   loads, such as Back home on the error page, go where they go), at the start page itself, a
-  minute or more after the app was last on screen. Closing the app from the app switcher and
-  opening it again comes sooner and starts at the Agent Floor: iOS tells a page nothing as it
-  ends it, so time is all that tells the two apart.
-- **How.** Before the router reads the address, which keeps the Agent Floor from showing
-  first.
+  minute or more after the app was last on screen. Closing the app from the app switcher as it
+  is used and opening it again comes sooner and starts at the Agent Floor: iOS tells a page
+  nothing as it ends it, so time is all that tells the two apart, and an app closed after
+  longer in the background opens on its page.
+- **Notifications.** A tap on one that starts the app opens its page instead: before going
+  back, the app looks, for at most half a second, for the click the service worker keeps.
+- **How.** Before the first page shows, which keeps the Agent Floor from showing first.
 
 **What else differs on phones.** No fold, rail or resize handle; no hide button; no Keyboard
 shortcuts in the person's menu or the palette. N goes to the Agent Floor, whose task box has
