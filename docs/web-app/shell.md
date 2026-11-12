@@ -1001,15 +1001,15 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
 | `fctl:left`; sessionStorage `fctl:running` | on an iPhone's or iPad's Home Screen, the page the app was on and when it was last on screen; that this run started | the next page, or sign-out or a 401 or 403 from the server; the app closes |
-| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), someone else signing in, or Clear |
+| `fctl:app-log`, `fctl:app-log-owner`, `fctl:app-beat` | the app log (300 entries at most) and the account it is kept for; in an installed app, when the run was last heard from and whether on screen | sign-out (the person's menu, the two-factor page, deleting the account), which keeps the log for no one, or someone else signing in; Clear empties it and keeps whose it is |
 | sessionStorage `fctl:log-running`, `fctl:recovered-at` | that this run started, and when it last reloaded to recover | the app or browser tab closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
 sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it
-clears the app log, and loads `/login` as a whole new page, which starts a new log with that
-page. Another tab still open may add to the log after it: lines about that tab's run, which go
-with the rest when someone else signs in.
+clears the app log and keeps it for no one, and loads `/login` as a whole new page, which starts
+a new log with that page. That page, and another tab still open, may add to the log after it,
+about the account that signed out: those lines go as anyone signs in next.
 
 
 ## The app log, and coming back from the background
@@ -1028,10 +1028,12 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
   unloading, the page cache, freezing and going offline. Nothing that looks like a secret
   (`lib/redact.ts`).
 - **Tabs.** They share the log, each adding to what is stored; they keep no heartbeat, as they
-  run side by side.
+  run side by side. Settings → App log reads the stored log as it opens, and again as another
+  tab writes, rather than what its own tab read before.
 - **Whose.** The log notes the account it is kept for, and goes when someone else signs in. A
   sign-in that ends leaves it (a signed-out browser gets a 401 on every load, and the log may
-  tell why); signing out clears it.
+  tell why); signing out clears it and keeps it for no one (`forgetLog`), so that what is logged
+  after goes as anyone signs in. Clear empties it and keeps whose it is.
 - **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
   page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
   is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
