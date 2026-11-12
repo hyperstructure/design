@@ -51,6 +51,7 @@ they read on:
   repositories, schedules, secrets, as far as you let it) **Keeps going.** (wakes when a session finishes or you steer
   it, every hour at least; a fresh session if its own stops) **Asks without waiting.** (decisions and credentials come
   here; secrets never into a transcript).
+- Under the points, as wide as them, the [token hungry notice](#the-token-hungry-notice).
 - The preview (300 px, hidden on phones): a card "At work · Checks in every hour" with the comet on its mark and a
   three-item plan, one ticked; a card of two sessions with their status dots; and a blue "It needs a secret" card with
   `CLOUDFLARE_API_TOKEN`. Made up, drawn with the app's own parts, `aria-hidden`.
@@ -235,7 +236,30 @@ Everything polls while the tab is open: every 4 s while its session works, 15 s 
   It asks you" with the question, opening the tab.
 - **The workspace's settings**: an *Autopilots* section with the pill, a switch ("Let projects have an autopilot") and
   what it means; turning it off asks first, saying every autopilot pauses and their sessions carry on. A link card to
-  the workspace's own autopilot when it has one; otherwise how to put the whole workspace on autopilot.
+  the workspace's own autopilot when it has one; otherwise how to put the whole workspace on autopilot. Last, on or
+  off, the [token hungry notice](#the-token-hungry-notice).
+
+### The token hungry notice
+
+(`components/project/autopilot.tsx` `TokenHungry`, fctl#532.) An autopilot spends its owner's Claude plan faster than
+anything else in fctl: several sessions at once, kept going without anyone, and its own between them. Someone who
+puts one on, or lets projects have one, learns that before, where they decide: under the intro's points, and last in
+the workspace's *Autopilots* section, whether it's on or off. Once one is on, the tab doesn't repeat it: its header
+says whose subscription it runs on, and a plan at its limit shows there.
+
+- An amber card (amber is for limits): `border-amber/30`, the surface under an `amber-soft` wash that fades out by 60 %
+  of its height, radius 18, as the intro preview's blue "It needs a secret" card is drawn.
+- Its title in amber, 13.5 px medium, after a flame: **"Autopilots are token hungry"**, the AI lingo on purpose, so
+  that it reads as the feature's nature, not an error. Then 13 px `ink-3`: "An autopilot runs several sessions at
+  once and keeps them going on its own, so it can drain a Claude plan's usage quickly. On a fresh build at full speed,
+  its sessions may hit the plan's ceiling and pause there until the limit resets."
+- Under an amber hairline, the plans, each its name over its verdict: **Claude Pro** "May hit its five-hour limit"
+  (amber, a gauge), **Claude Max** and **Claude Ultra** "Usually enough" (`ink-3`, a check). Each is as wide as its
+  words, 32 px apart, and moves to the next line whole where they don't fit: on a phone, Pro alone, then Max and
+  Ultra side by side.
+- The plan of the reader's connection that new sessions run on (`planOf`: Ultra by its login's tier) has a small
+  *Your plan* pill beside its name, its line no taller than the name's, so that the verdicts stay level. No
+  connection, or one whose plan Claude didn't say: no pill.
 
 ## Edge cases
 
