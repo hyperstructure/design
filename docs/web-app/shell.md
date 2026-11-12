@@ -1023,6 +1023,7 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
   happens to it. A canvas still on the page keeps it: React's development mode mounts a scene
   again on the same canvas.
 
+
 ## Known gaps
 Found reading the code and not yet confirmed on a device. They are not decisions: they describe
 what the code does now. Fix one when you're near it, and don't copy it.
