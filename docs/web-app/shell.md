@@ -1049,7 +1049,8 @@ it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watc
 - **WebGL.** `GLCanvas` and the error pages' stream let a scene's context go as its canvas
   leaves the page (`WEBGL_lose_context`), rather than when the browser collects it, and log what
   happens to it. A canvas still on the page keeps it: React's development mode mounts a scene
-  again on the same canvas.
+  again on the same canvas. One that never got a context (`data-webgl="unavailable"`) is left
+  alone, as asking for its context again would create one, which may cost another scene its own.
 
 
 ## Known gaps
