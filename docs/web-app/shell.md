@@ -979,12 +979,40 @@ what the server stores. New keys use the `fctl:` prefix; the older ones use a hy
 | `fctl:sidebar` | the kept copy of the lists, per user | sign-out, or a 401 or 403 from the server |
 | `fctl:hidden-sessions` | hidden sessions | they work again, 7 days, or sign-out |
 | `fctl:pulls-mine`; sessionStorage `fctl:pulls-left` | Mine; the tab and filter the pull requests page was left on | changed; the browser tab closes |
+| `fctl:app-log`, `fctl:app-beat`; sessionStorage `fctl:log-running`, `fctl:recovered-at` | the app log (300 entries at most); in an installed app, when the run was last heard from and whether on screen; that this run started, and when it last reloaded to recover | sign-out (the person's menu, the two-factor page, deleting the account) or Clear; the app closes |
 
 **Signing out** (the person's menu) ends the browser's push subscription, forgets drafts, signs
 out on the server, clears the query cache and the title count and badge, and forgets the kept
 sidebar and hidden sessions last, so that no list arriving meanwhile is kept again. Then it loads
 `/login` as a whole new page.
 
+
+## The app log, and coming back from the background
+
+The app on an iPhone's Home Screen has come back from the background black, and stayed so until
+it was closed, again and again (fctl#274, #350, #514, #515), and nobody has watched it happen.
+`lib/app-log.ts` keeps what each run goes through, in localStorage, for Settings → App log.
+
+- **What it keeps.** How each run started (a fresh run or a page load of its own, the navigation
+  type, where it runs, the page, the build, the viewports); in an installed app, how the run
+  before ended, from its heartbeat every 2 seconds on screen (it stopped on screen, or ended in
+  the background); each trip to the background and back, with how long it was away and the
+  viewports then (Safari's broken ones read like a visual height of -59); the main thread stuck
+  for over 3 seconds on screen; errors and unhandled rejections, the error page's errors and
+  React's crashes; WebGL losing a scene's context, getting it back or giving none; a page
+  unloading, the page cache, freezing and going offline. Nothing that looks like a secret
+  (`lib/redact.ts`).
+- **Tabs.** They share the log, each adding to what is stored; they keep no heartbeat, as they
+  run side by side.
+- **Coming back with nothing.** 3 seconds after the app comes back, it looks: a root with no
+  page loads the page again (`reloadToRecover`), and no part of the page at the screen's middle
+  is logged. React's `onUncaughtError`, an error that took the whole app down, reloads too. At
+  most once a minute, so that a reload that doesn't help isn't tried again and again; the log
+  says when it held back.
+- **WebGL.** `GLCanvas` and the error pages' stream let a scene's context go as its canvas
+  leaves the page (`WEBGL_lose_context`), rather than when the browser collects it, and log what
+  happens to it. A canvas still on the page keeps it: React's development mode mounts a scene
+  again on the same canvas.
 
 ## Known gaps
 Found reading the code and not yet confirmed on a device. They are not decisions: they describe
