@@ -63,10 +63,12 @@ palette, toasts and sequence hint z-50, and the band over the status bar (`body:
 - **Safari's status bar over the page.** The drawer and the top bar pad their tops by
   `--safe-top`, which is 0 except when Safari lays the installed app on an iPhone out under the
   status bar after the app switcher (`lib/viewport.ts`, fctl#514). iOS then frosts the page's
-  top, blurring what is under the bar and a little below it, so `--safe-top` covers that fade
-  too, and a band of `canvas` lies over it all, above the drawer and the shade: the drawer
-  starts below the band, and the top bar's logo and the drawer's head stay sharp. The band
-  sits 36 px lower than the status bar's own, which iOS draws while the page is below it.
+  top, blurring what is under the bar and about 34 px below it, so `--safe-top` covers most of
+  that fade too, and a band of `canvas` lies over it, above the drawer and the shade: the drawer
+  starts below the band, the fade's last 12 px fall on the top bar's and the drawer's plain
+  tops, and their logo, icons and title stay sharp below it. The band sits 22 px lower than the
+  status bar's own, which iOS draws while the page is below it: the least that keeps them sharp.
+  At 36 px lower (fctl#533) the top bar looked stuck too far down.
 - **Shared surfaces.** Sticky bars use `bg-canvas/80 backdrop-blur-xl`, with no border: the
   page blurs as it scrolls under them, which marks their edge. Beside the page, the sidebar is
   `bg-surface/80` with a blur and no border either: its lighter surface sets it apart from the
