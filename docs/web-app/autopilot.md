@@ -133,8 +133,9 @@ the menu off at its foot, and *Take off autopilot…* couldn't be reached.
   that nudges right on hover; full width on a phone. The answer row gains a paperclip (a field-height `Button`)
   between the textarea and send, files paste into the textarea and drop on the answer area (only there, as the tab
   may show several asks: "Drop to attach" over it), and wait above the textarea in the composer's tray. The line under
-  it says where they go: "Files you attach go to {slug}#{n} with your answer, in a message from you. It hears at
-  once." An answer pill clicked with files waiting sends them with it; files alone send too. The toast says "Sent
+  it, in place of the usual one, still says it doesn't wait and adds where the files go: "It goes on with what it can
+  meanwhile. Files you attach go to {slug}#{n} with your answer, in a message from you." An answer pill clicked with
+  files waiting sends them with it; files alone send too. The toast says "Sent
   {slug}#{n} the file: it hears now" (or "the 3 files"). If the message can't go (the session failed, the person
   can't message it), the files come back to the tray and the ask stays open.
 - A secret: a key icon, "It needs a secret", the name in a mono chip (and "for {project}" when it's another's), what
