@@ -128,6 +128,16 @@ the menu off at its foot, and *Take off autopilot…* couldn't be reached.
   characters ("Show all"), the answers as pills, and "Or answer in your own words" with a send button (⌘Enter). Under
   it: "It goes on with what it can meanwhile, and hears your answer at once." and *Decline…*, which asks for an
   optional reason in a dialog.
+- A question about a session (`about`: one it started that needs files only people have, say): under the question, a
+  link to it in a sunken chip, its status dot when it's one of its own, `{slug}#{n}` in mono, its title, and an arrow
+  that nudges right on hover; full width on a phone. The answer row gains a paperclip (a field-height `Button`)
+  between the textarea and send, files paste into the textarea and drop on the answer area (only there, as the tab
+  may show several asks: "Drop to attach" over it), and wait above the textarea in the composer's tray. The line under
+  it, in place of the usual one, still says it doesn't wait and adds where the files go: "It goes on with what it can
+  meanwhile. Files you attach go to {slug}#{n} with your answer, in a message from you." An answer pill clicked with
+  files waiting sends them with it; files alone send too. The toast says "Sent
+  {slug}#{n} the file: it hears now" (or "the 3 files"). If the message can't go (the session failed, the person
+  can't message it), the files come back to the tray and the ask stays open.
 - A secret: a key icon, "It needs a secret", the name in a mono chip (and "for {project}" when it's another's), what
   it's for, then a masked field (`SecretInput`, mono) with **Save secret** (primary, shield icon), and the promise:
   "It goes into {project}'s secrets, encrypted. The autopilot hears only that it's set; sessions that start from now
@@ -325,4 +335,5 @@ wait on the agent or the agent wait on people.
   rests (its log, 5 and 20 s). *Needs you* polls every 30 s, and so do the session cards in its transcript while their
   session rests, so a new ask, or a session that starts working again, can take half a minute to show there.
 - A workspace's autopilot lives on its home project's tab; the workspace page only links to it.
-- Asks can't carry images uploaded by people in answers: answers are text.
+- Files in an answer go only to the session the question is about: an ask about no session takes text alone, and the
+  autopilot itself can't attach files to the sessions it starts (fctl#517).
