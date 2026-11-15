@@ -236,9 +236,41 @@ and 20 s).
   Below them the details go on as any session's, without what such a session doesn't keep: **Changes** shows only once
   it changed something (it plans and steers; its sessions change the code), and the **retrospective** and **memory**
   sections stay out, as its sessions record and read those. Its turns, work figures and facts stay.
+- **An earlier session of its own asks before a message goes to it** (`components/session/moved-on.tsx`). Once a fresh
+  session takes over (after 12 hours, past its handoff size, or as people asked), the earlier one's agent no longer
+  acts as the autopilot: its `fctl` reaches nothing, so a message there gets the work done in that session alone,
+  rather than planned and handed to sessions. Someone reading an old session's transcript, or one the sidebar opened
+  before the handoff, wrote there unawares, and nothing on the composer said so. Now:
+  - **Above the message box**, in the line kept for "… is typing", the autopilot's mark in amber and "The autopilot
+    works in **#20** now, not in this earlier session", the number a link there (its end truncates on a phone). Typing
+    still takes the line first.
+  - **Sending asks first**, in a card over the message box where the question card floats: an amber border and a soft
+    amber wash from its top (amber is caution), the mark in a round amber tile, "An earlier session of the autopilot"
+    in amber, then "The autopilot works in #20 now" (15 px) and why it matters: "This session's agent no longer acts
+    as the autopilot: it can't start sessions or steer them, so it would take your message on alone." An × ("Keep
+    editing") closes it. Under it, the two ways the message can go, as full-width rows, each what it does over a line
+    of what follows, with a round send arrow at its end:
+    - **Send to #20** (first, raised, its arrow in an ink circle as the composer's Send is): the session's state
+      beside it as the tab says it, a dot and a word (*At work*, *Waking*, *Resting*, *Paused*) and "started 2h ago";
+      then "The autopilot takes it up there, and you go with your message." It sends the message, with its files,
+      to that session, toasts "Sent to #20, where the autopilot works now" and opens it, where the message shows as
+      the reader's. Paused, the line says "The autopilot is paused, and acts again once someone resumes it." Someone
+      who can't message that session sees the row disabled: "You can follow it, but not message it: ask its owner for
+      the editor role."
+    - **Send here anyway** ("Resume here anyway" for a failed session): "This session's agent takes it up on its
+      own." It sends as the composer always does, and the page asks no more in this session until the reader leaves
+      it: someone who chose to talk to the old session once means to.
+  - **Keys.** The card takes the focus on its first row, so Enter, then Enter again, sends to where the autopilot is:
+    the habit of pressing Enter twice lands on the safe way. ↑ and ↓ move between the rows, Escape (or ×) goes back to
+    the message as it was, focused. Enter in the box while the card is open brings the focus back to the card. A line
+    under the rows says so ("↑↓ choose · ↵ send · esc back to your message"), left out on phones.
+  - The card says where the autopilot works, so the line above the box steps aside while it shows: one place says it.
+    The text and files stay in the box until a way is chosen; a failed send puts them back and leaves the card open.
+  - The card rises in (`animate-rise`) as the question card does.
 - **The now line** doesn't say *Your turn* where it isn't the reader's: its own session at rest says **Resting** —
-  "fctl wakes it when something needs it"; a session it started that waits says **The autopilot's turn** — "It hears
-  that the agent waits". Both in ink, with the mark, not the blue of *your move*.
+  "fctl wakes it when something needs it"; an earlier session of its own at rest says **Handed over** — "The autopilot
+  works in #20 now", as fctl wakes it there, not here; a session it started that waits says **The autopilot's turn** —
+  "It hears that the agent waits". All in ink, with the mark, not the blue of *your move*.
 
 ## Elsewhere
 

@@ -686,6 +686,10 @@ it." A failed send puts the text and files back and toasts the error.
 **Keys.** Enter sends, Shift+Enter breaks the line, Escape leaves the box for the page's single-key
 shortcuts, and `r` on the page comes back to it. Nothing fires while an input method composes.
 
+**An autopilot's earlier session.** There the line above the box says where the autopilot works now, and sending asks
+first, in a card over the box: send it to that session and go there, or here anyway
+([autopilots](autopilot.md#in-sessions)).
+
 **Attachments** (`attachments.tsx`). Files come with the paperclip, a paste (named for what was pasted), or a drop
 anywhere on the page, so a near miss never opens the file in the tab; with two forms on the page,
 the newest takes them. While a drag is over the page, the box shows a dashed accent border and
