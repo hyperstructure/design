@@ -564,12 +564,14 @@ image four times, or to its own size if that is more; one finger moves it and le
 tap zooms in three times or back out; past an image's edge a sideways move swipes on. A finger
 moving down more than sideways pulls an image that fits away (one zoomed in moves about instead): it
 follows the finger, the spot it touched under it, shrinking to half its size a screen's height down,
-as the backdrop, the X, "2 of 5" and the caption fade (all of them by half the screen's height
-down). Past a quarter of the height, or with a flick, it goes on down out of sight (220 ms,
-ease-out) as they fade out, and the lightbox closes; anything less, or a flick back up, settles it
-back. A second finger zooms it from where it is. The pictures beside the current one wait out of
-sight, loaded and `inert`. A video alone leaves fingers to its player, and a video or a picture
-that hasn't loaded isn't pulled. A file that fails says so ("This browser can't play x.webm.").
+as the backdrop fades (gone half the screen's height down) and the X, "2 of 5" and the caption
+twice as fast (gone a quarter of the way down, where letting go closes it: faded halfway, they lay
+over the page's header and text). Past a quarter of the height, or with a flick, it goes on down
+out of sight (220 ms, ease-out) as the backdrop fades out, and the lightbox closes; anything less,
+or a flick back up, settles it back. A second finger zooms it from where it is. The pictures beside
+the current one wait out of sight, loaded and `inert`. A video alone leaves fingers to its player,
+and a video or a picture that hasn't loaded isn't pulled. A file that fails says so ("This browser
+can't play x.webm.").
 
 **Building a gesture like these.** A small class fed measurements (`Pull`, `Swipe`, `Zoom`), so that
 tests can drive it; touch events with a non-passive `touchmove`; start past a slop and along the
