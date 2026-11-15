@@ -79,6 +79,7 @@ turning pink).
 | draw | a plan step checked off | its check draws itself, 320 ms | "done" |
 | listbox | a Select's list | grows out of its trigger 200 ms, options settle in one after another (18 ms each), the picked one flashes 160 ms, out 140 ms | |
 | zoom-in | the lightbox | a screenshot grows into place, 220 ms | |
+| pull away | the lightbox, on a phone | an image follows the finger that pulls it down, shrinking as the page shows through; let go, it goes on down 220 ms or settles back 260 ms | "put it away" |
 | sheet | the details on a phone | slides up 420 ms, follows the finger that pulls it, the page dims behind and brightens as it's pulled | |
 | shake / pop | two-factor codes | a wrong code shakes 380 ms; digits pop in with a spring, 200 ms | |
 

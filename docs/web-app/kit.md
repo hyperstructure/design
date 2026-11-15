@@ -154,7 +154,7 @@ shimmer: 2 s across, 2 s at rest).
 - Come from where you came from: listboxes and popovers grow out of their trigger (the transform
   origin is the trigger's middle, and they start 4 px toward it), a sheet slides from its edge.
 - Leave faster than you came (200/140, 300/220, 420/260 ms). Dialogs, menus, the lightbox and
-  toasts go at once.
+  toasts go at once, except what a finger pulls away, which goes on from where it let go.
 - Press feedback is a scale: `active:scale-[0.97]` on buttons, 0.95 on icon buttons, 0.9 on swatches.
 - Stagger with an index: each item gets `style={{ "--i": i }}` and the CSS delays it by
   `min(var(--i), 7) * 18ms`, capped so that the end of a long list doesn't wait.
@@ -494,7 +494,7 @@ and the X slide it away before it closes; a click beside it closes it unless the
 inside; the focus goes back to its opener. On phones a finger pulls it down by its top, or by
 anything in it once that is scrolled to the top, if it moves down more than sideways: past a quarter
 of its height, or with a flick (0.4 px/ms over the last 100 ms, and 16 px), it goes, and anything
-less settles back; the backdrop brightens as it is pulled. It slides in with `@starting-style`
+less, or a flick back up, settles back; the backdrop brightens as it is pulled. It slides in with `@starting-style`
 (420 ms, ease-out) and away in 260 ms from wherever the finger left it, with a timer for when it
 can't slide. It holds the page still (`useHoldPage`, shared by overlays opened from one another,
 keeping a classic scrollbar's room so that the page doesn't shift).
@@ -550,7 +550,7 @@ middle (`object-cover`). One whose size is known takes its room before it loads;
 tall as the row until it loads. On a screen narrower than it, the frame narrows and cuts the image.
 
 **Anatomy.** A full-screen transparent `<dialog>`; the backdrop black at 75% with a blur, fading
-in; the picture zooming in from 97%, within the screen less 8 rem of height, with a border and a
+in (`@starting-style`, 300 ms); the picture zooming in from 97%, within the screen less 8 rem of height, with a border and a
 deep shadow. Round translucent pills: the X at the top right, "2 of 5" at the top left (mono,
 announced politely), step buttons at the sides, and the caption with the name, dimensions, size and
 a download button. Touch screens get neither the step buttons (fingers swipe) nor the download (iOS
@@ -561,13 +561,22 @@ and its caption closes, unless the press started on them; Escape closes; the foc
 ends the step buttons are `aria-disabled`, not disabled, so they keep the focus. A swipe brings the
 next picture in (a quarter of the width, or a flick), resisting at the ends; two fingers zoom an
 image four times, or to its own size if that is more; one finger moves it and lets it glide; a double
-tap zooms in three times or back out; past an image's edge a sideways move swipes on. The pictures
-beside the current one wait out of sight, loaded and `inert`. A video alone leaves fingers to its
-player. A file that fails says so ("This browser can't play x.webm.").
+tap zooms in three times or back out; past an image's edge a sideways move swipes on. A finger
+moving down more than sideways pulls an image that fits away (one zoomed in moves about instead): it
+follows the finger, the spot it touched under it, shrinking to half its size a screen's height down,
+as the backdrop fades (gone half the screen's height down) and the X, "2 of 5" and the caption
+twice as fast (gone a quarter of the way down, where letting go closes it: faded halfway, they lay
+over the page's header and text). Past a quarter of the height, or with a flick, it goes on down
+out of sight (220 ms, ease-out) as the backdrop fades out, and the lightbox closes; anything less,
+or a flick back up, settles it back. A second finger zooms it from where it is. The pictures beside
+the current one wait out of sight, loaded and `inert`. A video alone leaves fingers to its player,
+and a video or a picture that hasn't loaded isn't pulled. A file that fails says so ("This browser
+can't play x.webm.").
 
 **Building a gesture like these.** A small class fed measurements (`Pull`, `Swipe`, `Zoom`), so that
 tests can drive it; touch events with a non-passive `touchmove`; start past a slop and along the
-axis; follow 1:1, resisting where there is nothing more; decide by a quarter of the size or a flick;
+axis; follow 1:1, resisting where there is nothing more; decide by a quarter of the size or a flick,
+unless the last flick went back;
 settle with a CSS transition from where the finger left, with a timer in case `transitionend` never
 comes; leave the mouse's drags to the browser.
 
