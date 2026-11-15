@@ -330,8 +330,9 @@ says whose subscription it runs on, and a plan at its limit shows there.
 - **A workspace's autopilot, read by a member who isn't an admin**: what it does reaches projects they may not see, so
   its plan, notes, asks, sessions, files, log and own session are the admins' (`can.read`). The tab shows them the header,
   without a link to its session, and beside *How it works* a card, *What it does*: "It works across {workspace}, in
-  projects you may not see, so its plan, sessions, asks and log are for the workspace's admins, who steer it. Its
-  sessions in your projects show there, with its mark." Its admins see it all.
+  projects you may not see, so its plan, files, sessions, asks and log are for the workspace's admins, who steer it.
+  Its sessions in your projects show there, with its mark." Its admins see it all. The card names what people would
+  look for, not every part (its notes and own session go unsaid).
 
 ## Building one like it
 
