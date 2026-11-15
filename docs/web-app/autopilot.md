@@ -254,18 +254,24 @@ and 20 s).
       beside it as the tab says it, a dot and a word (*At work*, *Waking*, *Resting*, *Paused*) and "started 2h ago";
       then "The autopilot takes it up there, and you go with your message." It sends the message, with its files,
       to that session, toasts "Sent to #20, where the autopilot works now" and opens it, where the message shows as
-      the reader's. Paused, the line says "The autopilot is paused, and acts again once someone resumes it." Someone
-      who can't message that session sees the row disabled: "You can follow it, but not message it: ask its owner for
-      the editor role."
+      the reader's. Paused, the line says "The autopilot is paused, and acts again once someone resumes it." Where the
+      message can't go there, the row is disabled and its line says why: "It failed: fctl starts the autopilot a fresh
+      session at its next wake." (its word **Failed**, in red), "You can't open that session, so you can't message
+      it.", or "You can follow it, but not message it: ask its owner for the editor role." The focus then starts on
+      the other row.
     - **Send here anyway** ("Resume here anyway" for a failed session): "This session's agent takes it up on its
       own." It sends as the composer always does, and the page asks no more in this session until the reader leaves
       it: someone who chose to talk to the old session once means to.
   - **Keys.** The card takes the focus on its first row, so Enter, then Enter again, sends to where the autopilot is:
     the habit of pressing Enter twice lands on the safe way. ↑ and ↓ move between the rows, Escape (or ×) goes back to
-    the message as it was, focused. Enter in the box while the card is open brings the focus back to the card. A line
-    under the rows says so ("↑↓ choose · ↵ send · esc back to your message"), left out on phones.
+    the message as it was, focused; Escape in the box closes the card too, and a second one leaves the box. Enter in
+    the box while the card is open brings the focus back to the card. A line under the rows says so ("↑↓ choose · ↵
+    send · esc back to your message"), left out on phones.
   - The card says where the autopilot works, so the line above the box steps aside while it shows: one place says it.
-    The text and files stay in the box until a way is chosen; a failed send puts them back and leaves the card open.
+    The text and files stay in the box until a way is chosen; while they go, the chosen row spins, and a failed send
+    puts them back and leaves the card open. The card closes with the message: emptied, it closes, and a message
+    typed afresh asks afresh rather than open the card, and take the focus, at its first character. Leaving the
+    session closes it too.
   - The card rises in (`animate-rise`) as the question card does.
 - **The now line** doesn't say *Your turn* where it isn't the reader's: its own session at rest says **Resting** —
   "fctl wakes it when something needs it"; an earlier session of its own at rest says **Handed over** — "The autopilot
