@@ -93,8 +93,8 @@ Putting it on is a sensitive action: the app's confirm-it's-you dialog comes fir
 
 ### Once it's on: the tab as a cockpit
 
-From the top: the header, what it asks, steering, then the log beside a rail of its direction, plan, sessions and how
-it works. On a phone the rail's cards come before the log.
+From the top: the header, what it asks, steering, then the log beside a rail of its direction, plan, files, sessions
+and how it works. On a phone the rail's cards come before the log.
 
 **The header** is the status, the sentence that explains it and the controls. A surface card with a soft radial wash of
 the status's tone from its top left corner:
@@ -155,6 +155,16 @@ note in Markdown, and an × to remove it (shown on hover, always on touch).
   (which tells it at once).
 - **Its plan**: "1 of 4" from its checklist and a thin accent progress bar, the Markdown checklist, "Updated 12m ago".
   Empty: "It writes one as it starts: what it will do, in order. It keeps it current as the work goes."
+- **Its files** (fctl#551), once it keeps any: what its own sessions keep for the next with `fctl autopilot files`,
+  such as the scripts they rely on and drafts, as each starts in a new sandbox. Their total size at the heading's end
+  ("51 KB"), then a row for each by name: a code icon for scripts and data (`.sh`, `.py`, `.json`…), a text icon for
+  the rest, the name in mono, truncated, and when it was last written ("2m"), its time in full on hover. The footer
+  says why they're there: "Kept for its next sessions, which start in a new sandbox". A row opens the file in a wide
+  dialog that fits the screen: its name in mono as the title, "2 KB, written 2m ago. Its next session gets it back in a
+  new sandbox.", then what it holds in a sunken mono box that scrolls and wraps, and *Copy*. People read them; only
+  the autopilot writes and removes them. Its log says when it added or removed one ("Added `watch.sh` to its files",
+  a file icon); a rewrite, which a script may make often, shows only as the row's time. No card while it keeps none:
+  most autopilots won't, and an empty card would explain a feature people don't use.
 - **Its sessions**: "1 working · 8 in all", each a row with its status dot, number (with its project's slug when it's
   another's), title, and in blue what it asks, else its pull requests' states. Five rows in all, those at work or
   waiting for a message first (all of them when there are more), then "Show 3 more" for the rest of the 20 newest.
@@ -178,7 +188,8 @@ rows: they divide the log, a thin line with the mark, "Woke for a new note" ("Wo
 alone), the session it woke in, and the time, so what it did from one check-in to the next reads as a block. *Show
 earlier* pages back.
 
-Everything polls while the tab is open: every 4 s while its session works, 15 s otherwise (the log 5 s and 20 s).
+Everything polls while the tab is open: every 4 s while its session works, 15 s otherwise (the log and its files 5 s
+and 20 s).
 
 ## In sessions
 
@@ -276,7 +287,7 @@ says whose subscription it runs on, and a plan at its limit shows there.
 ## Edge cases
 
 - **Off, then on again**: the tab shows the intro with *Put it on again…*, and the form keeps its direction, powers and
-  rhythm. Its log, notes, plan and open asks stay; while it's off, its asks leave *Needs you*. A workspace's autopilot
+  rhythm. Its log, notes, plan, files and open asks stay; while it's off, its asks leave *Needs you*. A workspace's autopilot
   stays the workspace's: the form doesn't offer *What it runs*, and says "It ran all of {workspace} before, and what it
   kept reaches every project: it stays the workspace's."
 - **Paused by fctl**: the reason is the control plane's sentence ("It acts as its owner, who no longer manages Shop:
@@ -317,10 +328,11 @@ says whose subscription it runs on, and a plan at its limit shows there.
 - **An old session of its own**: wakes go to its current session; an earlier one's requests are refused, and its page
   still shows its wakes and actions. One fctl replaces (12 hours on) stops as the fresh one starts.
 - **A workspace's autopilot, read by a member who isn't an admin**: what it does reaches projects they may not see, so
-  its plan, notes, asks, sessions, log and own session are the admins' (`can.read`). The tab shows them the header,
+  its plan, notes, asks, sessions, files, log and own session are the admins' (`can.read`). The tab shows them the header,
   without a link to its session, and beside *How it works* a card, *What it does*: "It works across {workspace}, in
-  projects you may not see, so its plan, sessions, asks and log are for the workspace's admins, who steer it. Its
-  sessions in your projects show there, with its mark." Its admins see it all.
+  projects you may not see, so its plan, files, sessions, asks and log are for the workspace's admins, who steer it.
+  Its sessions in your projects show there, with its mark." Its admins see it all. The card names what people would
+  look for, not every part (its notes and own session go unsaid).
 
 ## Building one like it
 
