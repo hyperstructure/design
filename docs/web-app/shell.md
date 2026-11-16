@@ -690,7 +690,7 @@ room, instead of opening a dialog. The palette loses its blurs and its rise ([Th
 - **Breadcrumb.** A project's title has its workspace above it: 13 px `ink-3` with the
   workspace's avatar, as a link.
 - **Tabs** follow as a bottom-bordered row. On phones it scrolls sideways out to the screen's
-  edges (`-mx-6 px-6`, scrollbar hidden).
+  edges (`-mx-6 px-6`, scrollbar hidden), and the edges with more tabs past them fade out.
 - **Loading** shows skeletons the shape of the header. **Missing or forbidden** shows a banner
   in a narrow column: "This project does not exist, or you cannot see it."
 - On phones, the shell's top bar sits above all of this.
