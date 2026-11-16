@@ -120,7 +120,7 @@ rail has one there too, and one between workspaces.
 | Row | Height | Text | Leading mark |
 |---|---|---|---|
 | Header | 56 px | logo: 22 px mark and 15 px word (26 and 17 on phones) | fold button 32 px; close button 44 px on phones |
-| Search button | 34 px, `rounded-lg`, `bg-sunken/60`, `border-line` | 13 px `ink-4` and a ⌘K keycap | 14 px |
+| Search button | 34 px, `rounded-lg`, `bg-sunken/60`, `border-line` | 13 px `ink-4` and a ⌘K keycap, left out on touch screens | 14 px |
 | Views and foot rows | 32 px, `rounded-md`, `px-2.5` | 13.5 px | 16 px icon |
 | Workspace header | 32 px | 13 px semibold | 20 px avatar |
 | Project row | 32 px | 13.5 px | 16 px project icon |
@@ -1081,8 +1081,6 @@ what the code does now. Fix one when you're near it, and don't copy it.
   and the sidebar's preferences.
 - **Touch targets.** Sidebar rows keep their computer heights on touch screens (32 and 28 px),
   while the menu and close buttons are 44 px.
-- **The ⌘K keycap on phones.** The search button shows it there. The pull requests page hides
-  its "/" keycap on touch screens.
 - **The resize handle's focus** shows as a 1 px background line, which forced colors drop.
 - **Edge swipes on an iPhone** in the app on the Home Screen haven't been tried on one since
   fctl#493, which leaves them no page to go to. Another site's own pages, left behind on the
