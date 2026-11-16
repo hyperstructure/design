@@ -307,10 +307,16 @@ an icon alone, `buttonClass()` gives a link the look of a button (for one that l
 radius 9), `field` 38 px (an Input's height, for a button beside one), `lg` 44 px (20 px sides, 15 px,
 radius 13). `IconButton` is a 32 px square, radius 9, `ink-3`, filling with `hover`.
 
-**States.** Hover and press over 150 ms. Disabled: the primary fades to 45%, danger to 50%, the
-others turn `ink-4`, and the cursor is the default one (the base sets that on `button:disabled`).
+**States.** Hover and press over 150 ms. Disabled, a button doesn't respond to hover
+(`not-disabled:hover:`) and the cursor is the default one (the base sets that on
+`button:disabled`). The primary gives up its fill for `raised`, `ink-4` text and a `line-strong`
+ring, the look of the composers' Start with nothing to start: faded to 45%, as it was until
+fctl#563, its yellow was a muddy olive on the dark page, a color the palette doesn't have, and
+every form that starts empty showed one. Danger fades to 50%, and the others turn `ink-4`.
 `loading` puts a 14 px spinner in the icon's place and disables the button (one without an icon
-grows by the spinner). The ring is the base one.
+grows by the spinner), but marks it `data-loading`, which the disabled looks leave out: the button
+keeps its look, with a progress cursor, while the action it started goes on. The ring is the base
+one.
 
 **Use.** One primary per view. A dialog's footer is `flex justify-end gap-2`: Cancel (ghost), then
 the primary or danger action, named for what it does ("Delete project", not "OK"); a destructive
