@@ -877,7 +877,9 @@ at its foot):
   link, then the switch to the other view.
 
 The notes beside the status pill (`lib/status.ts`) come most pressing first: "Reconnecting…", the stall, the disk,
-when a paused session resumes, then the status's reason; a phone has room for the first.
+when a paused session resumes, then the status's reason; a phone has room for the first. A note leaves out the word
+the pill says already (`besidePill`): "Stopped · after being idle", "Stopping · studio is draining". Until fctl#570 the
+header said "Stopped · Stopped after being idle". Lists, which show the reason without the pill, keep it whole.
 
 **Behavior.** The page title is "<title> · project#12". Following toasts what it means
 ("Following: you get a notification when it waits for you, pauses or fails", or, without a
