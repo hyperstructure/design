@@ -691,8 +691,10 @@ room, instead of opening a dialog. The palette loses its blurs and its rise ([Th
   workspace's avatar, as a link.
 - **Tabs** follow as a bottom-bordered row. On phones it scrolls sideways out to the screen's
   edges (`-mx-6 px-6`, scrollbar hidden).
-- **Loading** shows skeletons the shape of the header. **Missing or forbidden** shows a banner
-  in a narrow column: "This project does not exist, or you cannot see it."
+- **Loading** shows skeletons the shape of the header. **Missing or forbidden** shows, in a
+  narrow column, "No project here", that it doesn't exist or the reader can't see it, and the
+  way back to the Agent Floor; a load that failed otherwise says so, with "Try again"
+  ([Lists, rows and pages](lists-and-pages.md#loading-empty-error-partial-and-live)).
 - On phones, the shell's top bar sits above all of this.
 
 **The sticky app bar** (a session's page):
