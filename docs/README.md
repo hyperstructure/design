@@ -55,6 +55,14 @@ and file paths here are relative to that repository.
   it done: a world to look at, both engines, themes and sizes, stills and
   clips, frame-by-frame checks, measurements.
 
+## Starting a new product
+
+- [Starting a new product with agents](new-products.md): the questions to
+  answer before agents build a product from nothing (its name, features,
+  roles, sign-in, infrastructure, languages, verification, priorities and
+  design language), and how to turn the answers into a plan that agents, or
+  an autopilot, build from.
+
 ## Keeping these pages true
 
 When a pull request in fctl changes how a component looks or behaves,
