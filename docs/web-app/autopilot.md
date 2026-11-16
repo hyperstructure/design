@@ -236,7 +236,10 @@ and 20 s).
 
   Below them the details go on as any session's, without what such a session doesn't keep: **Changes** shows only once
   it changed something (it plans and steers; its sessions change the code), and the **retrospective** and **memory**
-  sections stay out, as its sessions record and read those. Its turns, work figures and facts stay.
+  sections stay out, as its sessions record and read those. Its turns, work figures and facts stay, and its context
+  meter counts down to where a fresh session takes over, when people chose a size and it comes before Claude compacts
+  ("137K left until a fresh session takes over at 400K"; the Work section in [the transcript](transcript.md)). An
+  earlier session of its own shows the meter as any session's: a fresh one took over from it already.
 - **An earlier session of its own asks before a message goes to it** (`components/session/moved-on.tsx`). Once a fresh
   session takes over (after 12 hours, past its handoff size, or as people asked), the earlier one's agent no longer
   acts as the autopilot: its `fctl` reaches nothing, so a message there gets the work done in that session alone,

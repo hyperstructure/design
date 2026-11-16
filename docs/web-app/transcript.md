@@ -810,7 +810,13 @@ project's memory."
 at the moment the work stopped coming through. Tokens are compact ("412K / 38K"). The context meter
 reads "412K / 1M" over a 4 px meter split where Claude compacts the conversation, each part as wide
 as its share of the window, `ink-3`, amber from nine tenths of the way; under it "Compacts at 967K
-· compacted twice"; exact figures in tooltips.
+· compacted twice"; exact figures in tooltips. In the session an autopilot works in now, where a
+fresh session takes over at a size that comes before Claude compacts, the meter splits there too
+and turns amber nine tenths of the way to it, and a line above the note says how much is left:
+"137K left until a fresh session takes over at 400K", then "Past 400K: a fresh session takes over
+at the next wake between turns". That line's amber follows the handoff and the note's the
+compaction, so that a handoff near doesn't color a compaction far off. Claude's threshold alone
+would promise room the session won't get to use: the handoff ends its conversation first.
 
 **Session and Follow along.** The runner's row has a dot: the accent when connected, amber when it
 can't reach the agent, paused the sandbox or runs low on disk, red when nearly out of disk, grey
