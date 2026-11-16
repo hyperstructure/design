@@ -24,7 +24,9 @@ principles and its components (what each shows, how it behaves and moves,
 its copy, its edge cases, the traps found building it). Read them before
 designing a component for fctl or fctl.sh, and change them in the same
 pull request as a change to what they describe, or in one linked to the
-fctl pull request that makes it.
+fctl pull request that makes it. One page looks past fctl's own app:
+[Starting a new product with agents](docs/new-products.md), the questions
+to answer before agents build a product from nothing.
 
 ## Rules
 

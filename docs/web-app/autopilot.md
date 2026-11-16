@@ -58,7 +58,8 @@ they read on:
 - **Start from a direction**: four complete directions as row-wide buttons (Build a product from a brief, Keep it
   healthy, Work through the issues, Polish the UI and UX), and *Write your own*. Each is a careful direction ("Ask me
   before choosing anything that's hard to undo: a framework, a data model, a paid service."), so starting from one
-  teaches how to write one. The build idea keeps `[placeholders]` in brackets, which the form asks to fill in.
+  teaches how to write one. The build idea keeps `[placeholders]` in brackets, which the form asks to fill in; what a
+  brief for a new product should answer, at greater length, is in [Starting a new product](../new-products.md).
 - A quiet last line: what it acts with and on whose subscription, and that it can be paused or taken off any time.
 - For people who can't put it on: "The project's maintainers and owners put it on autopilot, on their own Claude
   subscription." Where the workspace doesn't allow it (a project that had one), an info banner says its admins allow it
