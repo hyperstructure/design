@@ -690,7 +690,7 @@ room, instead of opening a dialog. The palette loses its blurs and its rise ([Th
 - **Breadcrumb.** A project's title has its workspace above it: 13 px `ink-3` with the
   workspace's avatar, as a link.
 - **Tabs** follow as a bottom-bordered row. On phones it scrolls sideways out to the screen's
-  edges (`-mx-6 px-6`, scrollbar hidden).
+  edges (`-mx-6 px-6`, scrollbar hidden), and the edges with more tabs past them fade out.
 - **Loading** shows skeletons the shape of the header. **Missing or forbidden** shows, in a
   narrow column, "No project here", that it doesn't exist or the reader can't see it, and the
   way back to the Agent Floor; a load that failed otherwise says so, with "Try again"
