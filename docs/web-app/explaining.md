@@ -390,49 +390,80 @@ one paragraph; show an example of a setting's effect beside the setting, at the 
 
 (components/project/schedules.tsx; lib/schedules.ts)
 
-**Purpose.** Tasks that start sessions on their own (once, again and again, or when another tool asks) on the Claude
-subscription of the person each runs for.
+**Purpose.** Tasks that start sessions on their own (once, again and again, each time something happens on GitHub,
+or when another tool asks) on the Claude subscription of the person each runs for.
 
 **The intro**, whenever there are none and no task was handed over:
 
-- "Sessions that start on their own": "Give an agent a task and a time: once, or again and again. Each run is a session
-  of its own, on your Claude subscription, that you follow like any other."
+- "Sessions that start on their own": "Give an agent a task, and a time or something to wait for: once, again and
+  again, or each time it happens. Each run is a session of its own, on your Claude subscription, that you follow like
+  any other."
 - Points: when it can run ("Every hour, day, weekday, week or month in your time zone, once at a set time, on any cron
-  schedule, or only when asked."), "Runs don't pile up: one is skipped while the last is still at work, or while the
-  plan it runs on is at its limit.", and "Run one when you choose, here or with fctl schedules run…".
-- The preview (300 px): the first idea as a schedule card, "Update dependencies", "Every Monday at 9:00 AM" in the
-  reader's own clock, a week strip with Monday lit in the highlight color with a play mark, the cron `0 9 * * 1` in
-  mono, and a smaller card of sessions it started ("#41 Update 12 dependencies 6d", "#37 Update 3 dependencies 13d",
-  each with its status dot). Hidden on phones: "On a phone the ideas below say it, and come sooner."
-- **Start from an idea**: ready tasks as row-wide buttons, each an icon tile, a name, a one-line result and its cadence
-  in words: "Update dependencies" ("A pull request with the week's patch and minor releases, tested."), "Triage new
-  issues" ("Labels, questions and links for each issue opened since the last run."; offered only where the project's
-  agents reach a tracker, and marked "Triage only"), "Tidy the project's memory" ("Duplicate and outdated notes
-  marked, overlapping ones merged."), "Learn from the week's reviews" ("What agents keep tripping over, added to
-  AGENTS.md or filed as issues."). Each idea's task is a careful prompt ("…Leave major versions out: list them in the
-  pull request's description, with what upgrading would take."), so starting from one also teaches how to write a
-  task. [Start from scratch] sits by the heading; people who can't read "People who start sessions in this project set
-  up schedules."
+  schedule, or only when asked."), what it can wait for ("Each time something happens on GitHub: an issue is opened or
+  labeled, a pull request opens or merges, a release is published, checks fail on main."), "Runs don't pile up: one is
+  skipped while the last is still at the same work, or while the plan it runs on is at its limit.", and "Run one when
+  you choose, here or with fctl schedules run…".
+- The preview (300 px): two schedule cards, one of each way to run. "Update dependencies", "Every Monday at 9:00 AM"
+  in the reader's own clock, a week strip with Monday lit in the highlight color with a play mark, the cron `0 9 * * 1`
+  in mono; then "Triage new issues", "When an issue is opened", with the issues that started its sessions, each an open
+  issue's circle, its number and title, an arrow, and the session it started with its status dot ("#58 Export fails on
+  Safari → #212"). Hidden on phones: "On a phone the ideas below say it, and come sooner."
+- **Start from an idea**: ready tasks as row-wide buttons, each an icon tile, a name, a one-line result and when it
+  runs in words, in two groups under a quiet `ink-4` line each, those that wait for something first, since a timetable
+  can't do them. "When something happens on GitHub" (only where the project's agents work on GitHub): "Triage new
+  issues" ("Labels, questions and links for each issue as it's opened.", marked "Triage only", its sessions kept off
+  session lists) and "Work on labeled issues" ("Label an issue fctl to hand it to an agent, which opens a pull
+  request."), both only where the project's tracker is GitHub's issues; "Learn from merged pull requests" ("What people
+  said in the review of each agent's pull request, kept in AGENTS.md or a skill.", from those fctl's agents opened),
+  "Fix failing checks on main" and "Try each release". "At set times": "Update dependencies" ("A pull request with the
+  week's patch and minor releases, tested."), "Tidy the project's memory" ("Duplicate and outdated notes marked,
+  overlapping ones merged."), "Learn from the week's reviews" ("What agents keep tripping over, added to AGENTS.md or
+  filed as issues."), and, where the tracker is Linear's, whose issues start no event, a daily "Triage new issues".
+  Each idea's task is a careful prompt ("…Leave major versions out: list them in the pull request's description, with
+  what upgrading would take."; "When people said nothing worth keeping, change nothing and say so in a sentence."), so
+  starting from one also teaches how to write a task. [Start from scratch] sits by the heading; people who can't read
+  "People who start sessions in this project set up schedules."
 
 **The form** opens inline in the tab, raised, scrolled into view, its task focused:
 
 - "Start from" chips of the same ideas along the top, so they stay reachable after the intro has gone.
 - The name: a borderless 20 px display field whose placeholder is the name the task would give it, else "Name it".
 - The task box ("What should an agent do each time?") with the model, effort and GitHub access pickers.
-- **When**, a segmented control: Repeats, Once, Cron, When asked. Repeats reads as a sentence of fields: "Every
+- **When**, a segmented control: Repeats, Once, Cron, On an event, When asked, each titled with what it means. Five
+  don't fit a phone's row, so there it is a list, each choice with a quieter line ("Each time something happens on
+  GitHub"). Repeats reads as a sentence of fields: "Every
   [week] on [Mon][Tue]… at [09:00]", "Every [month] on [the 31st]" (described "Months without it are skipped"); "each
   word stays with its field where the sentence wraps". Once offers quick picks: "In an hour", "This evening" (before
   17:30), "Tomorrow morning", "Monday morning". Cron says what it read as you type ("Runs every weekday at 09:00."),
   or the grammar when it can't: "The minute, the hour, the day of the month, the month and the day of the week, like
   0 9 * * 1-5 for weekdays at 09:00." When asked explains itself: "It has no time of its own: it runs when someone
   runs it, here or with fctl schedules run, or when another tool does with an access token, such as an issue tracker
-  sending what it knows of the case."
+  sending what it knows of the case." **On an event** shows the six kinds as a two-column grid of pressable tiles (one
+  column on a phone), each with GitHub's symbol for it in a 28 px tile, which the highlight fills on the chosen one,
+  its name ("A pull request merges") and what it's for ("Learn from each merge and its review"); a kind fctl wouldn't
+  hear of here carries a small amber warning beside its name. Under the grid, only the fields the chosen kind has, as
+  labeled Fields two by two: "In" (the project's repositories, "Its repositories" first, described as those its agents
+  write to, with their names; a read-only one "Read only: its agents can't write to it"; shown only when there are
+  several), "Label" ("The label that starts a run. Several, comma-separated: any of them.") or "With the label"
+  ("Empty: any…"), "Into the branch" or "On the branch" (mono, with the default branch as the placeholder for failing
+  checks), and "Opened by" (Anyone, "People outside the project and apps too"; People who can write to it; fctl's
+  agents). Choosing anyone for pull requests opened says the risk under the field: "An outsider's pull request starts a
+  run too: write the task so that its agent doesn't run their code." Then a sunken box, "Each time", says in a
+  sentence what starts a run and what its agent gets ("A pull request that merges in acme/storefront or acme/docs
+  starts a session of its own, whose agent gets its title, text and who merged it after the task, and reads its review
+  on GitHub. Only those fctl's agents opened."), why that comes as information ("Whoever opens an issue or a pull
+  request may be someone who can't instruct your agents…"), the cap ("At most 20 runs start in an hour."), and, in
+  amber with a warning icon, why fctl wouldn't hear of the chosen kind here, as the control plane says it ("fctl's
+  GitHub App isn't subscribed to Issues events, so GitHub doesn't tell fctl when an issue is opened or labeled. An
+  admin of this instance subscribes it on GitHub, under the app's Permissions & events."): people learn it before
+  saving, not from runs that never come. An issue's label that names none keeps the form from saving, said under the
+  Label field. The time zone row goes, as its times are only in its runs' notes.
 - The time zone as a sentence with a Change link ("In your time zone, {city} ({offset})"), and **its next runs**,
   recomputed as you choose, in a sunken box, each also in your own time when the zone isn't yours. A problem takes
   their place in red ("That time has passed: choose one ahead").
 - "Keep its sessions off session lists", whose sentence says what each position does and when to use it: "Its
   sessions show in session lists like any other. Turn it on for a schedule that runs often, such as an hourly
-  triage."
+  triage or one for each new issue." Ideas that run often turn it on as they fill the form.
 - The footer says whose subscription, before the button: "Its runs start on your Claude subscription." ("Each run
   starts on the Claude subscription of whoever runs it." for When asked). [Set up schedule]; the toast: "Set up: it
   runs in 25 min". A task box elsewhere hands its task here with Schedule beside Start (with files attached, disabled
@@ -443,14 +474,22 @@ icon tile in its state's tone (a green dot while active, amber when fctl paused 
 at 08:00 · Triage only · Tokyo · Next in 3 hours · Last run 2 days ago") and a problem in amber ("fctl paused it.
 {reason}"). [Run now] is titled "Run now, on your Claude subscription"; a paused one shows [Resume] instead
 ("Paused, it starts nothing: what it needs is to be resumed."). Opened: the task, its facts, and its runs, each the
-session it started or why none, and who started it ("On time", "A tool, with {name}'s token"); with none yet, "None
-yet. The first starts in 25 min." "Run it from another tool" unfolds a ready curl request with Copy and its rule:
+session it started or why none, and who started it ("On time", "A tool, with {name}'s token"), or for a run an event
+started, what happened, a link to it on GitHub; with none yet, "None yet. The first starts in 25 min." ("…starts when
+an issue is opened." for one that waits). [Run now] on one that waits for events asks first what to run it on, in a
+dialog: "On the issue" ("#41, or its link"), "On the pull request", "On the release", or "On the branch" for failing
+checks, "Empty: the task alone, on nothing in particular."; its agent gets what was named as the person's own words,
+with where to read it ("Run it on issue acme/web#41 (…), as if it had just been opened: `gh issue view 41 -R
+acme/web` shows it."), since running the task of a schedule that waits for an issue on no issue would leave its agent
+guessing. "Run it from another tool" unfolds a ready curl request with Copy and its rule:
 "its agent takes what context says as information, not instructions." It starts open for When asked schedules,
 "which is what it's for". Taking one over asks: "It ran on {name}'s Claude subscription. From now on its runs start on
 yours, and it's yours to change." Deleting says what stays: "The sessions it started stay, with their transcripts."
 
 **Building one like it.** Offer complete, good ideas, filtered to what the project can use; turn settings into a
-sentence of fields; show the computed result (the next runs) live; say whose subscription every run uses.
+sentence of fields; show the computed result (the next runs, or what starts a run and what its agent gets) live; say
+whose subscription every run uses; say before saving why it wouldn't run here, rather than leave people waiting for
+runs that never come.
 
 ## A project's tickets
 
