@@ -476,8 +476,8 @@ at 08:00 · Triage only · Tokyo · Next in 3 hours · Last run 2 days ago") and
 ("Paused, it starts nothing: what it needs is to be resumed."). Opened: the task, its facts, and its runs, each the
 session it started or why none, and who started it ("On time", "A tool, with {name}'s token"), or for a run an event
 started, what happened, a link to it on GitHub; with none yet, "None yet. The first starts in 25 min." ("…starts when
-an issue is opened." for one that waits). [Run now] on one that waits for events asks first what to run it on, in a
-dialog: "On the issue" ("#41, or its link"), "On the pull request", "On the release", or "On the branch" for failing
+an issue is opened." for one that waits). On one that waits for events, it reads [Run now…], as it asks first what to
+run it on, in a dialog: "On the issue" ("#41, or its link"), "On the pull request", "On the release", or "On the branch" for failing
 checks, "Empty: the task alone, on nothing in particular."; its agent gets what was named as the person's own words,
 with where to read it ("Run it on issue acme/web#41 (…), as if it had just been opened: `gh issue view 41 -R
 acme/web` shows it."), since running the task of a schedule that waits for an issue on no issue would leave its agent
