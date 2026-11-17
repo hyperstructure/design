@@ -686,10 +686,12 @@ progress while people compare; tick steps from real state; warn inside the step 
   ("Found 1 issue", "2 new commits").
 - **One made-up world.** The review previews follow one pull request, an upload worker whose retries never stop when
   the server is down (`src/sync/upload.rs`, fixed in `3f2a1c9`): the Reviews intro, the summary example and the
-  GitHub tab's thread. The schedule preview is the first idea. Someone who saw one recognizes the next.
+  GitHub tab's thread. The schedule preview shows one idea of each way to run, each the first of its group: Triage new
+  issues on an event, Update dependencies at set times. Someone who saw one recognizes the next.
 - **Decoration**: `aria-hidden="true"` and `select-none`. The text beside a preview must say everything it shows.
 - **Anatomy**: a main card (`rounded-xl`, `border-line`, `bg-surface`, a long soft shadow, 0 18px 50px -24px at 35%
-  black) and, 12 px under it, a smaller card for a second fact (the check, the runs, the label).
+  black) and, 12 px under it, a smaller card for a second fact (the check, the runs, the label), or for schedules a
+  second card of the same size, for the other way to run.
 - **Place**: a 300 to 320 px column beside the text from 768 px; under it, at most 384 px wide, on smaller screens;
   hidden on a phone when what follows says the same and should come sooner.
 - **Timing**: a setting's example appears with the setting, when it matters: the summary example once its switch is
