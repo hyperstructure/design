@@ -344,7 +344,9 @@ subscription first (Settings → Claude): reviews run on it.") and the page adds
 **Once on: the status card.** A dot (GitHub's green), "Review agents are on", and the configuration as one paragraph:
 "They review each new commit of the pull requests in acme/web, on [avatar] your Claude subscription, with Opus at high
 effort. They skip acme/docs. Drafts wait until they're marked ready for review. Before each review, they sum the pull
-request up at the end of its description." and who waits. Buttons: [Review a pull request] for people who start
+request up at the end of its description. Their findings reach the agent that opened the pull request for up to 3
+review rounds before fctl pauses for a person." and who waits. Like drafts, the rounds are said only when they differ
+from the default (five). Buttons: [Review a pull request] for people who start
 sessions, [Settings ⌄] for owners. A line under it says which app posts on GitHub and why ("On GitHub they post as
 fctl-review, apart from what your agents write as fctl-sh."), with [Install fctl-review] where it doesn't reach.
 
@@ -365,6 +367,11 @@ fctl-review, apart from what your agents write as fctl-sh."), with [Install fctl
   does and what deserves a closer look at the end of its description, and rewrites it for each new commit. The rest
   of the description stays as people wrote it." Switched on, an example rises in under it: a medium-risk summary of
   the intro's upload-retry pull request, footed "fctl review's first look at 3f2a1c9 · 3 files, +120 −4 · Review agent settings".
+- Review rounds before a pause, a small select on the right ("1 round" to "10 rounds", "5 rounds" described as
+  "fctl's default"), whose sentence follows the choice: "When one of fctl's agents opened the pull request, it gets
+  the findings of 5 reviews in a row while nobody writes to it. Then fctl holds the next findings back until someone
+  messages the agent or passes them on from its session." ("…the findings of one review…" at one.) It bounds the back
+  and forth between the two agents, on both subscriptions.
 - Apps that start reviews: "Pull requests these GitHub Apps open from the repository's branches get a review without
   anyone asking. What they say reaches the agent before anyone here reads it, and it runs none of their code."
   Suggestions come from the project's own pull requests first ("3 pull requests here lately, the newest 2 days ago"),
