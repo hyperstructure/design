@@ -683,7 +683,7 @@ last with HTTP 502. Turn it on again once its address answers."
 | Failing | Amber glyph and pill, the row's amber line, the page's banner with Resend the ones that failed. |
 | Turned off by fctl | Amber glyph, "Off", why in amber, Turn it on. |
 | Off | Grey glyph, "Off", "It's off: it gets nothing, and what happens meanwhile doesn't wait for it." |
-| Full queue | "{n} events were dropped: 1,000 deliveries waited for it already." |
+| Full queue | "{n} events were dropped since it last took one: 1,000 deliveries waited for it already, so they won't be sent." (fctl keeps nothing of them) |
 
 **Edge cases.** Failing goes by fctl's own attempts: a person's test or resend that fails doesn't make a webhook
 Failing (its delivery shows the failure), one that goes through ends it, and a webhook turned on again or pointed
@@ -691,7 +691,7 @@ elsewhere fails afresh, so that its next failure doesn't turn it off at once. On
 webhooks show their addresses shortened to scheme and host (`https://hooks.slack.com/…`) to those who don't manage
 them: a path can hold a credential. A
 workspace's webhook opened from a project's page keeps its projects when saved (a test pins it). Tests aren't in
-the day's counts. Long addresses and headers wrap anywhere (`[overflow-wrap:anywhere]`); a payload scrolls
+the day's counts. Resending one that waits takes none of fctl's retries: its "fctl tries it again in 4m" stays. Long addresses and headers wrap anywhere (`[overflow-wrap:anywhere]`); a payload scrolls
 sideways on a phone. What fctl's own log calls a failure keeps its words beside the status ("302 Found in 12 ms: a
 redirect, which fctl doesn't follow. Give the address it redirects to.").
 
