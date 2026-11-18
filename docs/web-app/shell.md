@@ -226,7 +226,9 @@ The whole app uses one small color language for status. Red means danger only (A
   it comes. "Create a project" appears only once the projects list is known to be empty.
   Before the copy existed, every workspace said "Create a project" until its projects loaded.
 - **No workspaces.** "Create a workspace" in `ink-2`; otherwise a quieter "New workspace" in
-  `ink-4`. Both go once the person is at their workspace limit.
+  `ink-4`. Both go once the person is at their workspace limit, and for everyone but instance
+  admins where the instance lets only its admins create workspaces (the list's `can_create`,
+  kept with the copy, so the link doesn't flash before the list comes).
 - **Invitations.** A card per invitation in `accent-soft` with an `accent/25` border, reading
   "Invited · join on Agent Floor" and linking to the Agent Floor, where the person accepts.
 - **A workspace closed until two-factor sign-in.** An amber lock, labelled "Closed until you set
@@ -777,7 +779,7 @@ show only ⌘K.
 | Sessions | the 50 newest, each with its status dot | `web#12` |
 | Projects | named "Acme / Web app" when the person is in several workspaces | the repository |
 | Workspaces | each | "3 projects" |
-| Actions | New session; New project (workspace admins); New workspace; Settings; Toggle theme; Keyboard shortcuts (computers); Admin (instance admins) | |
+| Actions | New session; New project (workspace admins); New workspace (where the instance lets the person create one); Settings; Toggle theme; Keyboard shortcuts (computers); Admin (instance admins) | |
 | Settings | its pages, found by what they hold ("passkeys" finds Security); listed only while searching, so they don't crowd the list | |
 | In sessions | what sessions said: from 3 characters (2 in Chinese, Japanese or Korean), 220 ms after typing pauses, 8 results not already listed | `web#12 · archived` |
 
