@@ -431,28 +431,32 @@ or when another tool asks) on the Claude subscription of the person each runs fo
 - The task box ("What should an agent do each time?") with the model, effort and GitHub access pickers.
 - **When**, a segmented control: Repeats, Once, Cron, On an event, When asked, each titled with what it means. Five
   don't fit a phone's row, so there it is a list, each choice with a quieter line ("Each time something happens on
-  GitHub"). Repeats reads as a sentence of fields: "Every
-  [week] on [Mon][Tue]… at [09:00]", "Every [month] on [the 31st]" (described "Months without it are skipped"); "each
-  word stays with its field where the sentence wraps". Once offers quick picks: "In an hour", "This evening" (before
-  17:30), "Tomorrow morning", "Monday morning". Cron says what it read as you type ("Runs every weekday at 09:00."),
-  or the grammar when it can't: "The minute, the hour, the day of the month, the month and the day of the week, like
-  0 9 * * 1-5 for weekdays at 09:00." When asked explains itself: "It has no time of its own: it runs when someone
-  runs it, here or with fctl schedules run, or when another tool does with an access token, such as an issue tracker
-  sending what it knows of the case." **On an event** shows the six kinds as a two-column grid of pressable tiles (one
-  column on a phone), each with GitHub's symbol for it in a 28 px tile, which the highlight fills on the chosen one,
-  its name ("A pull request merges") and what it's for ("Learn from each merge and its review"); a kind fctl wouldn't
-  hear of here carries a small amber warning beside its name. Under the grid, only the fields the chosen kind has, as
-  labeled Fields two by two: "In" (the project's repositories, "Its repositories" first, described as those its agents
-  write to, with their names; a read-only one "Read only: its agents can't write to it"; shown only when there are
-  several), "Label" ("The label that starts a run. Several, comma-separated: any of them.") or "With the label"
-  ("Empty: any…"), "Into the branch" or "On the branch" (mono, with the default branch as the placeholder for failing
-  checks), and "Opened by" (Anyone, "People outside the project and apps too"; People who can write to it; fctl's
-  agents). Choosing anyone for pull requests opened says the risk under the field: "An outsider's pull request starts a
-  run too: write the task so that its agent doesn't run their code." Then a sunken box, "Each time", says in a
-  sentence what starts a run and what its agent gets ("A pull request that merges in acme/storefront or acme/docs
-  starts a session of its own, whose agent gets its title, text and who merged it after the task, and reads its review
-  on GitHub. Only those fctl's agents opened."), why that comes as information ("Whoever opens an issue or a pull
-  request may be someone who can't instruct your agents…"), the cap ("At most 20 runs start in an hour."), and, in
+  GitHub"). Repeats reads as a sentence of fields: "Every [week] on [Mon][Tue]… at [09:00]", "Every [month] on [the
+  31st]" (described "Months without it are skipped"); "each word stays with its field where the sentence wraps". Once
+  offers quick picks: "In an hour", "This evening" (before 17:30), "Tomorrow morning", "Monday morning". Cron says
+  what it read as you type ("Runs every weekday at 09:00."), or the grammar when it can't: "The minute, the hour, the
+  day of the month, the month and the day of the week, like 0 9 * * 1-5 for weekdays at 09:00." When asked explains
+  itself: "It has no time of its own: it runs when someone runs it, here or with fctl schedules run, or when another
+  tool does with an access token, such as an issue tracker sending what it knows of the case." **On an event** shows
+  the six kinds as a two-column grid of pressable tiles (one column on a phone), each with GitHub's symbol for it in a
+  28 px tile, which the highlight fills on the chosen one, its name ("A pull request merges") and what it's for
+  ("Learn from each merge and its review"); a kind fctl wouldn't hear of here carries a small amber warning beside its
+  name. Under the grid, only the fields the chosen kind has, as labeled Fields two by two: "In" (the project's
+  repositories, "Its repositories" first, described as those its agents write to, with their names; a read-only one
+  "Read only: its agents can't write to it"; shown only when there are several), "Label" ("The label that starts a
+  run. Several, comma-separated: any of them.") or "With the label" ("Empty: any…"), "Into the branch" or "On the
+  branch" (mono, with the default branch as the placeholder for failing checks), and "Opened by" (Anyone, "People
+  outside the project and apps too"; People who can write to it; fctl's agents). Choosing anyone for pull requests
+  opened says the risk under the field: "An outsider's pull request starts a run too: write the task so that its agent
+  doesn't run their code." Then how many sessions its events start, as a sentence of fields: "At most [3] sessions an
+  hour and [10] a day" (3 and 10 unless changed; 72 px number fields, each word staying with its field where the
+  sentence wraps), with "Each is a session on your Claude plan. Past either, events start none until there's room
+  again, and its runs say why." under it, or in red what won't do, as the control plane says it ("Let it start at
+  least 1 session an hour: pause it to start none", "It starts at most 1,000 sessions a day"), which keeps the form
+  from saving. Then a sunken box, "Each time", says in a sentence what starts a run and what its agent gets ("A pull
+  request that merges in acme/storefront or acme/docs starts a session of its own, whose agent gets its title, text
+  and who merged it after the task, and reads its review on GitHub. Only those fctl's agents opened."), why that comes
+  as information ("Whoever opens an issue or a pull request may be someone who can't instruct your agents…"), and, in
   amber with a warning icon, why fctl wouldn't hear of the chosen kind here, as the control plane says it ("fctl's
   GitHub App isn't subscribed to Issues events, so GitHub doesn't tell fctl when an issue is opened or labeled. An
   admin of this instance subscribes it on GitHub, under the app's Permissions & events."): people learn it before
@@ -472,17 +476,19 @@ or when another tool asks) on the Claude subscription of the person each runs fo
 **Once there are some.** "3 schedules · Update dependencies runs next, in 25 min" and [New schedule]. Each row: an
 icon tile in its state's tone (a green dot while active, amber when fctl paused it), the name, facts ("Every weekday
 at 08:00 · Triage only · Tokyo · Next in 3 hours · Last run 2 days ago") and a problem in amber ("fctl paused it.
-{reason}"). [Run now] is titled "Run now, on your Claude subscription"; a paused one shows [Resume] instead
-("Paused, it starts nothing: what it needs is to be resumed."). Opened: the task, its facts, and its runs, each the
-session it started or why none, and who started it ("On time", "A tool, with {name}'s token"), or for a run an event
-started, what happened, a link to it on GitHub; with none yet, "None yet. The first starts in 25 min." ("…starts when
-an issue is opened." for one that waits). On one that waits for events, it reads [Run now…], as it asks first what to
-run it on, in a dialog: "On the issue" ("#41, or its link"), "On the pull request", "On the release", or "On the branch" for failing
-checks, "Empty: the task alone, on nothing in particular."; its agent gets what was named as the person's own words,
-with where to read it ("Run it on issue acme/web#41 (…), as if it had just been opened: `gh issue view 41 -R
-acme/web` shows it."), since running the task of a schedule that waits for an issue on no issue would leave its agent
-guessing. "Run it from another tool" unfolds a ready curl request with Copy and its rule:
-"its agent takes what context says as information, not instructions." It starts open for When asked schedules,
+{reason}", or for one whose events started as many sessions as it allows, "It started 10 sessions on events in the
+last 24 hours, the most it starts in a day, so events until {time} start none."). [Run now] is titled "Run now, on
+your Claude subscription"; a paused one shows [Resume] instead ("Paused, it starts nothing: what it needs is to be
+resumed."). Opened: the task, its facts (for one that waits for events, "At most: 3 sessions an hour and 10 a day"),
+and its runs, each the session it started or why none, and who started it ("On time", "A tool, with {name}'s token"),
+or for a run an event started, what happened, a link to it on GitHub; with none yet, "None yet. The first starts in 25
+min." ("…starts when an issue is opened." for one that waits). On one that waits for events, it reads [Run now…], as
+it asks first what to run it on, in a dialog: "On the issue" ("#41, or its link"), "On the pull request", "On the
+release", or "On the branch" for failing checks, "Empty: the task alone, on nothing in particular."; its agent gets
+what was named as the person's own words, with where to read it ("Run it on issue acme/web#41 (…), as if it had just
+been opened: `gh issue view 41 -R acme/web` shows it."), since running the task of a schedule that waits for an issue
+on no issue would leave its agent guessing. "Run it from another tool" unfolds a ready curl request with Copy and its
+rule: "its agent takes what context says as information, not instructions." It starts open for When asked schedules,
 "which is what it's for". Taking one over asks: "It ran on {name}'s Claude subscription. From now on its runs start on
 yours, and it's yours to change." Deleting says what stays: "The sessions it started stay, with their transcripts."
 
