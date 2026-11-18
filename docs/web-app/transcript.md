@@ -782,7 +782,9 @@ opens the review's session, an arrow sliding in on hover, with a "Review again" 
 who may ask for reviews (it toasts "Reviewing fctl#12 at 3f2a1c9"). When fctl held the findings back from the agent, or they reached no agent, the card
 ends in an amber strip with `role="status"`: "Paused after 3 review rounds" ("fctl held these
 findings back, as nobody wrote to the agent in that time.") with "Continue for 3 more rounds", or
-"Sent to no agent" with "Pass on to the agent", for people who may message it.
+"Sent to no agent" with "Pass on to the agent", for people who may message it. The title counts the
+rounds the agent got; the button, the rounds the review's project passes on now (its owners may have
+chosen another number since), as many as the title until the project's settings answer.
 
 **Changes** (changes.tsx). Each repository, titled `owner/name` when there are several, "read only"
 where the agent can't push. Rows: a status letter (A green, D red, M and R blue), the path in mono,
