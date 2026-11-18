@@ -581,7 +581,7 @@ otherwise), since they change them there too.
 - Points, each an answer to a worry: what it hears of ("You choose what it hears of…"), trust ("Each request is
   signed with a secret only you and fctl know, as Standard Webhooks sign them, and names the workspace and project
   it comes from: check both before acting on it."), failure ("A request that fails goes again 7 times over about 21
-  hours; what went out stays in its log for 30 days, to read and resend.") and cost to everyone else ("It never holds
+  hours, and its log keeps what went out, the newest 1,000 of the last 30 days, to read and resend.") and cost to everyone else ("It never holds
   a session up: fctl posts from a queue of its own, at most 120 requests a minute to each address.").
 - [Add a webhook] (primary, large) beside who adds what: "Acme's admins add webhooks for all its projects, or some;
   each project's owners and maintainers add its own."
