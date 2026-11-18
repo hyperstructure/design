@@ -2,8 +2,8 @@
 
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
 explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
-its tickets, connecting Claude, GitHub and Linear, two-factor sign-in, memory and retrospectives, and the hints,
-warnings and empty states around them.
+its tickets, webhooks, connecting Claude, GitHub and Linear, two-factor sign-in, memory and retrospectives, and the
+hints, warnings and empty states around them.
 
 Written from the code on `main` (`web/src`, whose comments carry most of the reasons), the project's docs, ADRs and
 tests, and the notes earlier agents left. Paths are relative to `web/src` unless they say otherwise. Sizes are CSS
@@ -569,6 +569,161 @@ here."
 **Building one like it.** Present a few exclusive choices as cards with a one-line summary each; under the chosen
 one, say what it comes to, its security consequences included; save with a sticky bar that says what saving changes
 and when; show the flow as steps in the words of the current settings.
+
+## Webhooks
+
+(components/webhooks/panel.tsx, form.tsx, page.tsx, secret.tsx, parts.tsx; lib/webhooks.ts)
+
+**Purpose.** Tell other tools what agents do, as it happens: addresses that fctl posts events to, signed, which a
+workspace's admins add for all its projects (or some), and a project's owners and maintainers for its own; and,
+once they run, what went out to each and how the receiver answered, to read, test and resend.
+
+**Where it is.** A workspace's **Webhooks** tab, for its admins only (it holds every webhook of the workspace, its
+projects' too), and a page of a project's Settings (`?tab=webhooks`), for its owners and maintainers. A webhook
+opens in place (`&webhook=whk_…`), with "‹ Webhooks" back: there's too much per webhook (its health, its log, its
+secret) to unfold in a row. The project's page lists its own, then, under "Acme's, which send Web's events too",
+the workspace's that reach it: rows that open only for the workspace's admins ("The workspace's admins manage them."
+otherwise), since they change them there too.
+
+**The intro**, while there are none: the shape the other intros share.
+
+- Headline "What agents do, posted to your tools". Lead from the place: "When a session in Acme starts, finishes a
+  turn, asks something or has its pull requests ready for review, fctl posts it to an address of yours as it
+  happens, so that Slack, a deploy script or a service of your own acts on it." On a project's Settings the page's
+  own title, "Webhooks", and this lead stand in for both, and the intro keeps the rest.
+- Points, each an answer to a worry: what it hears of ("You choose what it hears of…"), trust ("Each request is
+  signed with a secret only you and fctl know, as Standard Webhooks sign them, and names the workspace and project
+  it comes from: check both before acting on it."), failure ("A request that fails goes again 7 times over about 21
+  hours, and its log keeps what went out, the newest 1,000 of the last 30 days, to read and resend.") and cost to everyone else ("It never holds
+  a session up: fctl posts from a queue of its own, at most 120 requests a minute to each address.").
+- [Add a webhook] (primary, large) beside who adds what: "Acme's admins add webhooks for all its projects, or some;
+  each project's owners and maintainers add its own."
+- **The preview**: the request as it goes out, the way a developer would read it: `POST hooks.example.com/fctl` with
+  a green 200, two of its headers (`fctl-event: session.ready_for_review`, the signature cut short), and the start
+  of its JSON with keys in blue and the number in pink, carrying the workspace's real slug; under it, the log it
+  lands in: three lines, the last "503 → 200" in amber, a delivery that failed and went again. It's the upload
+  worker's pull request again (`web#12`, `#45`, "Retry failed uploads…"). On a phone it follows the text.
+
+**The form**, raised and inline, as the schedules' is:
+
+- The name, a borderless display field whose placeholder is the address's host as it's typed ("Name it" before).
+- **Address**, mono, with the rule in its hint: "fctl posts each event there as JSON, signed with its secret: an
+  https:// address on the public internet." A self-hosted instance that lets webhooks reach its own network or
+  post over http:// says so there, naming what its settings list, four at most ("an https:// or http:// address
+  on the public internet, or on this instance's network (10.20.0.0/16, *.corp.internal)", "… and 2 more"); as an
+  http:// address is typed there, the hint warns instead: "Over http://, anyone on the way can read and change
+  what fctl posts: keep it to your own network." A development instance says it takes http:// and local
+  addresses. What's wrong shows once the address has a scheme or the field was left: "Use https://: fctl posts
+  only over HTTPS, so that nobody on the way reads or changes what it sends."; the server says why it refuses a
+  private or local host, naming what the instance takes.
+- **Events**: a pill, "Choose events" or "Every event" (every event says what that means: "All 19 events, and
+  those a later version of fctl adds… A session's status changes often, so expect many requests."). Choosing starts
+  from "When agents need people" (ready for review, a question, a failure), the commonest reason to add one; "Start
+  from" chips swap in other sets ("Sessions as they go", "Agents' pull requests", "Reviews"). Below, the four groups
+  flow into two columns (`columns-2`, each group whole), Sessions beside the three smaller ones, each with a
+  tick that ticks or clears it all ("3 of 9"). Each event is its label, its type in mono on the same line (what a
+  receiver switches on), and a sentence of when it comes; the busiest says so ("The busiest event.").
+- **Projects**, a workspace's webhook only (also when its admins change it from a project's page): "Every project"
+  ("Every project's events in Acme, those made later too.") or a checklist of them with their icons.
+- **Sessions started by**, only while a chosen event is about sessions: chips (People and tools, Schedules,
+  Autopilot, Tickets), none chosen meaning any; the hint follows the value ("…of these sessions alone. Reviews' and
+  schedules' events come whoever started them.").
+- **The sentence**, in a sunken box (`aria-live`), what the CLI says too (`describeWebhook` mirrors
+  `fctl_domain::hooks::describe` word for word, with tests in both): "Posts to hooks.slack.com when pull requests
+  are ready for review, an agent asks something or a session fails, in Web, for sessions started by people." More
+  than three events count instead ("Posts 7 kinds of events…").
+- The footer says what saving does next: "fctl first posts the address a challenge, which your receiver answers
+  with it; then its signing secret shows, once." / "fctl first posts the new address a challenge, which your
+  receiver answers with it." / "Changes reach new events within half a minute."; while fctl waits for the answer,
+  "Checking the address: fctl posted it a challenge, which it answers with the challenge…" beside the button's
+  spinner; what's missing replaces it once the person tried ("Choose an event, or every event."). An address that
+  doesn't give the challenge back keeps the form as it was, with why under the address ("This address answered
+  fctl's challenge with HTTP 401. It answers fctl's url_verification request with the challenge, before it checks
+  the signature…"): fctl checks an address as Slack checks an app's, so that events go only where a receiver
+  takes them.
+
+**Added**: a card over the list, a key in an accent circle, "Added Deploy bot", "Its first events go to
+deploy.example.com within half a minute.", a warn banner ("Copy its signing secret now: it shows once here, and later
+only to those who manage the webhook, on its page. Whoever has it can sign requests as fctl, to your receiver."), the
+secret in a CodeBox, and how a receiver checks it (below). [Done] [Send it a test], which opens the webhook's page on
+its test.
+
+**The list**: "2 webhooks · 1 failing · 1 off" and [Add a webhook] (disabled at the workspace's 20, saying so). A
+row is a glyph in its state's tone (the webhook mark with GitHub's green dot while it delivers; amber with a
+warning while it fails or once fctl turned it off; grey while off), the name and a pill only when it isn't plainly
+on ("Failing", "Off"), the sentence, facts ("Web's · 27 delivered, 4 failed in the last day · 3 waiting · last 2m
+ago", "nothing sent yet" for a new one) and the problem in amber: "fctl's attempts have all failed since 9m ago
+(HTTP 503): it tries each again over about 21 hours." or "fctl turned it off. Every delivery failed for 3 days, the
+last with HTTP 502. Turn it on again once its address answers."
+
+**A webhook's page**:
+
+- Its header: the glyph, the name, its pill, the address in mono, the sentence, and "The workspace's · added by
+  [avatar] Ada · 3d ago"; [Send a test] and a ⋯ menu (Edit, Turn off/on, Delete…). Edit swaps the header for the
+  form. On a phone the buttons go under the name rather than squeeze it into a column.
+- **What's wrong, with the way out beside it**: fctl turned it off (amber, its reason, [Turn it on]); failing
+  ("fctl's attempts have all failed since 12:25, the last with 503 Service Unavailable in 5 ms. It tries each
+  delivery again 7 times over about 21 hours, and turns the webhook off when one fails for good after 3 days of
+  failures."
+  [Resend the ones that failed] "Once your receiver works again."); events dropped for a full queue.
+- **Deliveries**: "27 delivered, 4 failed in the last day. Its newest 1,000 of the last 30 days are kept." (a day
+  without failures says "27 delivered in the last day"; a busy webhook's thousand cover less than 30 days), a pill
+  (All, Failed, Waiting, Delivered) and an event Select. The summary's second sentence starts a line of its own,
+  and the summary narrows beside the pill and Select, which move below it once the row has no room for both (on a
+  phone, or in a narrow window). A row is a mark (a green check, a red cross, an amber clock while it waits for a
+  retry, a dashed circle before its first attempt, each with its words for screen readers), the delivery's gist
+  ("web#12 finished a turn: Retry failed uploads", "Review of acme/web#45 at 3f2a1c9 found 1 new issue, 1 still
+  open", a "test" pill), its type and facts in mono ("session.finished · 3 attempts · goes again in 4m"), the
+  status in its tone (green 2xx, red the rest, `---` when no answer came) and when. It unfolds in place: the
+  attempts, newest first, each a dot, its time and its words ("503 Service Unavailable in 5 ms", "No answer within
+  10 seconds: answer first, then do the slow work.", "· resent by Ada", or for a test "· sent by Ada"), "fctl tries
+  it again in 4m." in amber while it waits; then Request or Answer: the address, every header as posted (the signatures too, two during a
+  rotation's day), the payload laid out and highlighted (Shiki, in both themes), or the answer's status, headers and
+  body ("Its first 4 KB."). [Resend] beside them, disabled with its reason for a test ("A test isn't resent: send
+  another one.") or after five. Twenty at a time, then [Show older]. Empty: "Nothing went out to it yet", "The next
+  event it wants shows here as fctl posts it, with the answer it got. Send a test to see one now." [Send a test].
+- **Send a test** is a dialog: what it does ("fctl posts a made-up event of the kind you choose to {address}, now,
+  marked as a test…"), a Select of every event (those it doesn't get say so), [Send], and the result in place:
+  "Delivered: 200 OK in 6 ms." or "Failed: …" in red, the answer's body, "It's in the log below, with the request as
+  fctl posted it."
+- **Signing secret**: hidden (`whsec_••••`) until [Show], which takes confirming it's you where the instance asks;
+  [Rotate secret…] ("For when it may have got out, or as a habit."), whose dialog says the overlap before the
+  click: "A new secret signs its requests from now on. The current one signs them too for a day, so that your
+  receiver switches without missing one…", after which an info banner says until when. Then **Check that a
+  request is fctl's**: a pill of Node.js, Python and Any language over the check, with this webhook's workspace (and
+  project) ids in it, so that it checks where a request says it comes from too.
+- The danger zone: "fctl posts nothing more to it, and forgets what went out to it and its secret. The sessions,
+  reviews and schedules it heard of stay as they are." The dialog offers the gentler way in words: "Turning it off
+  instead keeps all of it."
+
+**States.**
+
+| State | What people see |
+|---|---|
+| Loading | Skeletons; never "no webhooks" before the list has loaded. |
+| None, a workspace | The intro. |
+| None of its own, a project, the workspace's reaching it | "Web has no webhooks of its own yet." beside [Add a webhook], then the workspace's. |
+| New | A green-less glyph and "nothing sent yet" until its first attempt. |
+| Delivering | GitHub's green dot on its glyph; no pill. |
+| Failing | Amber glyph and pill, the row's amber line, the page's banner with Resend the ones that failed. |
+| Turned off by fctl | Amber glyph, "Off", why in amber, Turn it on. |
+| Off | Grey glyph, "Off", "It's off: it gets nothing, and what happens meanwhile doesn't wait for it." |
+| Full queue | "{n} events were dropped since it last took one: 1,000 deliveries waited for it already, so they won't be sent." (fctl keeps nothing of them) |
+
+**Edge cases.** Failing goes by fctl's own attempts: a person's test or resend that fails doesn't make a webhook
+Failing (its delivery shows the failure), one that goes through ends it, and a webhook turned on again or pointed
+elsewhere fails afresh, so that its next failure doesn't turn it off at once. On a project's page, the workspace's
+webhooks show their addresses shortened to scheme and host (`https://hooks.slack.com/…`) to those who don't manage
+them: a path can hold a credential. A
+workspace's webhook opened from a project's page keeps its projects when saved (a test pins it). Tests aren't in
+the day's counts. Resending one that waits takes none of fctl's retries: its "fctl tries it again in 4m" stays. Long addresses and headers wrap anywhere (`[overflow-wrap:anywhere]`); a payload scrolls
+sideways on a phone. What fctl's own log calls a failure keeps its words beside the status ("302 Found in 12 ms: a
+redirect, which fctl doesn't follow. Give the address it redirects to.").
+
+**Building one like it.** Lead with where the result lands and what it carries, drawn as a developer reads it; make
+the set people most likely want the starting point; say the configuration in the CLI's sentence as it's chosen;
+show a secret once with what its holder can do, then behind a confirmation; for anything that runs unattended, keep
+what it did, the request and the answer, a click away, with the way to try again beside what failed.
 
 ## Settings → Claude
 
