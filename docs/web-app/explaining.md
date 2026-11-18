@@ -595,10 +595,14 @@ otherwise), since they change them there too.
 
 - The name, a borderless display field whose placeholder is the address's host as it's typed ("Name it" before).
 - **Address**, mono, with the rule in its hint: "fctl posts each event there as JSON, signed with its secret: an
-  https:// address on the public internet." (a development instance adds that it takes http:// and local
-  addresses). What's wrong shows once the address has a scheme or the field was left: "Use https://: fctl posts
+  https:// address on the public internet." A self-hosted instance that lets webhooks reach its own network or
+  post over http:// says so there, naming what its settings list, four at most ("an https:// or http:// address
+  on the public internet, or on this instance's network (10.20.0.0/16, *.corp.internal)", "… and 2 more"); as an
+  http:// address is typed there, the hint warns instead: "Over http://, anyone on the way can read and change
+  what fctl posts: keep it to your own network." A development instance says it takes http:// and local
+  addresses. What's wrong shows once the address has a scheme or the field was left: "Use https://: fctl posts
   only over HTTPS, so that nobody on the way reads or changes what it sends."; the server says why it refuses a
-  private or local host.
+  private or local host, naming what the instance takes.
 - **Events**: a pill, "Choose events" or "Every event" (every event says what that means: "All 19 events, and
   those a later version of fctl adds… A session's status changes often, so expect many requests."). Choosing starts
   from "When agents need people" (ready for review, a question, a failure), the commonest reason to add one; "Start
