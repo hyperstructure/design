@@ -643,9 +643,9 @@ last with HTTP 502. Turn it on again once its address answers."
   [Resend the ones that failed] "Once your receiver works again."); events dropped for a full queue.
 - **Deliveries**: "27 delivered, 4 failed in the last day. Its newest 1,000 of the last 30 days are kept." (a day
   without failures says "27 delivered in the last day"; a busy webhook's thousand cover less than 30 days), a pill
-  (All, Failed, Waiting, Delivered) and an event Select. The summary's two sentences take a line each and shrink
-  beside the pill and Select, which move below them only on a phone: a summary that kept to one line pushed them
-  down on a desktop. A row is a mark (a green check, a red cross, an amber clock while it waits for a
+  (All, Failed, Waiting, Delivered) and an event Select. The summary's second sentence starts a line of its own,
+  and the summary narrows beside the pill and Select, which move below it once the row has no room for both (on a
+  phone, or in a narrow window). A row is a mark (a green check, a red cross, an amber clock while it waits for a
   retry, a dashed circle before its first attempt, each with its words for screen readers), the delivery's gist
   ("web#12 finished a turn: Retry failed uploads", "Review of acme/web#45 at 3f2a1c9 found 1 new issue, 1 still
   open", a "test" pill), its type and facts in mono ("session.finished · 3 attempts · goes again in 4m"), the
