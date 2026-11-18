@@ -768,9 +768,10 @@ it start sessions for them: say what it is and where they use it."). The footer 
 it start sessions for them. It starts none for anyone until they do.", a warn banner ("Copy its secret now: it
 shows once, here. Whoever has it starts sessions for the people who allowed it, so keep it where your program
 reads it, and nowhere else."), the secret in a CodeBox, and **Start a session for someone**: a pill of fctl, curl
-and Node.js over the request, with this instance, one of the workspace's projects, the admin's own address and
-the new secret in it. The Node.js one shows how a program tells "they haven't allowed it yet" from other
-refusals (`body.field === "on_behalf_of"`), since that is what a portal shows its user. [Done] [See who it acts
+and Node.js over the request, with this instance, one of the workspace's projects and the admin's own address in
+it. The fctl and curl ones carry the new secret, to try at once; the Node.js one reads it from `FCTL_TOKEN`, as a
+program's code should, and shows how it tells "they haven't allowed it yet" from other refusals
+(`body.field === "on_behalf_of"`), since that is what a portal shows its user. [Done] [See who it acts
 for]. A new secret (below) shows the same card, "Acme portal's new secret", without the second button.
 
 **The list**: "2 service accounts · 1 stopped" and [Make a service account] (disabled at the workspace's 10, saying
@@ -805,8 +806,9 @@ is no longer an admin of Acme. An admin makes it a new secret to start it again.
 
 **What members see**: the tab's lead says what a service account is and what allowing one means ("…It messages,
 interrupts and stops their agents for you, and nothing else. Change your answer whenever you like."), then each
-service account as a row: its glyph, name, what it says it is, and a `Meta` line ("Asks to start sessions for you"
-in blue until they answer, "Starts sessions for you", "You didn't allow it"; who made it; when they answered).
+service account as a row: its glyph, name, what it says it is, and a `Meta` line ("Asks to start agents for you"
+in blue until they answer, "Starts agents for you", "You didn't allow it"; who made it; when they answered), the
+same words the Agent Floor and Needs you use, so that one ask reads the same wherever it shows.
 Unanswered, a row ends in [Don't allow] [Allow]; answered, in a switch labelled "Allowed" or "Not allowed", so that
 the first answer is a deliberate choice and a change is quick. On a phone the answer goes under the words.
 
@@ -827,8 +829,10 @@ answer.
 
 **Where the instance doesn't ask** (Admin → Settings → Service accounts, "People allow them first"): turning it off
 asks first, in a dialog that says who it affects, those who said no included, and that answers count again once
-it's on, with a warning of what holding a secret then means; the members' tab, the intro, Made and Settings → You
-say that the instance's admins chose that people don't choose, and nothing asks.
+it's on, with a warning of what holding a secret then means. Then nothing asks, and each place says so in its own
+words: the members' tab's lead and the admins' list ("This instance's admins chose that people don't choose…"),
+the intro and Settings → You ("This instance doesn't ask people…"), Made ("It starts sessions for anyone in Acme
+from now on."), and the members' rows ("Starts agents for anyone here").
 
 **Elsewhere.** A session it started says so: its cover "Started by Ada Lovelace, through [mark] Acme portal", its
 details' "Through" row, its row's mark beside the schedule's and the ticket's ("Started through Acme portal"), and
@@ -845,15 +849,16 @@ ran it, it's the schedule's. Webhooks' "Sessions started by" offers Service acco
 | New | "Not used yet" pill, no green dot. |
 | Used | GitHub's green dot on its glyph; no pill. |
 | Stopped (its keeper left) | Amber glyph and pill, the row's amber line, the page's banner with Make a new secret. |
-| Asks you | The Agent Floor's card, Needs you, the tab's blue count, "Asks to start sessions for you" in blue. |
+| Asks you | The Agent Floor's card ("Acme portal asks to start agents for you in Acme"), Needs you's line and the members' tab row ("Asks to start agents for you", in blue), the tab's blue count. |
 | Instance doesn't ask | No card, no count; "Starts sessions for anyone here" and why. |
 
 **Edge cases.** An answer is the person's own: their row on its page is the only one with a control. A workspace
 closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
 leaves its sessions saying "through a service account deleted since". Leaving a workspace forgets the answers
 given there, so joining again asks again. A secret shows once; the page shows only its end, so people tell two
-apart without it. The workspace's admins see nine tabs with it, closer spaced so that they fit a computer's
-column (below).
+apart without it. With it, the workspace's admins see nine tabs where the instance has a Linear app (eight
+elsewhere), which their strip spaces closer so that they fit a computer's column
+([Page tabs](lists-and-pages.md#narrowing-ordering-and-counting)).
 
 **Building one like it.** When a feature acts as someone, ask that person, where they already look, with what it
 will do in their name and what it won't, and make the first answer two buttons and later ones a switch; show its
