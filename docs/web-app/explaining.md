@@ -779,7 +779,11 @@ so). A row is its glyph (an account with a cog, lucide's `UserRoundCog`, with Gi
 used; amber with a warning once it stopped), the name and a pill when it isn't plainly at work ("Stopped", "Not
 used yet"), what it says it is on one line, the facts ("4 of 12 allowed it · 1 didn't · 7 haven't answered · 23
 sessions started · used 5m ago") and, once it stopped, why in amber: "Stopped: Grace Hopper, who made its secret,
-is no longer an admin of Acme. An admin makes it a new secret to start it again."
+is no longer an admin of Acme. An admin makes it a new secret to start it again." Each row holds the admin's own
+answer too, as members' rows do, since the tab's badge, Needs you and Settings → You lead them to this list: [Don't
+allow] [Allow] while it asks them, with "Asks to start agents for you" in blue before the facts, then a switch. Its
+name is the row's cover link (`ROW_COVER`), so the page opens from anywhere on the row, and the answer lies over it
+(`ROW_ABOVE`); on a phone the answer goes under the words, and the arrow goes.
 
 **A service account's page**:
 
@@ -852,7 +856,8 @@ ran it, it's the schedule's. Webhooks' "Sessions started by" offers Service acco
 | Asks you | The Agent Floor's card ("Acme portal asks to start agents for you in Acme"), Needs you's line and the members' tab row ("Asks to start agents for you", in blue), the tab's blue count. |
 | Instance doesn't ask | No card, no count; "Starts agents for anyone here" and why. |
 
-**Edge cases.** An answer is the person's own: their row on its page is the only one with a control. A workspace
+**Edge cases.** An answer is the person's own: the only controls are their own row on its page and, for its admins,
+the list's rows, which hold their own answer. A workspace
 closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
 leaves its sessions saying "through a service account deleted since". Leaving a workspace forgets the answers
 given there, so joining again asks again. A secret shows once; the page shows only its end, so people tell two
