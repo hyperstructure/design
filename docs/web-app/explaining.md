@@ -619,8 +619,15 @@ otherwise), since they change them there too.
   `fctl_domain::hooks::describe` word for word, with tests in both): "Posts to hooks.slack.com when pull requests
   are ready for review, an agent asks something or a session fails, in Web, for sessions started by people." More
   than three events count instead ("Posts 7 kinds of events…").
-- The footer says what saving does next: "Adding it shows its signing secret, once." / "Changes reach new events
-  within half a minute."; what's missing replaces it once the person tried ("Choose an event, or every event.").
+- The footer says what saving does next: "fctl first posts the address a challenge, which your receiver answers
+  with it; then its signing secret shows, once." / "fctl first posts the new address a challenge, which your
+  receiver answers with it." / "Changes reach new events within half a minute."; while fctl waits for the answer,
+  "Checking the address: fctl posted it a challenge, which it answers with the challenge…" beside the button's
+  spinner; what's missing replaces it once the person tried ("Choose an event, or every event."). An address that
+  doesn't give the challenge back keeps the form as it was, with why under the address ("This address answered
+  fctl's challenge with HTTP 401. It answers fctl's url_verification request with the challenge, before it checks
+  the signature…"): fctl checks an address as Slack checks an app's, so that events go only where a receiver
+  takes them.
 
 **Added**: a card over the list, a key in an accent circle, "Added Deploy bot", "Its first events go to
 deploy.example.com within half a minute.", a warn banner ("Copy its signing secret now: it shows once here, and later
@@ -643,7 +650,8 @@ last with HTTP 502. Turn it on again once its address answers."
   form. On a phone the buttons go under the name rather than squeeze it into a column.
 - **What's wrong, with the way out beside it**: fctl turned it off (amber, its reason, [Turn it on]); failing
   ("fctl's attempts have all failed since 12:25, the last with 503 Service Unavailable in 5 ms. It tries each
-  delivery again 7 times over about 21 hours, and turns the webhook off once they have all failed for 3 days."
+  delivery again 7 times over about 21 hours, and turns the webhook off when one fails for good after 3 days of
+  failures."
   [Resend the ones that failed] "Once your receiver works again."); events dropped for a full queue.
 - **Deliveries**: "27 delivered, 4 failed in the last day. Its newest 1,000 of the last 30 days are kept." (a day
   without failures says "27 delivered in the last day"; a busy webhook's thousand cover less than 30 days), a pill
