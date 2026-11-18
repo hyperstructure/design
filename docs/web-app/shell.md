@@ -380,6 +380,13 @@ remaining animation to 0.01 ms.
 started or follow. It shows how many wherever they look: the sidebar, the browser tab and the
 installed app's icon.
 
+Besides sessions, it lists what asks the person something outside them, before the sessions:
+what autopilots ask, then the service accounts of their workspaces that wait for their answer
+("Acme portal", "Asks to start agents for you" in blue, the workspace's 26 px avatar with the
+service account's mark), each linking to its workspace's Service accounts tab. Both count in the
+pill, the title and the badge. Service accounts come from the control plane's list of workspaces,
+never the copy the sidebar keeps, which would ask again what was answered elsewhere.
+
 ### What counts (`lib/needs.ts`)
 
 It is computed in the browser from lists the app loads anyway:

@@ -2,8 +2,8 @@
 
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
 explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
-its tickets, webhooks, connecting Claude, GitHub and Linear, two-factor sign-in, memory and retrospectives, and the
-hints, warnings and empty states around them.
+its tickets, webhooks, service accounts and the people they ask, connecting Claude, GitHub and Linear, two-factor
+sign-in, memory and retrospectives, and the hints, warnings and empty states around them.
 
 Written from the code on `main` (`web/src`, whose comments carry most of the reasons), the project's docs, ADRs and
 tests, and the notes earlier agents left. Paths are relative to `web/src` unless they say otherwise. Sizes are CSS
@@ -724,6 +724,140 @@ redirect, which fctl doesn't follow. Give the address it redirects to.").
 the set people most likely want the starting point; say the configuration in the CLI's sentence as it's chosen;
 show a secret once with what its holder can do, then behind a confirmation; for anything that runs unattended, keep
 what it did, the request and the answer, a click away, with the way to try again beside what failed.
+
+## Service accounts
+
+(components/service-accounts/panel.tsx, page.tsx, ask.tsx, parts.tsx, usage.tsx; lib/service-accounts.ts)
+
+**Purpose.** Let a program of a workspace's own (a portal where its people start agents, a chat bot, a script) start
+sessions for its people through fctl's API, while each person decides whether it may start them for them: a
+session it starts is theirs, on their Claude subscription. It is the one feature here that acts as someone else,
+so every page around it says whose sessions, on whose subscription, and who chose.
+
+**Where it is.** A workspace's **Service accounts** tab: its admins see it always, its members once it has a
+service account, which they answer there. One opens in place (`&serviceAccount=sva_…`) with "‹ Service accounts"
+back, for its admins. What people answer also shows where they are anyway: a card on the Agent Floor, a line in
+Needs you, the workspace's Settings → You, and an invitation to the workspace.
+
+**The intro**, for admins while there are none, in the shape the other intros share:
+
+- Headline "Agents started from your own tools". Lead from the place: "A service account lets a program of
+  Acme's, such as a portal where your people start agents, a chat bot or a script, start sessions for them
+  through fctl's API and CLI, and follow what their agents do."
+- Points, each an answer to a worry: whose session ("It acts for one person at a time, named in each request: the
+  session it starts is theirs, on their Claude subscription, within what they may do in the project."); consent
+  ("People choose: it starts sessions only for those who allowed it. fctl asks each of Acme's people, and each
+  one who joins later, and they change their answer whenever they like.", or, where the instance doesn't ask,
+  "This instance doesn't ask people: it starts sessions for anyone in Acme…"); what it can't do ("…It changes
+  nothing else: no settings, people, secrets or tokens."); and the keeper ("Its secret works while the admin who
+  made it is an admin here. If they leave, it stops until another admin makes it a new one.").
+- [Make a service account] (primary, large) beside "Acme's admins make them. Every session one starts says so,
+  in the app, the audit log and webhooks."
+- **The preview**: a program's request as it goes out (`POST /projects/web/sessions`, a green 201, the
+  `authorization` header cut short, `fctl-on-behalf-of: ada@acme.dev` in blue, the prompt), the session it
+  started under it ("web#12 Fix the login redirect", "Ada Lovelace, through Acme portal" after the service
+  account's mark), and a card of whom it acts for: Ada "Allowed it" (green dot), Grace "Asked" (blue), Linus
+  "Didn't allow it" (grey); where the instance doesn't ask, each says "It acts for them".
+
+**The form**, raised and inline, as the webhooks' is: the name as a borderless display field ("Name it: what uses
+it"), then **What it is**, two lines, whose hint says who reads it ("Acme's people read it as fctl asks them to let
+it start sessions for them: say what it is and where they use it."). The footer says what making it does next:
+"Its secret shows once, as it's made. Then fctl asks Acme's people to let it start sessions for them."
+
+**Made**: a card over the list, a key in an accent circle, "Made Acme portal", "fctl asks Acme's 12 people to let
+it start sessions for them. It starts none for anyone until they do.", a warn banner ("Copy its secret now: it
+shows once, here. Whoever has it starts sessions for the people who allowed it, so keep it where your program
+reads it, and nowhere else."), the secret in a CodeBox, and **Start a session for someone**: a pill of fctl, curl
+and Node.js over the request, with this instance, one of the workspace's projects, the admin's own address and
+the new secret in it. The Node.js one shows how a program tells "they haven't allowed it yet" from other
+refusals (`body.field === "on_behalf_of"`), since that is what a portal shows its user. [Done] [See who it acts
+for]. A new secret (below) shows the same card, "Acme portal's new secret", without the second button.
+
+**The list**: "2 service accounts · 1 stopped" and [Make a service account] (disabled at the workspace's 10, saying
+so). A row is its glyph (an account with a cog, lucide's `UserRoundCog`, with GitHub's green dot once it has been
+used; amber with a warning once it stopped), the name and a pill when it isn't plainly at work ("Stopped", "Not
+used yet"), what it says it is on one line, the facts ("4 of 12 allowed it · 1 didn't · 7 haven't answered · 23
+sessions started · used 5m ago") and, once it stopped, why in amber: "Stopped: Grace Hopper, who made its secret,
+is no longer an admin of Acme. An admin makes it a new secret to start it again."
+
+**A service account's page**:
+
+- Its header: the glyph, the name, its pill, what it says it is (or, without it, "It says nothing of what it is.
+  Say what it is, for the people it asks."), and "Acme's · made by [avatar] Ada · 3d ago · used 5m ago"; [Edit]
+  and a ⋯ menu (Make a new secret…, Delete…). Edit swaps the header for the form.
+- **Stopped**: an amber banner with why and [Make a new secret] beside it ("…Until then, your program's requests
+  are refused, and it starts no sessions.").
+- **Who it acts for**: the tally, then everyone in the workspace by name, with the address they're a member as
+  and their role: "Allowed it 2d ago" with a green dot, "Asked: hasn't answered yet" in blue, "Didn't allow it" in
+  grey, or why it can't act for them whatever they answer in amber ("Cy's account is disabled", "…has to set up
+  two-factor sign-in first, which Acme requires"). Your own row holds your answer, which you change there; nobody
+  answers for anyone else, which the section's lead says. Over six people, a pill narrows the list (Everyone, It
+  acts for, Asked, Didn't allow it, Can't now), each with its count, the empty ones left out.
+- **Sessions it started**: the newest eight as the app's session rows ("23 in all, the newest first. Each is its
+  person's, who follows it."); "None yet. The sessions it starts show here as it starts them."
+- **Secret**: its end (`fctl_svc_••••…x8Kq`) with [New secret…] beside it, "Made by [avatar] Ada · 3d ago · it
+  works while Ada is an admin of Acme.", then how a program uses it, as on Made, without the secret. The dialog
+  says what happens before the click: "Its current secret stops working at once: your program's requests are
+  refused until it has the new one. You keep the new one from now on. People's answers stay as they are." (for one
+  that stopped: "It works again with the new one…").
+- The danger zone: "Its secret works no more, and people's answers to it go. The sessions it started stay their
+  people's." The dialog adds that one made again asks people again.
+
+**What members see**: the tab's lead says what a service account is and what allowing one means ("…It messages,
+interrupts and stops their agents for you, and nothing else. Change your answer whenever you like."), then each
+service account as a row: its glyph, name, what it says it is, and a `Meta` line ("Asks to start sessions for you"
+in blue until they answer, "Starts sessions for you", "You didn't allow it"; who made it; when they answered).
+Unanswered, a row ends in [Don't allow] [Allow]; answered, in a switch labelled "Allowed" or "Not allowed", so that
+the first answer is a deliberate choice and a change is quick. On a phone the answer goes under the words.
+
+**What fctl asks people.** On the Agent Floor, a blue-tinted card (blue is "your move") after invitations, until
+they answer: "Acme portal asks to start agents for you in Acme", what it says it is in quotes, three lines of what
+allowing it means (it starts sessions for you in Acme's projects you work in: they're yours, on your Claude
+subscription, and you follow them; it messages, interrupts and stops their agents for you, and reads what they do;
+nothing else, and you take it back whenever you like), "A service account of Acme's · made by Ada · 2 days ago",
+and [Don't allow] [Allow]. Several share one card, which says what allowing means once ("2 service accounts ask
+to start agents for you in Acme", "Each starts…") and lists each with its own answers: the same lines in every
+card read as boilerplate, and get skipped. Needs you lists each ("Acme portal", "Asks to start agents for you" in
+blue, the workspace's avatar with the service account's mark), counted in its pill, the tab's title and the app's
+badge; the workspace's tab carries a blue count; Settings → You says which act for you ("Acme portal starts
+sessions for you, on your Claude subscription. One asks you." [Choose]). An invitation says it before they join:
+"Acme has a service account, Acme portal: a program of its own that starts agents for its people, on their Claude
+subscription. It starts them for you only if you allow it: fctl asks you once you join."; joining says where to
+answer.
+
+**Where the instance doesn't ask** (Admin → Settings → Service accounts, "People allow them first"): turning it off
+asks first, in a dialog that says who it affects, those who said no included, and that answers count again once
+it's on, with a warning of what holding a secret then means; the members' tab, the intro, Made and Settings → You
+say that the instance's admins chose that people don't choose, and nothing asks.
+
+**Elsewhere.** A session it started says so: its cover "Started by Ada Lovelace, through [mark] Acme portal", its
+details' "Through" row, its row's mark beside the schedule's and the ticket's ("Started through Acme portal"), and
+the audit log (" through the service account Acme portal"). A schedule's run keeps the schedule's mark: whoever
+ran it, it's the schedule's. Webhooks' "Sessions started by" offers Service accounts.
+
+**States.**
+
+| State | What people see |
+|---|---|
+| Loading | Skeletons; never the intro before the list has loaded. |
+| None, an admin | The intro. |
+| None, a member | No tab, no card. |
+| New | "Not used yet" pill, no green dot. |
+| Used | GitHub's green dot on its glyph; no pill. |
+| Stopped (its keeper left) | Amber glyph and pill, the row's amber line, the page's banner with Make a new secret. |
+| Asks you | The Agent Floor's card, Needs you, the tab's blue count, "Asks to start sessions for you" in blue. |
+| Instance doesn't ask | No card, no count; "Starts sessions for anyone here" and why. |
+
+**Edge cases.** An answer is the person's own: their row on its page is the only one with a control. A workspace
+closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
+leaves its sessions saying "through a service account deleted since". Leaving a workspace forgets the answers
+given there, so joining again asks again. A secret shows once; the page shows only its end, so people tell two
+apart without it. The workspace's admins see nine tabs with it, closer spaced so that they fit a computer's
+column (below).
+
+**Building one like it.** When a feature acts as someone, ask that person, where they already look, with what it
+will do in their name and what it won't, and make the first answer two buttons and later ones a switch; show its
+admins every person's answer, never a way to give it for them; and say on everything it made that it made it.
 
 ## Settings → Claude
 

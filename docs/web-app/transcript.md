@@ -765,7 +765,7 @@ the wheel; long lists show their first few, with the rest a click away.
 | Retrospective, or "Retrospectives (3)" | When there is one, or the project keeps them | The latest (below) |
 | Memory | When the project keeps a memory, or the agent left notes | The notes it left and marked stale (below) |
 | Work | Always | Turns, Tool calls, Agent time, Tokens in / out, Cache reads, and the context meter |
-| Session | Always | Started by ("Runs on" for a review), Created, Schedule, Ticket, From (the base branch), Model, Effort, On GitHub, Issues, Runner, Billing ("Claude subscription") |
+| Session | Always | Started by ("Runs on" for a review), Through (the service account that started it for its person), Created, Schedule, Ticket, From (the base branch), Model, Effort, On GitHub, Issues, Runner, Billing ("Claude subscription") |
 | Follow along | Always | "Open in the Claude app", claude.ai, and `fctl attach` to copy |
 | Watching (2) | Always | Who has the session open, "×2" for two tabs |
 
