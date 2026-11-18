@@ -628,8 +628,8 @@ its test.
 row is a glyph in its state's tone (the webhook mark with GitHub's green dot while it delivers; amber with a
 warning while it fails or once fctl turned it off; grey while off), the name and a pill only when it isn't plainly
 on ("Failing", "Off"), the sentence, facts ("Web's · 27 delivered, 4 failed in the last day · 3 waiting · last 2m
-ago", "nothing sent yet" for a new one) and the problem in amber: "Every attempt has failed since 9m ago (HTTP
-503): fctl tries each again over about 21 hours." or "fctl turned it off. Every delivery failed for 3 days, the
+ago", "nothing sent yet" for a new one) and the problem in amber: "fctl's attempts have all failed since 9m ago
+(HTTP 503): it tries each again over about 21 hours." or "fctl turned it off. Every delivery failed for 3 days, the
 last with HTTP 502. Turn it on again once its address answers."
 
 **A webhook's page**:
@@ -638,18 +638,19 @@ last with HTTP 502. Turn it on again once its address answers."
   [avatar] Ada · 3d ago"; [Send a test] and a ⋯ menu (Edit, Turn off/on, Delete…). Edit swaps the header for the
   form. On a phone the buttons go under the name rather than squeeze it into a column.
 - **What's wrong, with the way out beside it**: fctl turned it off (amber, its reason, [Turn it on]); failing
-  ("Every attempt has failed since 12:25, the last with 503 Service Unavailable in 5 ms. fctl tries each delivery
-  again 7 times over about 21 hours, and turns the webhook off once its attempts have all failed for 3 days."
+  ("fctl's attempts have all failed since 12:25, the last with 503 Service Unavailable in 5 ms. It tries each
+  delivery again 7 times over about 21 hours, and turns the webhook off once they have all failed for 3 days."
   [Resend the ones that failed] "Once your receiver works again."); events dropped for a full queue.
-- **Deliveries**: "27 delivered and 4 failed in the last day. Kept for 30 days.", a pill (All, Failed, Waiting,
-  Delivered) and an event Select. A row is a mark (a green check, a red cross, an amber clock while it waits for a
+- **Deliveries**: "27 delivered, 4 failed in the last day. Its newest 1,000 of the last 30 days are kept." (a day
+  without failures says "27 delivered in the last day"; a busy webhook's thousand cover less than 30 days), a pill
+  (All, Failed, Waiting, Delivered) and an event Select. A row is a mark (a green check, a red cross, an amber clock while it waits for a
   retry, a dashed circle before its first attempt, each with its words for screen readers), the delivery's gist
   ("web#12 finished a turn: Retry failed uploads", "Review of acme/web#45 at 3f2a1c9 found 1 new issue, 1 still
   open", a "test" pill), its type and facts in mono ("session.finished · 3 attempts · goes again in 4m"), the
   status in its tone (green 2xx, red the rest, `---` when no answer came) and when. It unfolds in place: the
   attempts, newest first, each a dot, its time and its words ("503 Service Unavailable in 5 ms", "No answer within
-  10 seconds: answer first, then do the slow work.", "· resent by Ada"), "fctl tries it again in 4m." in amber while
-  it waits; then Request or Answer: the address, every header as posted (the signatures too, two during a
+  10 seconds: answer first, then do the slow work.", "· resent by Ada", or for a test "· sent by Ada"), "fctl tries
+  it again in 4m." in amber while it waits; then Request or Answer: the address, every header as posted (the signatures too, two during a
   rotation's day), the payload laid out and highlighted (Shiki, in both themes), or the answer's status, headers and
   body ("Its first 4 KB."). [Resend] beside them, disabled with its reason for a test ("A test isn't resent: send
   another one.") or after five. Twenty at a time, then [Show older]. Empty: "Nothing went out to it yet", "The next
@@ -682,7 +683,11 @@ last with HTTP 502. Turn it on again once its address answers."
 | Off | Grey glyph, "Off", "It's off: it gets nothing, and what happens meanwhile doesn't wait for it." |
 | Full queue | "{n} events were dropped: 1,000 deliveries waited for it already." |
 
-**Edge cases.** A webhook turned on again fails afresh, so that the next failure doesn't turn it off at once. A
+**Edge cases.** Failing goes by fctl's own attempts: a person's test or resend that fails doesn't make a webhook
+Failing (its delivery shows the failure), one that goes through ends it, and a webhook turned on again or pointed
+elsewhere fails afresh, so that its next failure doesn't turn it off at once. On a project's page, the workspace's
+webhooks show their addresses shortened to scheme and host (`https://hooks.slack.com/…`) to those who don't manage
+them: a path can hold a credential. A
 workspace's webhook opened from a project's page keeps its projects when saved (a test pins it). Tests aren't in
 the day's counts. Long addresses and headers wrap anywhere (`[overflow-wrap:anywhere]`); a payload scrolls
 sideways on a phone. What fctl's own log calls a failure keeps its words beside the status ("302 Found in 12 ms: a
