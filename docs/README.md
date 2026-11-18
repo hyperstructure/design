@@ -27,8 +27,9 @@ and file paths here are relative to that repository.
 - [Pages that explain](web-app/explaining.md): how settings teach and
   invite rather than list switches: the workspace's runners and their setup,
   the project's reviews, schedules and tickets showing what they do before
-  they're on, and the patterns across them (commands to copy, previews
-  before a switch, warnings before a risk, empty states that teach).
+  they're on, webhooks and what went out to them, and the patterns across
+  them (commands to copy, previews before a switch, warnings before a risk,
+  empty states that teach).
 - [The UI kit](web-app/kit.md): buttons, fields, selects, dialogs, menus,
   sheets, the lightbox, feedback, icons, and the global styling rules: focus
   rings, forced colors, touch, Tailwind 4 conventions, browser quirks.
