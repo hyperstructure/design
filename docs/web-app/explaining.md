@@ -850,7 +850,7 @@ ran it, it's the schedule's. Webhooks' "Sessions started by" offers Service acco
 | Used | GitHub's green dot on its glyph; no pill. |
 | Stopped (its keeper left) | Amber glyph and pill, the row's amber line, the page's banner with Make a new secret. |
 | Asks you | The Agent Floor's card ("Acme portal asks to start agents for you in Acme"), Needs you's line and the members' tab row ("Asks to start agents for you", in blue), the tab's blue count. |
-| Instance doesn't ask | No card, no count; "Starts sessions for anyone here" and why. |
+| Instance doesn't ask | No card, no count; "Starts agents for anyone here" and why. |
 
 **Edge cases.** An answer is the person's own: their row on its page is the only one with a control. A workspace
 closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
