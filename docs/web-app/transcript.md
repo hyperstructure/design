@@ -121,7 +121,7 @@ content starts at 22 px (thread at 6.5 px, padding 14.5 px).
 | --- | --- |
 | `RailIcon` | A 24 px box for a bare 14 px icon, marked `data-rail` so the new view can draw its thread behind it |
 | `Tile` | A tool call's icon on a 24 px tile: radius 7 px, `border-line`, `bg-raised`; red (`danger-soft` fill, `danger` border at 30%) when the call failed; bare inside a run. A run's tile is `stacked`: a second tile's edge shows under it (two offset 3 px shadows) |
-| `OpenLine` | A button: icon, what it says (truncating, the chevron after it), facts at the right. With `wrap`, the text wraps instead and the chevron stays glued to the last word |
+| `OpenLine` | A button: icon, what it says (truncating, the chevron after it), facts at the right, or under the text where they would crowd it. With `wrap`, the text wraps instead and the chevron stays glued to the last word |
 | `Thread` | What a line opened, under it; `tone="thought"` tints the thread pink at 25% |
 | `Milestone` | A 12.5 px line with a rail icon and a tone: muted (`ink-4`), warn (`amber`), error (`danger`), info (`blue`), ok (`accent`) |
 | `MilestoneButton` | A milestone that opens (setup, logs, "What fctl told the agent"); its chevron and `aria-expanded` appear only when there is more to show |
@@ -132,7 +132,11 @@ content starts at 22 px (thread at 6.5 px, padding 14.5 px).
 6 px past the column on each side (`-mx-1.5` with `px-1.5`), framing the text without moving it.
 On coarse pointers it grows 4 px taller. A line is as tall as its icon (24 px, 20 px nested), so
 the text and the facts line up with the icon's middle. Facts sit at the right in 11.5 px `ink-4`
-tabular figures, separated by middle dots.
+tabular figures, separated by middle dots. When, beside the text, they would leave it less than
+12rem (or its own width, when that is less), they go under it instead, where the text starts: on a
+phone, "1 failed · 1 in the background · 2m 22s" beside a run's summary broke it after every word
+or two. The text takes at least `basis-48` but no more than its own width (`max-w-max`), and the
+row wraps (`flex-wrap justify-between`), so on a computer nothing moves.
 
 **Motion.** The chevron turns 90° over 200 ms (`ease-out`); hover colors change over 150 ms; what a
 line opens rises in (`animate-rise`: 420 ms, from 6 px below at 99.5% scale and a 2 px blur).
@@ -195,7 +199,7 @@ when they care.
 
 **Anatomy.** A stacked tile with the first call's icon; the summary, which wraps rather than lose
 any of it (a run's line has nothing else to say); the chevron after its last word; then facts at
-the right, in order: lines changed ("+12 −3", colored only when not zero), failures ("1 failed", in
+the right, or under the summary where they would crowd it (on a phone), in order: lines changed ("+12 −3", colored only when not zero), failures ("1 failed", in
 `danger` at 80%), work left in the background ("2 in the background" behind a pulsing accent dot;
 new view only), and how long it took (first step to last result, once it no longer goes on, from
 one second up).
@@ -240,7 +244,8 @@ redraw every run on the page.
 
 - Summarize by verb and object, counting distinct objects, in the order they first happened.
 - Past tense for what is done, present participle for what goes on; never both in one line.
-- Never truncate a summary: wrap it.
+- Never truncate a summary: wrap it, and move what sits beside it out of its way rather than
+  squeeze it to a word a line.
 - Keep the step under way visible under a folded line while work goes on, and remember what the
   reader opened inside it.
 
