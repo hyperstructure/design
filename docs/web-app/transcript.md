@@ -271,9 +271,11 @@ check it.
 | others | The tool's name |
 
 Paths read as people know them (`shownPath`): from the root of the repository Claude Code works in,
-`~/` elsewhere in the home directory, the sandbox's `~/workspace/` dropped. The directory is dimmer
-(`ink-4`) and gives way first when room runs out (`shrink-[1000]`), so the file's name (`ink-3`)
-stays. A described command shows the command itself as a tooltip (first 500 characters).
+`~/` elsewhere in the home directory, the sandbox's `~/workspace/` dropped. `PathText` shows them:
+the directory is dimmer (`ink-4`) and gives way first when room runs out, so the file's name
+(`ink-3`) stays whole until the directory is gone, then truncates too. The name never shrinks
+(`shrink-0`) and is capped at the line's width instead (`max-w-full`). A described command shows the
+command itself as a tooltip (first 500 characters).
 
 **Facts at the right.** For a subagent, its steps and last tool: "12 steps · Grep". Lines an edit
 added and took out. While a call runs, for how long, once past two seconds ("12 s", "1m 4s"); once
@@ -959,6 +961,12 @@ activity". The others:
   2160×450 at 460 px, ignoring the cap, which holds a percentage; the image inside then took the
   288 px cap and left the rest of the frame empty. `Thumbnail` sets the width and height in pixels
   from the image's size and leaves the percentage to `max-width: 100%` alone.
+- **A name that shrinks at all loses its last letters in Safari.** Paths used to let the directory
+  give way first by shrinking it 1000 times faster than the name (`shrink-[1000]`), but the name
+  still took its tiny share, a fraction of a pixel, and Safari drew its ellipsis over the last
+  letters: "web/src/compo… tool.t…" with a gap before the chevron (fctl#602). Chromium rounded the
+  fraction away for most names, though not all ("reset_link.…"). Let only the part that may give way
+  shrink, and cap the rest (`PathText`: `shrink-0 max-w-full` on the name).
 
 
 ## Principles at work here
