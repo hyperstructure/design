@@ -562,6 +562,14 @@ announced politely), step buttons at the sides, and the caption with the name, d
 a download button. Touch screens get neither the step buttons (fingers swipe) nor the download (iOS
 answers a download with a sheet of its own).
 
+**Its size.** A picture whose file says its width and height (attachments, images agents read,
+published screenshots, and those in agents' answers) shows at that size, a CSS pixel for each of
+its own, or as large as fits (`fitWidth`), and takes that room while it loads; only one of an
+unknown size shows as large as the browser says it is. Safari decodes a large image no larger than
+the page shows it, and can then lay out every `<img>` of that image at the size of that decode, in
+device pixels: opened from a 154 × 96 px thumbnail on a 2× screen, a picture showed 308 × 192 px
+until the page loaded again. Fingers zoom to the file's size too.
+
 **Behavior.** Arrow keys step, but not with a modifier (⌘← goes back); a click outside the picture
 and its caption closes, unless the press started on them; Escape closes; the focus returns. At the
 ends the step buttons are `aria-disabled`, not disabled, so they keep the focus. A swipe brings the
