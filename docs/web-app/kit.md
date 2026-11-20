@@ -564,8 +564,10 @@ answers a download with a sheet of its own).
 
 **Its size.** A picture whose file says its width and height (attachments, images agents read,
 published screenshots, and those in agents' answers) shows at that size, a CSS pixel for each of
-its own, or as large as fits (`fitWidth`), and takes that room while it loads; only one of an
-unknown size shows as large as the browser says it is. Safari decodes a large image no larger than
+its own, or as large as fits (`fitWidth`), and takes that room while it loads; once it has, that size
+turns a quarter if the browser shows the picture the other way round (`oriented`: a JPEG's size in
+its file leaves out the photo's orientation). Only one of an unknown size shows as large as the
+browser says it is. Safari decodes a large image no larger than
 the page shows it, and can then lay out every `<img>` of that image at the size of that decode, in
 device pixels: opened from a 154 × 96 px thumbnail on a 2× screen, a picture showed 308 × 192 px
 until the page loaded again. Fingers zoom to the file's size too.
