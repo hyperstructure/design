@@ -942,12 +942,14 @@ progress while people compare; tick steps from real state; warn inside the step 
 
 ## Domains that sign in with a provider
 
-(components/sign-in/admin.tsx `SignInAdmin`; components/sign-in/provider.tsx; routes/auth.tsx `LoginPage`,
-`DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0097)
+(components/sign-in/admin.tsx `SignInAdmin`; routes/admin.tsx `SignInTab`; components/sign-in/provider.tsx;
+routes/auth.tsx `LoginPage`, `DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0097. Written
+from hyperstructure/fctl#642, ahead of its merge, unlike the rest of this page.)
 
-**Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today:
-"acme.com and acme.dev: Google only") without a nervous afternoon: no way to lock themselves out, and a clear picture
-of whom it concerns before anything changes. Then explain it, wherever someone meets it.
+**Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today, so
+that the tab reads "acme.com and acme.dev sign in with Google only.") without a nervous afternoon: no way to lock
+themselves out, and a clear picture of whom it concerns before anything changes. Then explain it, wherever someone
+meets it.
 
 **Admin → Sign-in reads like the instance's front door**, top to bottom:
 
@@ -970,7 +972,7 @@ of whom it concerns before anything changes. Then explain it, wherever someone m
    passwords…"), and the button is primary; with rules, secondary. With no provider set up, the button is disabled
    with its reason beside it.
 4. **Accounts**: the self sign-up switch, its hint following the value.
-5. **Two-factor sign-in**, which moved here from Settings.
+5. **Two-factor sign-in**, which moved here from Admin → Settings; the workspace setting's link to it follows.
 
 **Requiring one is a dialog that shows its consequences as you type** (`RuleDialog`). Domains in one field
 (commas, spaces or lines; `*@` and case don't matter), its placeholder the admin's own domain with "Use acme.com,
@@ -979,10 +981,12 @@ whose hint says the cost of each answer ("Quick, but past Google's checks: a pas
 account Google closed…"). Once what's typed settles (250 ms) and reads as domains, the preview
 (`POST /api/v1/admin/sign-in/preview`) fills a sunken box (`aria-live`): the avatars of those it concerns, then the
 CLI's sentences (`consequences` mirrors `fctl admin sign-in require`): "38 people sign in with a password today: their
-next sign-in goes through Google, and their passwords stop working.", "4 people at other domains sign in as
-before.", "Ada, the primary instance owner, keeps their password and passkeys: the way in if Google is down.", and
-"fctl emails each of them what changes." where the instance sends email. A word that isn't a domain is the field's
-error, and asks the server nothing.
+next sign-in goes through Google, and their passwords stop working.", the tokens saving deletes ("Their 5 access tokens
+and CLI sign-ins made with another way in go: they make new ones after signing in with Google.", and an admin token's,
+which a directory sync may depend on), "4 people at other domains sign in as before.", "Ada, the primary instance
+owner, keeps their password and passkeys: the way in if Google is down.", and "fctl emails each of them what
+changes." where the instance sends email. A change that takes nobody's way in leads with "Nobody's way in changes."
+A word that isn't a domain is the field's error, and asks the server nothing.
 
 **No way to lock yourself out.** When the change would sign out the admin who saves it (their own address is covered,
 and they signed in another way), an amber banner says so with the way out as a link, and the primary button stays
