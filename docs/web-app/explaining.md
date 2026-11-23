@@ -3,7 +3,8 @@
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
 explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
 its tickets, webhooks, service accounts and the people they ask, connecting Claude, GitHub and Linear, two-factor
-sign-in, memory and retrospectives, and the hints, warnings and empty states around them.
+sign-in, the domains that sign in with a provider, memory and retrospectives, and the hints, warnings and empty states
+around them.
 
 Written from the code on `main` (`web/src`, whose comments carry most of the reasons), the project's docs, ADRs and
 tests, and the notes earlier agents left. Paths are relative to `web/src` unless they say otherwise. Sizes are CSS
@@ -939,6 +940,86 @@ progress while people compare; tick steps from real state; warn inside the step 
   minute." Two cards: "Add a passkey" (marked Quickest: "Your fingerprint, face or screen lock confirms it's you.
   Nothing to type, and nothing a fake site can catch.") and "Use an authenticator app".
 
+## Domains that sign in with a provider
+
+(components/sign-in/admin.tsx `SignInAdmin`; components/sign-in/provider.tsx; routes/auth.tsx `LoginPage`,
+`DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0097)
+
+**Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today:
+"acme.com and acme.dev: Google only") without a nervous afternoon: no way to lock themselves out, and a clear picture
+of whom it concerns before anything changes. Then explain it, wherever someone meets it.
+
+**Admin → Sign-in reads like the instance's front door**, top to bottom:
+
+1. **How people sign in**: a lead built from the instance's own counts ("52 people have an account: 38 with a
+   password, 12 with Google and 9 with a passkey. 3 people haven't signed in yet." then "acme.com and acme.dev sign in
+   with Google only."), and four small counts in sunken tiles, an icon each: a password's, the provider's mark, a
+   fingerprint, a person with a plus for those not signed in yet.
+2. **Providers**: a card each, the provider's own mark in a tile that lights once it's set up, a "Set up" or "Not set
+   up" pill, and who uses it ("12 people sign in with it"). Set up, it shows the redirect URI in a `CodeBox` ("Its OAuth
+   client lists this as an authorized redirect URI.") and what the admin's own sign-in says of it: "You signed in with
+   Google as an address at acme.com: it works for you." or, with a link that signs in and comes back, "You signed in
+   with a password. Sign in with Google to check that it works for you before you require it." Not set up, it names
+   what sets it up (`GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET`) and links fctl.sh's guide.
+3. **Domains that sign in with a provider**: a row per rule, a building in a lit tile, the domains in words, a pill
+   with the provider's mark ("Google only"), and whom it covers ("40 people · 12 with Google · 26 still have a
+   password, which goes at their next sign-in · passkeys don't sign them in alone"); Edit and Stop requiring. Under
+   them, with a crown, who keeps a way in: "Ada, the primary instance owner, keeps their password and passkeys
+   whatever these say: the instance's way in while a provider is down." Empty, one sentence says what requiring does
+   with the reader's likeliest case ("Requiring Google at acme.com, say, moves everyone with an acme.com address off
+   passwords…"), and the button is primary; with rules, secondary. With no provider set up, the button is disabled
+   with its reason beside it.
+4. **Accounts**: the self sign-up switch, its hint following the value.
+5. **Two-factor sign-in**, which moved here from Settings.
+
+**Requiring one is a dialog that shows its consequences as you type** (`RuleDialog`). Domains in one field
+(commas, spaces or lines; `*@` and case don't matter), its placeholder the admin's own domain with "Use acme.com,
+your own domain" under it while it's empty; a Select of providers only when there are several; the passkeys switch,
+whose hint says the cost of each answer ("Quick, but past Google's checks: a passkey still signs in someone whose
+account Google closed…"). Once what's typed settles (250 ms) and reads as domains, the preview
+(`POST /api/v1/admin/sign-in/preview`) fills a sunken box (`aria-live`): the avatars of those it concerns, then the
+CLI's sentences (`consequences` mirrors `fctl admin sign-in require`): "38 people sign in with a password today: their
+next sign-in goes through Google, and their passwords stop working.", "4 people at other domains sign in as
+before.", "Ada, the primary instance owner, keeps their password and passkeys: the way in if Google is down.", and
+"fctl emails each of them what changes." where the instance sends email. A word that isn't a domain is the field's
+error, and asks the server nothing.
+
+**No way to lock yourself out.** When the change would sign out the admin who saves it (their own address is covered,
+and they signed in another way), an amber banner says so with the way out as a link, and the primary button stays
+disabled: "This would sign you out: you signed in another way. Sign in with Google as your acme.com address first,
+which shows that it works, then require it." The server refuses the same save (409), so a stale tab can't either.
+
+**Stopping** asks first, with what happens and what doesn't come back: "Their people sign in as they like again:
+those who still have a password, with it. Passwords that went at their first sign-in with Google don't come back…"
+and how many it releases. Reversible, so its button is primary, not red; the server asks the admin to confirm it's
+them, where the instance asks for that.
+
+**The sign-in page leads with the provider.** Its buttons keep the provider's own mark and neutral colors (never the
+app's yellow, which would clash with them), and under them, a quiet line per rule: "acme.com and acme.dev sign in with
+Google." Typing an address at such a domain turns the form into that provider's button, two lines with the address
+under the label (`ProviderSubmit`, the invitation's look), and the password field goes; a line says why ("…its own
+sign-in, with its checks, signs you in here"), and a quiet question offers the instance's way in while the provider
+is down: "Primary instance owner? Sign in with your password", which turns back with "Continue with Google instead".
+Enter goes on to the provider with the address as its `login_hint`. Coming back refused, the page says which account
+to choose: "Your account signs in with Google as your acme.com address. Choose that Google account when Google asks:
+the one you chose isn't one." Where signing in makes no accounts, the footer says where they come from: "Need an
+account? Your organization makes them here: ask an admin of this instance." An invitation to a covered address shows
+the provider's button alone, and says it takes the invitation.
+
+**Settings explains it where it applies.** Sign-in methods leads with a blue banner ("acme.com signs in with Google,
+as Acme factory's admins require: Google's own sign-in, with its checks, signs you in here."); the password row says
+"None: passwords don't sign in at acme.com" and offers nothing; the Google account at the domain reads "Your way in,
+as ada@acme.com" and can't be unlinked, while a personal one can. Passkeys say what they still do ("Confirm it's you…
+after you sign in with Google and before sensitive actions. They don't sign you in alone…"). An address at the domain
+loses its Disconnect button, and a note under the list says why and who removes it. The primary instance owner reads
+instead that they keep their password and passkeys, the way in if the provider is down. Devices say how each signed
+in ("Browser · signed in with Google · active 2 minutes ago").
+
+**Building one like it.** Show who is affected before the button, with the real numbers and names, in the same
+sentences the CLI prints. Make the dangerous outcome impossible rather than warned about: the admin proves the
+provider works for them by signing in with it. Keep a named way in when the outside service is down, and say whose it
+is on every page that takes the others away.
+
 ## Memory and retrospectives
 
 (components/project/memory.tsx, retrospectives.tsx; routes/project.tsx `Settings`)
@@ -1075,6 +1156,8 @@ progress while people compare; tick steps from real state; warn inside the step 
 | "Your sessions in this workspace run on it: a company's seat here, your own plan elsewhere." | Explains a setting by the case it exists for. |
 | "You don't need one unless {workspace}'s projects use repositories outside acme." | Says when *not* to act. |
 | "That code doesn't match either. Codes depend on the time: check that your phone sets its clock automatically." | The second failure gets the likely cause, not the same message. |
+| "38 people sign in with a password today: their next sign-in goes through Google, and their passwords stop working." | Whom a change concerns, counted, before the button, in the CLI's words too. |
+| "This would sign you out: you signed in another way. Sign in with Google as your acme.com address first, which shows that it works, then require it." | Refuses the one change that would lock its maker out, with the way through as a link. |
 | "Its runners stay with their owners, and its GitHub accounts keep the app." | Says what stays, not only what goes. |
 | "Saving runs them on your Claude subscription, instead of {name}'s." | The consequence people miss, before the button. |
 | "No label asks for one: every delegated ticket gets the work done." | An empty value's meaning, spelled out. |
