@@ -283,7 +283,9 @@ organization gave them, so the facts live with the people, not on a tab of their
   says where seats are given: "Claude Team and Enterprise seats are given in Claude's organization settings (how
   ↗); each person connects theirs in Settings → Claude, or an admin token sets it for them." The link goes to
   Claude's own guide; no console URL is guessed.
-- **Under each person's address, a facts line** in `ink-4`, the same words as `fctl workspaces members --claude`:
+- **Under each person's address, a facts line**, 12 px in `ink-3` (a shade above the address's `ink-4`: it is the
+  row's news), in the words of `fctl workspaces members --claude` made into a line (the CLI's table cells are
+  shorter: "token, set by admin token", "~Dec 14 (21d)", "2h ago"):
   "Long-lived token, set by an admin token · plan unknown · Claude answered 2 hours ago · runs out around Dec 14";
   "Claude login · Max · Claude answered 5 minutes ago"; "Token on their runners · plan unknown · Claude answered
   yesterday". Problems take the whole line and name the place: "No Claude connection for Acme: their sessions here
@@ -337,7 +339,7 @@ run to the screen's edges on a phone. A reset that isn't today reads "on Nov 25"
 visit's preview first said "for Acme" in every workspace and gave a long-lived token a Team plan, which no token
 can show: previews take the place's name, and only facts fctl can know.
 
-**Building one like it.** Put oversight where the people are listed; one facts line each, in the CLI's words;
+**Building one like it.** Put oversight where the people are listed; one facts line each, saying what the CLI says;
 problems as the line itself, named with the place; a way out that is complete and copyable, or the link to send;
 say the level to those it's about.
 
@@ -1002,7 +1004,7 @@ lays the trade-offs out before the steps.
 - **When was it made.** The paste steps ask "When did claude setup-token make it?" with three answers, the common
   one first: Just now (the date is exact), Earlier (a date picker), I don't know ("fctl counts a year from today and
   says around"), and say the result: "It runs out on Nov 23, 2027, a year on. fctl tells you a month and a week
-  before." 
+  before."
 
 **Building one like it.** List each way's gains and losses before its steps; recommend one, with the reason; keep
 progress while people compare; tick steps from real state; warn inside the step where the risk arises.
