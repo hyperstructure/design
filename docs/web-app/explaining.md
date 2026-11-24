@@ -76,8 +76,9 @@ them, after teaching a model that's easy to get wrong: whose runner runs whose s
 2. **Runners that wait for your approval**: an amber card, only while some do.
 3. **Register a machine**: a name field ("studio mac") with Register in its row; beside it, when you have runners that
    aren't here, "Or add one of yours", whose options say where each works already ("Also runs Side project").
-4. **The runners**, then **how to bring a machine online** (straight under the form while there's none), then
-   **enrollment tokens** (`#enrollment-tokens`), for machines nobody signs in on.
+4. **The runners** that are in no pool you see, then **how to bring a machine online** (straight under the form
+   while there's none), then **pools** (`#enrollment-tokens`, its heading `#pools`): each an enrollment token, for
+   machines nobody signs in on, with the runners it enrolled under it.
 
 **A runner's row.** An 8 px dot; the name and a state word (12 px `ink-4`: "online", "offline", "draining", "driver
 not ready", "disabled"); pills only where they matter: "Only your sessions" or "Only {name}'s sessions", "Keeps your
@@ -111,16 +112,46 @@ circle with the number in mono 11.5 px, a 14.5 px medium title, a 13.5 px `ink-3
   shown once and lets the machine run sessions: keep it private.", the two commands (the second with the token), and
   "It shows up here as online within seconds. Add it to your other workspaces from their Runners tab."
 
-**Enrollment tokens.** The paragraph says what they're for before what they are: "For machines that autoscaling
-creates, or that you set up without signing in on them: each enrolls itself with a token, and gets a token of its
-own.", then whose the runners will be, and "How enrollment works ↗" (fctl.sh's guide). Token rows carry state pills
-("Full" in amber, "Revoked", "Expired"), a sentence of what the token does and facts ("3 of 20 runners · 1 waiting ·
-last enrolled one 2 hours ago · made by you"); ended ones fold behind "Show 2 revoked or expired". The form explains
-each choice inside its options rather than above them:
+**Pools.** A pool is an enrollment token and the runners it enrolled, which carry its labels and follow its
+placement. The paragraph says what they're for before what they are: "For machines that autoscaling creates, or that
+you set up without signing in on them: each enrolls itself with its pool's enrollment token, and gets a token of its
+own. A pool's labels say which projects' sessions its runners take, and how many it needs now tells whatever scales
+it.", then whose the runners will be, and "How enrollment works ↗" (fctl.sh's guide). The button is "New pool".
+
+Each pool is a card (`PoolCard`, a configured thing whose state people check: `rounded-xl`, `bg-surface/40`), in
+one stacked column, never a grid:
+
+- Its name with state pills ("Full" in amber, "Revoked", "Expired") and whose ("Only your sessions"), then its labels
+  as chips in the code font (`aria-label="Labels"`), and a ⋯ menu: Edit…, Revoke….
+- **What it is doing, as a sentence** (`poolState`, lib/pools.ts), from what it needs now (`GET …/runners/demand`,
+  read again every 15 seconds): "Growing: 1 runner is starting for 3 sessions that wait." in `ink-2`; "3 sessions
+  wait, the longest for 2m: it wants 3 runners, and has 2 online." and "At its limit of 20 runners: 3 sessions wait
+  for room." in amber, where someone should look; quiet otherwise: "Busy: 4 of 4 runners run sessions.", "Could
+  shrink: it wants 1 runner of its 4.", "Idle: its 2 runners run nothing.", "No runner online, and no session waits
+  for it.", "No runners yet: machines that enroll with its token show here." It says what the numbers show, not what
+  something will do: fctl doesn't know whether anything scales the pool.
+- **The facts**, from the same numbers: "6 of 8 runners busy · 1 starting · 1 waiting for approval (amber) · 11 of 32
+  sessions · 3 sessions waiting · longest 2m", left out for an empty pool that nothing waits for, whose sentence says
+  it already. Times as the CLI says them (`2m`, `1h 5m`).
+- Its placement and what the token does, quiet: "Packed: fills one runner before the next, so that idle ones can go.
+  Enrolls up to 20 runners at a time, which run everyone's sessions at once and are removed once they have been
+  offline for 5 minutes.", then the token's facts ("last enrolled one 2 hours ago · expires Feb 22 · made by you"; the
+  runner count only where the demand line doesn't give it).
+- **Its runners**, under a hairline at the card's foot, as the list draws them, without "Enrolled with…" and "Removed
+  once offline…", which the card says. They leave the list above, so each runner shows once. A revoked or expired
+  token's pool stays among the others while it has runners; the rest fold behind "Show 2 revoked or expired".
+
+The form explains each choice inside its options rather than above them:
 
 - Name ("What it's for, which the runners it enrolls show."); Runs, for admins ("Everyone's sessions": "The
   workspace's runners, which its admins manage"; "Only my sessions": "Your runners, for Only on my runners and a
-  Claude token kept on them"); Runners at once (empty for no limit, "Removed and rejected ones free their place.").
+  Claude token kept on them").
+- Labels, in the code font ("Projects that ask for them run on its runners. Commas or spaces between them.", checked
+  as the server checks them, the error under the field), and Placement: "Spread" ("Each session goes to the least
+  busy runner: for machines that stay on.") or "Packed" ("Fills one runner before the next, so that idle ones can go:
+  for a pool that grows and shrinks."). Until someone chooses, it follows When they go offline: packed for a pool
+  that removes offline runners, as the server would.
+- Expires; Runners at once (empty for no limit, "Removed and rejected ones free their place.").
 - When they go offline: each option says when to pick it. "Keep them" ("They stay until someone removes them."),
   "Remove after 5 minutes" ("For machines autoscaling destroys without uninstalling."), after 15 minutes ("The same,
   through a short network outage."), after a day ("For machines that are off overnight."), after a week ("Through a
@@ -128,8 +159,15 @@ each choice inside its options rather than above them:
 - Approve each runner: "Runners it enrolls wait on this tab, with where they enrolled from, until an admin approves
   them; until then they run nothing. {workspace}'s admins get a notification."
 - **A live summary** in a sunken box (`aria-live="polite"`), rewritten as the form changes, in the CLI's words
-  (`describeEnrollment` mirrors `fctl_domain::enrollment::describe`): "Enrolls up to 20 runners at a time, which wait
-  for an admin's approval and are removed once they have been offline for 5 minutes. It expires on February 6, 2027."
+  (`describeEnrollment` mirrors `fctl_domain::enrollment::describe`, `poolLine` the pool line of `fctl runners
+  enrollment-tokens`): "Enrolls up to 20 runners at a time, which wait for an admin's approval and are removed once
+  they have been offline for 5 minutes. Its runners carry the labels aws and large. Packed: fills one runner before the
+  next, so that idle ones can go. It expires on February 6, 2027."
+
+**Editing a pool** (Edit…) changes it as it runs: its name, labels, placement and runners at once, whose hint says
+what a lower limit does ("Fewer than it has removes none: it enrolls no more until some go."). The dialog's sentence
+says what follows: "Its runners carry the new labels and follow the new placement at once; the sessions they run
+carry on." The toast says the result: "AWS large's runners carry the labels aws and large, and pack sessions".
 
 Created: an amber "Copy it now: it is shown once. Whoever has it enrolls machines in {workspace}, which wait for an
 admin's approval." over the secret, the steps (the enroll command one variable a line, ready for a boot script), and a
