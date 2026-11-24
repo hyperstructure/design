@@ -1035,8 +1035,7 @@ progress while people compare; tick steps from real state; warn inside the step 
 ## Domains that sign in with a provider
 
 (components/sign-in/admin.tsx `SignInAdmin`; routes/admin.tsx `SignInTab`; components/sign-in/provider.tsx;
-routes/auth.tsx `LoginPage`, `DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0098. Written
-from hyperstructure/fctl#642, ahead of its merge, unlike the rest of this page.)
+routes/auth.tsx `LoginPage`, `DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0099)
 
 **Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today, so
 that the tab reads "acme.com and acme.dev sign in with Google only.") without a nervous afternoon: no way to lock
