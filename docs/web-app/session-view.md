@@ -197,6 +197,17 @@ in from both sides and the exact time on hover.
   of the accent spreads out from the message box once (*invite*, 1.6 s), and
   the now line rolls to "Your turn".
 
+## The session's snapshot
+
+Where a session has a snapshot that a resume on another runner would restore, the rail's Session section shows it
+under *Runner* (components/session/snapshot.tsx): "Snapshot 12 MB · 2 hours ago" (the time to the minute in its
+title), and under it in 11.5 px `ink-4` what it holds, where and until when, as `fctl show` says it: "Its
+conversation and uncommitted work, saved on aws-7, kept by fctl. A resume on another runner restores it until Dec
+23." A snapshot in a bucket names the bucket ("in s3://acme-fctl") and one that left something out says what ("Its
+conversation, without its images"). Runner and bucket names don't break at their hyphens. Only the session's
+details carry it, not the live state, so the page reads them again when the session stops, which is when a new one
+is saved. People who never look see nothing of it: when a resume restores one, the transcript says so in one line.
+
 ## Whose subscription
 
 A session runs on the Claude subscription of whoever started it (or last
