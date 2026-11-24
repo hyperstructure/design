@@ -3,7 +3,8 @@
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
 explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
 its tickets, webhooks, service accounts and the people they ask, connecting Claude, GitHub and Linear, two-factor
-sign-in, memory and retrospectives, and the hints, warnings and empty states around them.
+sign-in, the domains that sign in with a provider, memory and retrospectives, and the hints, warnings and empty states
+around them.
 
 Written from the code on `main` (`web/src`, whose comments carry most of the reasons), the project's docs, ADRs and
 tests, and the notes earlier agents left. Paths are relative to `web/src` unless they say otherwise. Sizes are CSS
@@ -58,7 +59,8 @@ empty list says what will fill it, and when.
 ## A workspace's Runners tab
 
 (routes/workspace.tsx `Runners`, `AddRunner`; components/workspace/runners.tsx; components/runner-driver.tsx;
-lib/enrollment.ts; lib/install.ts)
+components/runner-snapshots.tsx; components/workspace/snapshots.tsx; lib/enrollment.ts; lib/install.ts;
+lib/snapshots.ts)
 
 **Purpose.** Bring machines online for the workspace, see whose each is and whose sessions it runs, and look after
 them, after teaching a model that's easy to get wrong: whose runner runs whose sessions, and what a runner sees.
@@ -78,13 +80,20 @@ them, after teaching a model that's easy to get wrong: whose runner runs whose s
    aren't here, "Or add one of yours", whose options say where each works already ("Also runs Side project").
 4. **The runners** that are in no pool you see, then **how to bring a machine online** (straight under the form
    while there's none), then **pools** (`#enrollment-tokens`, its heading `#pools`): each an enrollment token, for
-   machines nobody signs in on, with the runners it enrolled under it.
+   machines nobody signs in on, with the runners it enrolled under it, then **where sessions' snapshots go**
+   (`#snapshots`).
 
 **A runner's row.** An 8 px dot; the name and a state word (12 px `ink-4`: "online", "offline", "draining", "driver
 not ready", "disabled"); pills only where they matter: "Only your sessions" or "Only {name}'s sessions", "Keeps your
 Claude token" (accent-soft, with a shield). Facts: "{workspace}'s docker runner · 1/4 sessions · seen 5 minutes ago"
-("never connected" for one that never was). Lines that show only when true: the driver problem in amber, "Enrolled
-with “Build fleet”", "Removed once offline for 5 minutes", "Also runs" with the other workspaces' avatars. At the end,
+("never connected" for one that never was). Lines that show only when true: the driver problem in amber, the bucket its host keeps sessions' snapshots in
+("Keeps sessions' snapshots in `s3://acme-fctl/sessions`", 11.5 px `ink-4`, the URL in the code font), "Enrolled
+with “Build fleet”", "Removed once offline for 5 minutes", "Also runs" with the other workspaces' avatars. While
+that bucket fails, its line turns amber and says what the error means for people, not for machines: "Keeps
+sessions' snapshots in `s3://acme-fctl/sessions`, but the last one failed 3 minutes ago: putting it in the bucket
+failed: AccessDenied. Until the bucket works again, sessions may resume without their latest conversation and
+work." The host's error is any of saving, restoring or getting credentials, so the line says "failed", not
+"refused"; `fctl runners` says the same. At the end,
 a ⋯ menu for the workspace's own runners and your own that enrolled here (Rename…, Drain, Disable, Replace token…,
 Remove…), Take out for a runner added from elsewhere, Remove for a member's runner that enrolled here.
 
@@ -195,6 +204,31 @@ A footnote says what follows: "Its runners show under it on this tab as they enr
 what a lower limit does ("Fewer than it has removes none: it enrolls no more until some go."). The dialog's sentence
 says what follows: "Its runners carry the new labels and follow the new placement at once; the sessions they run
 carry on." The toast says the result: "AWS large's runners carry the labels aws and large, and pack sessions".
+
+**Where sessions' snapshots go** (`SnapshotsSection`, `#snapshots`): the tab's last section, for everyone, because
+the choice it explains is made on the runners themselves (`[snapshots] url` in host.toml), not by a switch. A 20 px
+display heading that names the outcome, "Sessions that resume anywhere"; a lead that says what a snapshot holds and
+that nobody reads it without the session's key ("As a session's sandbox stops, its agent saves a snapshot of its
+conversation and the work it hadn't pushed, so that the session resumes on any of {workspace}'s runners as it was.
+It encrypts the snapshot in the sandbox with a key of the session's own, which fctl keeps encrypted: wherever the
+snapshot is kept, nobody reads it without that key."); then the configuration as a sentence, with what it holds now
+and where (`usageWords`): "On, each kept 30 days after it was saved: 14 snapshots with fctl (210 MB) and 3 in
+s3://acme-fctl (1.2 GB). Change in Settings" (members read who chooses: "Its admins choose this in its settings
+(Ada is its primary admin)."). Off says what follows ("Off: a session that resumes on another runner starts from
+its task and branch."); an instance that keeps none says so in amber, whatever the workspace chose.
+
+Beside it from 768 px (under it on a phone), a drawing of the choice, `aria-hidden`: the sandbox's card with chips
+for what a snapshot holds and "sealed with the session's own key", an arrow, then each place it goes on a line of
+its own, with how many it holds and their size: "fctl 14 · 210 MB", "s3://acme-fctl 3 · 1.2 GB" (in the code font,
+whole: lines, not two columns, so that a bucket's name doesn't truncate), and a dashed "your bucket — set on
+runners" while none has one. The whole drawing dims while snapshots are off.
+
+Under both, at the column's full width so that the command fits: "To keep them in your own cloud", what changes
+("fctl keeps only where each is, its size and its checksum. A session then resumes with its snapshot on runners with
+the same bucket."), one CodeBox (`fctl host install --snapshot-bucket s3://your-bucket/fctl`), and a quiet footnote
+for what bites: an installed runner takes `[snapshots] url` and `fctl host restart`, the bucket needs a policy and a
+lifecycle rule as many days long, because fctl forgets a snapshot but can't delete it from someone else's bucket;
+then "Setting up the bucket ↗".
 
 **States.**
 
@@ -310,6 +344,16 @@ in lists.") in a 260 px column beside the controls from 768 px.
   project"). Under the two-factor switch, a fact that informs the choice: "3 of 5 members have two-factor sign-in".
   Turning it on while some lack it asks and lists them: "These members haven't set it up yet. {workspace} closes to
   them until they do; they keep their other workspaces." [Require it].
+- **Session snapshots** (`SnapshotSettings`, `#snapshots`). "Save sessions' snapshots" with what it does and what
+  goes without it ("Without them, a session that moves to another runner starts again from its task and branch."),
+  then, only while on, "Keep each one" (1 day to 365, "30 days" marked the default; "Fewer days delete the older ones
+  within the hour.") and what they take now, with "Where they go" (the Runners tab's section). Turning them off asks,
+  because it deletes: "The 14 snapshots fctl keeps for {workspace}'s sessions are deleted within the hour, and a
+  session that resumes on another runner starts from its task and branch. Snapshots in your runners' own buckets go
+  by those buckets' rules." [Keep them] [Turn them off] in red. Turning them on doesn't ask. An instance that keeps
+  none says so in amber above the switch, which stays usable: it is the workspace's own choice. Admin → Settings has
+  the instance's: "Sessions save snapshots" (off asks the same, for every workspace) and "Each one at most" (50 MiB
+  to 2 GiB, 200 MiB the default), whose hint says what goes first past it.
 - **Primary admin.** "You. Other admins can't demote or remove you; you can hand the role to one of them." With no
   admin to hand it to, a precondition instead of a disabled control: "Make someone an admin first (People): the role
   goes to an admin."
@@ -324,6 +368,84 @@ in lists.") in a 260 px column beside the controls from 768 px.
   sessions at once. Their sessions here stop, and so do its sessions on their runners, which leave it."
 - **Audit log.** What it holds and for how long: "What happened in {workspace}: people joining and leaving, roles,
   runners, GitHub accounts, projects and sessions. Kept for a year."
+
+## Claude on the People tab
+
+(components/workspace/claude-people.tsx, lib/claude-oversight.ts; routes/workspace.tsx `People`,
+`ClaudeOversightSection`, `You`; routes/admin.tsx)
+
+**Purpose.** A workspace's admins see at a glance whether everyone in it can run sessions this week and next, and
+know exactly what to do about each person who can't, without ever seeing anyone's token, while each person knows
+what their admins see (fctl#627). Sessions run on each person's own Claude subscription, often a seat their
+organization gave them, so the facts live with the people, not on a tab of their own: admins see nine tabs already.
+
+- **Above the list, for admins**, 32 px under the invite form: the summary as one sentence of counts, "5 of 7 people
+  have Claude connected for Acme · 1 token runs out within a month · 1 stopped working · 1 waits for a usage limit
+  to reset" (`aria-live`), then segment pills that narrow the list, each with its count in `ink-4` (Everyone, No
+  Claude, Runs out soon, Stopped working, Pausing on limits). Pills at zero are left out unless chosen, so that a
+  healthy workspace shows Everyone alone; choosing one hides the invitations, which have no Claude. A quiet line
+  says where seats are given: "Claude Team and Enterprise seats are given in Claude's organization settings (how
+  ↗); each person connects theirs in Settings → Claude, or an admin token sets it for them." The link goes to
+  Claude's own guide; no console URL is guessed.
+- **Under each person's address, a facts line**, 12 px in `ink-3` (a shade above the address's `ink-4`: it is the
+  row's news), in the words of `fctl workspaces members --claude` made into a line (the CLI's table cells are
+  shorter: "token, set by admin token", "~Dec 14 (21d)", "2h ago"):
+  "Long-lived token, set by an admin token · plan unknown · Claude answered 2 hours ago · runs out around Dec 14";
+  "Claude login · Max · Claude answered 5 minutes ago"; "Token on their runners · plan unknown · Claude answered
+  yesterday". Problems take the whole line and name the place: "No Claude connection for Acme: their sessions here
+  can't start" in amber; "Claude refused their token on Nov 20: their sessions here can't run" in red (danger: it
+  is a failure). Only the date turns amber within 30 days, not the line. A long-lived token never says its plan, so
+  it reads "plan unknown" rather than a guess; a login says its own, and Ultra shows from the limits sessions
+  report.
+- **Opening it.** The facts line is a button (`aria-expanded`, a chevron) that opens, in place under the row (42 px
+  in, past the avatar), or in a `Sheet` on a phone, the whole of it in sentences: "Grace Hopper's sessions in Acme
+  run on a long-lived token an admin token set on Dec 14, 2025. Claude last answered it 2 hours ago. It runs out
+  around Dec 14, 2026, a year after it was set: fctl can't read the date from the token. Their sessions paused on
+  usage limits 6 times this week and 7 times in 30 days, the last on the weekly limit." Then the way out, where
+  there is something to do: where the instance takes admin tokens, "Set them a new one with an admin token, from a
+  token claude setup-token printed:" and a `CodeBox` with the complete command
+  (`fctl admin users set grace@acme.dev --claude-token - --claude-label "Acme seat"`); elsewhere "Grace Hopper
+  connects a new token in Settings → Claude: fctl has told them too." with a button that copies the link to their
+  Settings → Claude. Five limit pauses in a week add "Their plan's limits are short for this work: a Max or Ultra
+  seat has more."
+- **First visit**, while nobody but you has a working connection: "Claude for everyone in Globex", the lead built
+  from this workspace's counts ("Globex's sessions run on each person's own Claude subscription: 1 of its 3 people
+  has connected one. You see whether their sessions can run and when their tokens run out, never the tokens."),
+  three points (where people connect, what the line under each says, who hears before a token runs out), one
+  action (copy the link to Settings → Claude, "Send it to them: it opens where they connect Claude."), and at the
+  side a preview of two made-up rows drawn with the real facts line and this workspace's name, `aria-hidden`.
+- **States.** Loading: skeletons for the summary, the pills and each facts line, never "No Claude connection"
+  first, which would alarm before the data says so. Failed: "Claude connections didn't load: … Try again" in a
+  banner, with the people still listed. An empty pill: one line in the list's place ("Nobody's token runs out
+  within a month.") with Show everyone. Admins who see nothing: one quiet line saying so and where it's set (the
+  workspace's settings, or Admin → Settings when the instance decided). Members see none of it, and their page
+  makes no request for it.
+- **Who sees how much.** A Claude section in the workspace's Settings, for admins: "Admins see" (Details, Whether
+  sessions can run, Nothing), where levels above what the instance lets them see stay in the list, disabled, with
+  "More than this instance lets admins see" as their description and a sentence under the field naming Admin →
+  Settings; "Limit pauses", a switch whose hint says what it shows and that whose sessions wait for a limit now
+  shows either way; and "Email admins" (Once a week, Each time, Not by email), whose hint says plainly when the
+  instance sends no email. Each member reads the level in **You**, under their Claude connection: "Acme's admins
+  see what kind of Claude connection your sessions here run on, its plan, when Claude last answered it and when it
+  runs out, and how often your sessions paused on usage limits: never the token or the account." Admin → Settings
+  holds the instance's side (the most workspaces' admins may see, limit pauses, Admin → People showing everyone's,
+  and in how many sessions Claude must refuse a token before fctl marks it ended); with the last on, Admin → People
+  shows the same summary and facts line under each account.
+
+**Why it's built so.** Facts, never secrets: the control plane sends no token, account or label, so the page
+can't leak one. The level is said to the people it's about, in their own settings, so oversight is never silent.
+Pronouns are never guessed: copy uses the person's name or "their". The detail is sentences rather than a table
+of fields because each fact needs its reason beside it ("around", "a year after it was set: fctl can't read the
+date from the token").
+
+**Traps found building it.** The `Sheet` pads only its header: its body needs its own `px-5`, or the sentences
+run to the screen's edges on a phone. A reset that isn't today reads "on Nov 25", not "at Nov 25". The first
+visit's preview first said "for Acme" in every workspace and gave a long-lived token a Team plan, which no token
+can show: previews take the place's name, and only facts fctl can know.
+
+**Building one like it.** Put oversight where the people are listed; one facts line each, saying what the CLI says;
+problems as the line itself, named with the place; a way out that is complete and copyable, or the link to send;
+say the level to those it's about.
 
 ## Connecting GitHub and Linear
 
@@ -973,6 +1095,20 @@ lays the trade-offs out before the steps.
 - **A login Claude ended** gets a red banner with both ways back, the lasting one first: "Claude ended this login, so
   sessions can't run on it. Sign in again, or connect a long-lived token, which lasts a year." Meanwhile Settings'
   list of pages marks Claude with an amber dot ("Needs reconnecting").
+- **A token Claude refused** (in as many sessions as the instance says) gets the same red banner: "Claude refused
+  this token on Nov 20, so sessions can't run on it: it was revoked, or its year ran out. Make a new one with claude
+  setup-token and connect it here." [Connect a new token]; one an admin token set sends its person to their admins
+  first.
+- **When a token runs out.** Each long-lived token's line says when ("runs out around Nov 23, 2027", "around" while
+  nobody said when it was made) and "Claude answered 2 minutes ago". Within 30 days the date leaves the line for an
+  amber block under it that says why it's "around" and what to do before then: "Runs out around Nov 29. That's a
+  year after you connected it: fctl can't read the date from the token, so it may be sooner. Make a new one with
+  claude setup-token and paste it here before then, or your sessions stop." [Connect a new token], which opens the
+  paste steps. In its last week the list of pages marks Claude ("Runs out in 5 days").
+- **When was it made.** The paste steps ask "When did claude setup-token make it?" with three answers, the common
+  one first: Just now (the date is exact), Earlier (a date picker), I don't know ("fctl counts a year from today and
+  says around"), and say the result: "It runs out on Nov 23, 2027, a year on. fctl tells you a month and a week
+  before."
 
 **Building one like it.** List each way's gains and losses before its steps; recommend one, with the reason; keep
 progress while people compare; tick steps from real state; warn inside the step where the risk arises.
@@ -998,6 +1134,89 @@ progress while people compare; tick steps from real state; warn inside the step 
   everyone to confirm their sign-ins with a second factor. A passkey takes a moment; an authenticator app, about a
   minute." Two cards: "Add a passkey" (marked Quickest: "Your fingerprint, face or screen lock confirms it's you.
   Nothing to type, and nothing a fake site can catch.") and "Use an authenticator app".
+
+## Domains that sign in with a provider
+
+(components/sign-in/admin.tsx `SignInAdmin`; routes/admin.tsx `SignInTab`; components/sign-in/provider.tsx;
+routes/auth.tsx `LoginPage`, `DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0099)
+
+**Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today, so
+that the tab reads "acme.com and acme.dev sign in with Google only.") without a nervous afternoon: no way to lock
+themselves out, and a clear picture of whom it concerns before anything changes. Then explain it, wherever someone
+meets it.
+
+**Admin → Sign-in reads like the instance's front door**, top to bottom:
+
+1. **How people sign in**: a lead built from the instance's own counts ("52 people have an account: 38 with a
+   password, 12 with Google and 9 with a passkey. 3 people haven't signed in yet." then "acme.com and acme.dev sign in
+   with Google only."), and four small counts in sunken tiles, an icon each: a password's, the provider's mark, a
+   fingerprint, a person with a plus for those not signed in yet.
+2. **Providers**: a card each, the provider's own mark in a tile that lights once it's set up, a "Set up" or "Not set
+   up" pill, and who uses it ("12 people sign in with it"). Set up, it shows the redirect URI in a `CodeBox` ("Its OAuth
+   client lists this as an authorized redirect URI.") and what the admin's own sign-in says of it: "You signed in with
+   Google as an address at acme.com: it works for you." or, with a link that signs in and comes back, "You signed in
+   with a password. Sign in with Google to check that it works for you before you require it." Not set up, it names
+   what sets it up (`GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET`) and links fctl.sh's guide.
+3. **Domains that sign in with a provider**: a row per rule, a building in a lit tile, the domains in words, a pill
+   with the provider's mark ("Google only"), and whom it covers ("40 people · 12 with Google · 26 still have a
+   password, which goes at their next sign-in · passkeys don't sign them in alone"); Edit and Stop requiring. Under
+   them, with a crown, who keeps a way in: "Ada, the primary instance owner, keeps their password and passkeys
+   whatever these say: the instance's way in while a provider is down." Empty, one sentence says what requiring does
+   with the reader's likeliest case ("Requiring Google at acme.com, say, moves everyone with an acme.com address off
+   passwords…"), and the button is primary; with rules, secondary. With no provider set up, the button is disabled
+   with its reason beside it.
+4. **Accounts**: the self sign-up switch, its hint following the value.
+5. **Two-factor sign-in**, which moved here from Admin → Settings; the workspace setting's link to it follows.
+
+**Requiring one is a dialog that shows its consequences as you type** (`RuleDialog`). Domains in one field
+(commas, spaces or lines; `*@` and case don't matter), its placeholder the admin's own domain with "Use acme.com,
+your own domain" under it while it's empty; a Select of providers only when there are several; the passkeys switch,
+whose hint says the cost of each answer ("Quick, but past Google's checks: a passkey still signs in someone whose
+account Google closed…"). Once what's typed settles (250 ms) and reads as domains, the preview
+(`POST /api/v1/admin/sign-in/preview`) fills a sunken box (`aria-live`): the avatars of those it concerns, then the
+CLI's sentences (`consequences` mirrors `fctl admin sign-in require`): "38 people sign in with a password today: their
+next sign-in goes through Google, and their passwords stop working.", the tokens saving deletes ("Their 5 access tokens
+and CLI sign-ins made with another way in go: they make new ones after signing in with Google.", and an admin token's,
+which a directory sync may depend on), "4 people at other domains sign in as before.", "Ada, the primary instance
+owner, keeps their password and passkeys: the way in if Google is down.", and "fctl emails each of them what
+changes." where the instance sends email. A change that takes nobody's way in leads with "Nobody's way in changes."
+A word that isn't a domain is the field's error, and asks the server nothing.
+
+**No way to lock yourself out.** When the change would sign out the admin who saves it (their own address is covered,
+and they signed in another way), an amber banner says so with the way out as a link, and the primary button stays
+disabled: "This would sign you out: you signed in another way. Sign in with Google as your acme.com address first,
+which shows that it works, then require it." The server refuses the same save (409), so a stale tab can't either.
+
+**Stopping** asks first, with what happens and what doesn't come back: "Their people sign in as they like again:
+those who still have a password, with it. Passwords that went at their first sign-in with Google don't come back…"
+and how many it releases. Reversible, so its button is primary, not red; the server asks the admin to confirm it's
+them, where the instance asks for that.
+
+**The sign-in page leads with the provider.** Its buttons keep the provider's own mark and neutral colors (never the
+app's yellow, which would clash with them), and under them, a quiet line per rule: "acme.com and acme.dev sign in with
+Google." Typing an address at such a domain turns the form into that provider's button, two lines with the address
+under the label (`ProviderSubmit`, the invitation's look), and the password field goes; a line says why ("…its own
+sign-in, with its checks, signs you in here"), and a quiet question offers the instance's way in while the provider
+is down: "Primary instance owner? Sign in with your password", which turns back with "Continue with Google instead".
+Enter goes on to the provider with the address as its `login_hint`. Coming back refused, the page says which account
+to choose: "Your account signs in with Google as your acme.com address. Choose that Google account when Google asks:
+the one you chose isn't one." Where signing in makes no accounts, the footer says where they come from: "Need an
+account? Your organization makes them here: ask an admin of this instance." An invitation to a covered address shows
+the provider's button alone, and says it takes the invitation.
+
+**Settings explains it where it applies.** Sign-in methods leads with a blue banner ("acme.com signs in with Google,
+as Acme factory's admins require: Google's own sign-in, with its checks, signs you in here."); the password row says
+"None: passwords don't sign in at acme.com" and offers nothing; the Google account at the domain reads "Your way in,
+as ada@acme.com" and can't be unlinked, while a personal one can. Passkeys say what they still do ("Confirm it's you…
+after you sign in with Google and before sensitive actions. They don't sign you in alone…"). An address at the domain
+loses its Disconnect button, and a note under the list says why and who removes it. The primary instance owner reads
+instead that they keep their password and passkeys, the way in if the provider is down. Devices say how each signed
+in ("Browser · signed in with Google · active 2 minutes ago").
+
+**Building one like it.** Show who is affected before the button, with the real numbers and names, in the same
+sentences the CLI prints. Make the dangerous outcome impossible rather than warned about: the admin proves the
+provider works for them by signing in with it. Keep a named way in when the outside service is down, and say whose it
+is on every page that takes the others away.
 
 ## Memory and retrospectives
 
@@ -1135,6 +1354,8 @@ progress while people compare; tick steps from real state; warn inside the step 
 | "Your sessions in this workspace run on it: a company's seat here, your own plan elsewhere." | Explains a setting by the case it exists for. |
 | "You don't need one unless {workspace}'s projects use repositories outside acme." | Says when *not* to act. |
 | "That code doesn't match either. Codes depend on the time: check that your phone sets its clock automatically." | The second failure gets the likely cause, not the same message. |
+| "38 people sign in with a password today: their next sign-in goes through Google, and their passwords stop working." | Whom a change concerns, counted, before the button, in the CLI's words too. |
+| "This would sign you out: you signed in another way. Sign in with Google as your acme.com address first, which shows that it works, then require it." | Refuses the one change that would lock its maker out, with the way through as a link. |
 | "Its runners stay with their owners, and its GitHub accounts keep the app." | Says what stays, not only what goes. |
 | "Saving runs them on your Claude subscription, instead of {name}'s." | The consequence people miss, before the button. |
 | "No label asks for one: every delegated ticket gets the work done." | An empty value's meaning, spelled out. |
