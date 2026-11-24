@@ -265,6 +265,84 @@ in lists.") in a 260 px column beside the controls from 768 px.
 - **Audit log.** What it holds and for how long: "What happened in {workspace}: people joining and leaving, roles,
   runners, GitHub accounts, projects and sessions. Kept for a year."
 
+## Claude on the People tab
+
+(components/workspace/claude-people.tsx, lib/claude-oversight.ts; routes/workspace.tsx `People`,
+`ClaudeOversightSection`, `You`; routes/admin.tsx)
+
+**Purpose.** A workspace's admins see at a glance whether everyone in it can run sessions this week and next, and
+know exactly what to do about each person who can't, without ever seeing anyone's token, while each person knows
+what their admins see (fctl#627). Sessions run on each person's own Claude subscription, often a seat their
+organization gave them, so the facts live with the people, not on a tab of their own: admins see nine tabs already.
+
+- **Above the list, for admins**, 32 px under the invite form: the summary as one sentence of counts, "5 of 7 people
+  have Claude connected for Acme · 1 token runs out within a month · 1 stopped working · 1 waits for a usage limit
+  to reset" (`aria-live`), then segment pills that narrow the list, each with its count in `ink-4` (Everyone, No
+  Claude, Runs out soon, Stopped working, Pausing on limits). Pills at zero are left out unless chosen, so that a
+  healthy workspace shows Everyone alone; choosing one hides the invitations, which have no Claude. A quiet line
+  says where seats are given: "Claude Team and Enterprise seats are given in Claude's organization settings (how
+  ↗); each person connects theirs in Settings → Claude, or an admin token sets it for them." The link goes to
+  Claude's own guide; no console URL is guessed.
+- **Under each person's address, a facts line**, 12 px in `ink-3` (a shade above the address's `ink-4`: it is the
+  row's news), in the words of `fctl workspaces members --claude` made into a line (the CLI's table cells are
+  shorter: "token, set by admin token", "~Dec 14 (21d)", "2h ago"):
+  "Long-lived token, set by an admin token · plan unknown · Claude answered 2 hours ago · runs out around Dec 14";
+  "Claude login · Max · Claude answered 5 minutes ago"; "Token on their runners · plan unknown · Claude answered
+  yesterday". Problems take the whole line and name the place: "No Claude connection for Acme: their sessions here
+  can't start" in amber; "Claude refused their token on Nov 20: their sessions here can't run" in red (danger: it
+  is a failure). Only the date turns amber within 30 days, not the line. A long-lived token never says its plan, so
+  it reads "plan unknown" rather than a guess; a login says its own, and Ultra shows from the limits sessions
+  report.
+- **Opening it.** The facts line is a button (`aria-expanded`, a chevron) that opens, in place under the row (42 px
+  in, past the avatar), or in a `Sheet` on a phone, the whole of it in sentences: "Grace Hopper's sessions in Acme
+  run on a long-lived token an admin token set on Dec 14, 2025. Claude last answered it 2 hours ago. It runs out
+  around Dec 14, 2026, a year after it was set: fctl can't read the date from the token. Their sessions paused on
+  usage limits 6 times this week and 7 times in 30 days, the last on the weekly limit." Then the way out, where
+  there is something to do: where the instance takes admin tokens, "Set them a new one with an admin token, from a
+  token claude setup-token printed:" and a `CodeBox` with the complete command
+  (`fctl admin users set grace@acme.dev --claude-token - --claude-label "Acme seat"`); elsewhere "Grace Hopper
+  connects a new token in Settings → Claude: fctl has told them too." with a button that copies the link to their
+  Settings → Claude. Five limit pauses in a week add "Their plan's limits are short for this work: a Max or Ultra
+  seat has more."
+- **First visit**, while nobody but you has a working connection: "Claude for everyone in Globex", the lead built
+  from this workspace's counts ("Globex's sessions run on each person's own Claude subscription: 1 of its 3 people
+  has connected one. You see whether their sessions can run and when their tokens run out, never the tokens."),
+  three points (where people connect, what the line under each says, who hears before a token runs out), one
+  action (copy the link to Settings → Claude, "Send it to them: it opens where they connect Claude."), and at the
+  side a preview of two made-up rows drawn with the real facts line and this workspace's name, `aria-hidden`.
+- **States.** Loading: skeletons for the summary, the pills and each facts line, never "No Claude connection"
+  first, which would alarm before the data says so. Failed: "Claude connections didn't load: … Try again" in a
+  banner, with the people still listed. An empty pill: one line in the list's place ("Nobody's token runs out
+  within a month.") with Show everyone. Admins who see nothing: one quiet line saying so and where it's set (the
+  workspace's settings, or Admin → Settings when the instance decided). Members see none of it, and their page
+  makes no request for it.
+- **Who sees how much.** A Claude section in the workspace's Settings, for admins: "Admins see" (Details, Whether
+  sessions can run, Nothing), where levels above what the instance lets them see stay in the list, disabled, with
+  "More than this instance lets admins see" as their description and a sentence under the field naming Admin →
+  Settings; "Limit pauses", a switch whose hint says what it shows and that whose sessions wait for a limit now
+  shows either way; and "Email admins" (Once a week, Each time, Not by email), whose hint says plainly when the
+  instance sends no email. Each member reads the level in **You**, under their Claude connection: "Acme's admins
+  see what kind of Claude connection your sessions here run on, its plan, when Claude last answered it and when it
+  runs out, and how often your sessions paused on usage limits: never the token or the account." Admin → Settings
+  holds the instance's side (the most workspaces' admins may see, limit pauses, Admin → People showing everyone's,
+  and in how many sessions Claude must refuse a token before fctl marks it ended); with the last on, Admin → People
+  shows the same summary and facts line under each account.
+
+**Why it's built so.** Facts, never secrets: the control plane sends no token, account or label, so the page
+can't leak one. The level is said to the people it's about, in their own settings, so oversight is never silent.
+Pronouns are never guessed: copy uses the person's name or "their". The detail is sentences rather than a table
+of fields because each fact needs its reason beside it ("around", "a year after it was set: fctl can't read the
+date from the token").
+
+**Traps found building it.** The `Sheet` pads only its header: its body needs its own `px-5`, or the sentences
+run to the screen's edges on a phone. A reset that isn't today reads "on Nov 25", not "at Nov 25". The first
+visit's preview first said "for Acme" in every workspace and gave a long-lived token a Team plan, which no token
+can show: previews take the place's name, and only facts fctl can know.
+
+**Building one like it.** Put oversight where the people are listed; one facts line each, saying what the CLI says;
+problems as the line itself, named with the place; a way out that is complete and copyable, or the link to send;
+say the level to those it's about.
+
 ## Connecting GitHub and Linear
 
 (routes/workspace.tsx `Github`, `Returned`, `Choice`; components/workspace/review-app.tsx, linear.tsx; lib/tickets.ts.)
@@ -913,6 +991,20 @@ lays the trade-offs out before the steps.
 - **A login Claude ended** gets a red banner with both ways back, the lasting one first: "Claude ended this login, so
   sessions can't run on it. Sign in again, or connect a long-lived token, which lasts a year." Meanwhile Settings'
   list of pages marks Claude with an amber dot ("Needs reconnecting").
+- **A token Claude refused** (in as many sessions as the instance says) gets the same red banner: "Claude refused
+  this token on Nov 20, so sessions can't run on it: it was revoked, or its year ran out. Make a new one with claude
+  setup-token and connect it here." [Connect a new token]; one an admin token set sends its person to their admins
+  first.
+- **When a token runs out.** Each long-lived token's line says when ("runs out around Nov 23, 2027", "around" while
+  nobody said when it was made) and "Claude answered 2 minutes ago". Within 30 days the date leaves the line for an
+  amber block under it that says why it's "around" and what to do before then: "Runs out around Nov 29. That's a
+  year after you connected it: fctl can't read the date from the token, so it may be sooner. Make a new one with
+  claude setup-token and paste it here before then, or your sessions stop." [Connect a new token], which opens the
+  paste steps. In its last week the list of pages marks Claude ("Runs out in 5 days").
+- **When was it made.** The paste steps ask "When did claude setup-token make it?" with three answers, the common
+  one first: Just now (the date is exact), Earlier (a date picker), I don't know ("fctl counts a year from today and
+  says around"), and say the result: "It runs out on Nov 23, 2027, a year on. fctl tells you a month and a week
+  before."
 
 **Building one like it.** List each way's gains and losses before its steps; recommend one, with the reason; keep
 progress while people compare; tick steps from real state; warn inside the step where the risk arises.
