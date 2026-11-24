@@ -58,7 +58,8 @@ empty list says what will fill it, and when.
 ## A workspace's Runners tab
 
 (routes/workspace.tsx `Runners`, `AddRunner`; components/workspace/runners.tsx; components/runner-driver.tsx;
-lib/enrollment.ts; lib/install.ts)
+components/runner-snapshots.tsx; components/workspace/snapshots.tsx; lib/enrollment.ts; lib/install.ts;
+lib/snapshots.ts)
 
 **Purpose.** Bring machines online for the workspace, see whose each is and whose sessions it runs, and look after
 them, after teaching a model that's easy to get wrong: whose runner runs whose sessions, and what a runner sees.
@@ -77,13 +78,20 @@ them, after teaching a model that's easy to get wrong: whose runner runs whose s
 3. **Register a machine**: a name field ("studio mac") with Register in its row; beside it, when you have runners that
    aren't here, "Or add one of yours", whose options say where each works already ("Also runs Side project").
 4. **The runners**, then **how to bring a machine online** (straight under the form while there's none), then
-   **enrollment tokens** (`#enrollment-tokens`), for machines nobody signs in on.
+   **enrollment tokens** (`#enrollment-tokens`), for machines nobody signs in on, then **where sessions' snapshots
+   go** (`#snapshots`).
 
 **A runner's row.** An 8 px dot; the name and a state word (12 px `ink-4`: "online", "offline", "draining", "driver
 not ready", "disabled"); pills only where they matter: "Only your sessions" or "Only {name}'s sessions", "Keeps your
 Claude token" (accent-soft, with a shield). Facts: "{workspace}'s docker runner · 1/4 sessions · seen 5 minutes ago"
-("never connected" for one that never was). Lines that show only when true: the driver problem in amber, "Enrolled
-with “Build fleet”", "Removed once offline for 5 minutes", "Also runs" with the other workspaces' avatars. At the end,
+("never connected" for one that never was). Lines that show only when true: the driver problem in amber, the bucket its host keeps sessions' snapshots in
+("Keeps sessions' snapshots in `s3://acme-fctl/sessions`", 11.5 px `ink-4`, the URL in the code font), "Enrolled
+with “Build fleet”", "Removed once offline for 5 minutes", "Also runs" with the other workspaces' avatars. While
+that bucket fails, its line turns amber and says what the error means for people, not for machines: "Keeps
+sessions' snapshots in `s3://acme-fctl/sessions`, but the last one failed 3 minutes ago: putting it in the bucket
+failed: AccessDenied. Until the bucket works again, sessions may resume without their latest conversation and
+work." The host's error is any of saving, restoring or getting credentials, so the line says "failed", not
+"refused"; `fctl runners` says the same. At the end,
 a ⋯ menu for the workspace's own runners and your own that enrolled here (Rename…, Drain, Disable, Replace token…,
 Remove…), Take out for a runner added from elsewhere, Remove for a member's runner that enrolled here.
 
@@ -135,6 +143,31 @@ Created: an amber "Copy it now: it is shown once. Whoever has it enrolls machine
 admin's approval." over the secret, the steps (the enroll command one variable a line, ready for a boot script), and a
 footnote for what bites: "on Linux, where nobody logs in, run loginctl enable-linger for that user first. Run again,
 the install keeps the runner the machine enrolled."
+
+**Where sessions' snapshots go** (`SnapshotsSection`, `#snapshots`): the tab's last section, for everyone, because
+the choice it explains is made on the runners themselves (`[snapshots] url` in host.toml), not by a switch. A 20 px
+display heading that names the outcome, "Sessions that resume anywhere"; a lead that says what a snapshot holds and
+that nobody reads it without the session's key ("As a session's sandbox stops, its agent saves a snapshot of its
+conversation and the work it hadn't pushed, so that the session resumes on any of {workspace}'s runners as it was.
+It encrypts the snapshot in the sandbox with a key of the session's own, which fctl keeps encrypted: wherever the
+snapshot is kept, nobody reads it without that key."); then the configuration as a sentence, with what it holds now
+and where (`usageWords`): "On, each kept 30 days after it was saved: 14 snapshots with fctl (210 MB) and 3 in
+s3://acme-fctl (1.2 GB). Change in Settings" (members read who chooses: "Its admins choose this in its settings
+(Ada is its primary admin)."). Off says what follows ("Off: a session that resumes on another runner starts from
+its task and branch."); an instance that keeps none says so in amber, whatever the workspace chose.
+
+Beside it from 768 px (under it on a phone), a drawing of the choice, `aria-hidden`: the sandbox's card with chips
+for what a snapshot holds and "sealed with the session's own key", an arrow, then each place it goes on a line of
+its own, with how many it holds and their size: "fctl 14 · 210 MB", "s3://acme-fctl 3 · 1.2 GB" (in the code font,
+whole: lines, not two columns, so that a bucket's name doesn't truncate), and a dashed "your bucket — set on
+runners" while none has one. The whole drawing dims while snapshots are off.
+
+Under both, at the column's full width so that the command fits: "To keep them in your own cloud", what changes
+("fctl keeps only where each is, its size and its checksum. A session then resumes with its snapshot on runners with
+the same bucket."), one CodeBox (`fctl host install --snapshot-bucket s3://your-bucket/fctl`), and a quiet footnote
+for what bites: an installed runner takes `[snapshots] url` and `fctl host restart`, the bucket needs a policy and a
+lifecycle rule as many days long, because fctl forgets a snapshot but can't delete it from someone else's bucket;
+then "Setting up the bucket ↗".
 
 **States.**
 
@@ -250,6 +283,16 @@ in lists.") in a 260 px column beside the controls from 768 px.
   project"). Under the two-factor switch, a fact that informs the choice: "3 of 5 members have two-factor sign-in".
   Turning it on while some lack it asks and lists them: "These members haven't set it up yet. {workspace} closes to
   them until they do; they keep their other workspaces." [Require it].
+- **Session snapshots** (`SnapshotSettings`, `#snapshots`). "Save sessions' snapshots" with what it does and what
+  goes without it ("Without them, a session that moves to another runner starts again from its task and branch."),
+  then, only while on, "Keep each one" (1 day to 365, "30 days" marked the default; "Fewer days delete the older ones
+  within the hour.") and what they take now, with "Where they go" (the Runners tab's section). Turning them off asks,
+  because it deletes: "The 14 snapshots fctl keeps for {workspace}'s sessions are deleted within the hour, and a
+  session that resumes on another runner starts from its task and branch. Snapshots in your runners' own buckets go
+  by those buckets' rules." [Keep them] [Turn them off] in red. Turning them on doesn't ask. An instance that keeps
+  none says so in amber above the switch, which stays usable: it is the workspace's own choice. Admin → Settings has
+  the instance's: "Sessions save snapshots" (off asks the same, for every workspace) and "Each one at most" (50 MiB
+  to 2 GiB, 200 MiB the default), whose hint says what goes first past it.
 - **Primary admin.** "You. Other admins can't demote or remove you; you can hand the role to one of them." With no
   admin to hand it to, a precondition instead of a disabled control: "Make someone an admin first (People): the role
   goes to an admin."
