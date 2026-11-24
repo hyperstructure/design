@@ -131,14 +131,16 @@ Each pool is a card (`PoolCard`, a configured thing whose state people check: `r
 one stacked column, never a grid:
 
 - Its name with state pills ("Full" in amber, "Revoked", "Expired") and whose ("Only your sessions"), then its labels
-  as chips in the code font (`aria-label="Labels"`), and a ⋯ menu: Edit…, Revoke….
+  as chips in the code font (`aria-label="Labels"`), and, while its token works, a ⋯ menu: Edit…, Revoke…. A
+  revoked or expired pool's card has none: there is nothing left to change.
 - **What it is doing, as a sentence** (`poolState`, lib/pools.ts), from what it needs now (`GET …/runners/demand`,
   read again every 15 seconds): "Growing: 1 runner is starting for 3 sessions that wait." in `ink-2`; "3 sessions
   wait, the longest for 2m: it wants 3 runners, and has 2 online." and "At its limit of 20 runners: 3 sessions wait
   for room." in amber, where someone should look; quiet otherwise: "Busy: 4 of 4 runners run sessions.", "Could
   shrink: it wants 1 runner of its 4.", "Idle: its 2 runners run nothing.", "No runner online, and no session waits
-  for it.", "No runners yet: machines that enroll with its token show here." It says what the numbers show, not what
-  something will do: fctl doesn't know whether anything scales the pool.
+  for it.", "No runners yet: machines that enroll with its token show here." for an open pool, and "Its token enrolls
+  no more runners." for a revoked or expired one with none left, which folds behind "Show 2 revoked or expired". It
+  says what the numbers show, not what something will do: fctl doesn't know whether anything scales the pool.
 - **The facts**, from the same numbers: "6 of 8 runners busy · 1 starting · 1 waiting for approval (amber) · 11 of 32
   sessions · 3 sessions waiting · longest 2m", left out for an empty pool that nothing waits for, whose sentence says
   it already. Times as the CLI says them (`2m`, `1h 5m`).
@@ -172,7 +174,8 @@ dialog, and explains each choice inside its options rather than above them:
    script or a shell enrolls each."), AWS ("An Auto Scaling group from fctl's Terraform module, which sizes it from
    what the pool needs."), Google Cloud, Azure ("…from fctl's example, which its machines size.") and Kubernetes ("A
    Deployment of hosts that KEDA scales from what the pool needs."). A cloud destroys machines without uninstalling
-   them, so choosing one turns Keep them into Remove after 5 minutes, and the placement to packed with it.
+   them, so choosing one turns Keep them into Remove after 5 minutes, while Keep them is the choice: another removal
+   someone chose stays. The placement follows it to packed while nobody has chosen one; a chosen Spread stays.
 
 Under the steps, **a live summary** in a sunken box (`aria-live="polite"`), rewritten as the form changes, in the
 CLI's words (`describeEnrollment` mirrors `fctl_domain::enrollment::describe`, `poolLine` the pool line of `fctl
@@ -188,15 +191,20 @@ online") and that place's steps (lib/pool-setup.ts), each with what to copy, eve
 pool filled in, and a link to the guide where it leaves something to it:
 
 - Your own machines: install fctl, then enroll it and start its host service, one variable a line, with the
-  machine's capacity where it isn't the default.
+  machine's capacity always: `fctl host install` would make it 4, where the form, like the cloud modules, starts
+  at 3.
 - AWS: keep the token in a file Terraform reads, add fctl's module (its name from the pool's, `fctl-aws-large`; the
   instance as `fctl_server`, its version, the capacity, a `max_size` a few below the pool's limit; the VPC and its
   subnets left to fill in), then apply it, which takes about 25 minutes the first time.
-- Google Cloud and Azure: build the image with Packer, fill in the example's `terraform.tfvars` (the token stays
-  out of it), then apply it with the token in `TF_VAR_enrollment_token`.
-- Kubernetes: keep the token in a secret, run the host as a Deployment (linking to the role and the preStop hook),
-  and apply a TriggerAuthentication and a ScaledObject whose metrics-api trigger reads the pool's demand with the
-  token, `valueLocation: wanted`.
+- Google Cloud: build the image with Packer, fill in the example's `terraform.tfvars` (the token stays out of it),
+  then apply it with the token in `TF_VAR_enrollment_token`.
+- Azure: make the image's resource group, gallery and image definition, named after the pool, and build the image
+  into that gallery with Packer; then fill in `terraform.tfvars` from the same shell (the subscription, the
+  location, the image's ID, and a resource group of the scale set's own) and apply it the same way.
+- Kubernetes: keep the token in a secret, run the host as a Deployment whose pods enroll with `fctl host install
+  --no-service --capacity 3` and run `fctl host run` (linking to the role and the preStop hook), and apply a
+  TriggerAuthentication and a ScaledObject whose metrics-api trigger reads the pool's demand with the token,
+  `valueLocation: wanted`.
 
 A footnote says what follows: "Its runners show under it on this tab as they enroll." and when a runner goes.
 
