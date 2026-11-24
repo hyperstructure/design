@@ -141,38 +141,60 @@ one stacked column, never a grid:
   once offline…", which the card says. They leave the list above, so each runner shows once. A revoked or expired
   token's pool stays among the others while it has runners; the rest fold behind "Show 2 revoked or expired".
 
-The form explains each choice inside its options rather than above them:
+**Making a pool** (New pool) follows the setup steps' look (`Step`, components/claude/guide.tsx), in the wide
+dialog, and explains each choice inside its options rather than above them:
 
-- Name ("What it's for, which the runners it enrolls show."); Runs, for admins ("Everyone's sessions": "The
-  workspace's runners, which its admins manage"; "Only my sessions": "Your runners, for Only on my runners and a
-  Claude token kept on them").
-- Labels, in the code font ("Projects that ask for them run on its runners. Commas or spaces between them.", checked
-  as the server checks them, the error under the field), and Placement: "Spread" ("Each session goes to the least
-  busy runner: for machines that stay on.") or "Packed" ("Fills one runner before the next, so that idle ones can go:
-  for a pool that grows and shrinks."). Until someone chooses, it follows When they go offline: packed for a pool
-  that removes offline runners, as the server would.
-- Expires; Runners at once (empty for no limit, "Removed and rejected ones free their place.").
-- When they go offline: each option says when to pick it. "Keep them" ("They stay until someone removes them."),
-  "Remove after 5 minutes" ("For machines autoscaling destroys without uninstalling."), after 15 minutes ("The same,
-  through a short network outage."), after a day ("For machines that are off overnight."), after a week ("Through a
-  weekend.").
-- Approve each runner: "Runners it enrolls wait on this tab, with where they enrolled from, until an admin approves
-  them; until then they run nothing. {workspace}'s admins get a notification."
-- **A live summary** in a sunken box (`aria-live="polite"`), rewritten as the form changes, in the CLI's words
-  (`describeEnrollment` mirrors `fctl_domain::enrollment::describe`, `poolLine` the pool line of `fctl runners
-  enrollment-tokens`): "Enrolls up to 20 runners at a time, which wait for an admin's approval and are removed once
-  they have been offline for 5 minutes. Its runners carry the labels aws and large. Packed: fills one runner before the
-  next, so that idle ones can go. It expires on February 6, 2027."
+1. **Name it**, ticked once it has one: Name ("What it's for, which the runners it enrolls show.", "AWS large" as
+   the placeholder); Runs, for admins ("Everyone's sessions": "The workspace's runners, which its admins manage";
+   "Only my sessions": "Your runners, for Only on my runners and a Claude token kept on them").
+2. **Choose its labels and machines**: Labels, in the code font ("Projects that ask for them run on its runners.
+   Commas or spaces between them.", checked as the server checks them, the error under the field), and Placement:
+   "Spread" ("Each session goes to the least busy runner: for machines that stay on.") or "Packed" ("Fills one
+   runner before the next, so that idle ones can go: for a pool that grows and shrinks."), which follows When they go
+   offline until someone chooses, as the server's default does. Sessions each machine runs ("What the commands below
+   give each host.": a host's setting, not the token's, so it shapes only what the next step gives to copy) and
+   Runners at once (empty for no limit, "Removed and rejected ones free their place."). When they go offline, each
+   option saying when to pick it: "Keep them" ("They stay until someone removes them."), "Remove after 5 minutes"
+   ("For machines autoscaling destroys without uninstalling."), after 15 minutes ("The same, through a short network
+   outage."), after a day ("For machines that are off overnight."), after a week ("Through a weekend."). Approve each
+   runner ("Runners it enrolls wait on this tab, with where they enrolled from, until an admin approves them; until
+   then they run nothing. {workspace}'s admins get a notification."). Its token expires.
+3. **Choose where it runs**: Its machines, a Select of Your own machines ("Macs or Linux machines you set up: a boot
+   script or a shell enrolls each."), AWS ("An Auto Scaling group from fctl's Terraform module, which sizes it from
+   what the pool needs."), Google Cloud, Azure ("…from fctl's example, which its machines size.") and Kubernetes ("A
+   Deployment of hosts that KEDA scales from what the pool needs."). A cloud destroys machines without uninstalling
+   them, so choosing one turns Keep them into Remove after 5 minutes, and the placement to packed with it.
+
+Under the steps, **a live summary** in a sunken box (`aria-live="polite"`), rewritten as the form changes, in the
+CLI's words (`describeEnrollment` mirrors `fctl_domain::enrollment::describe`, `poolLine` the pool line of `fctl
+runners enrollment-tokens`): "Enrolls up to 20 runners at a time, which run everyone's sessions at once and are
+removed once they have been offline for 5 minutes. Its runners carry the labels aws and large. Packed: fills one
+runner before the next, so that idle ones can go. It expires on February 22, 2027." Then **a preview**, "Once its
+first runner is online:": the pool's own card, drawn from the form (its name, labels and placement, "Idle: its runner
+runs nothing.", "0 of 1 runner busy · 0 of 4 sessions") with one runner under it, `aria-hidden`, not a control.
+
+**Once it is made**, the dialog goes back to its top, where the token is: the amber "Copy it now: it is shown once.
+Whoever has it enrolls machines in {workspace}…" over it, then "Bring it online on AWS" (or "Bring a machine
+online") and that place's steps (lib/pool-setup.ts), each with what to copy, every value of this instance and this
+pool filled in, and a link to the guide where it leaves something to it:
+
+- Your own machines: install fctl, then enroll it and start its host service, one variable a line, with the
+  machine's capacity where it isn't the default.
+- AWS: keep the token in a file Terraform reads, add fctl's module (its name from the pool's, `fctl-aws-large`; the
+  instance as `fctl_server`, its version, the capacity, a `max_size` a few below the pool's limit; the VPC and its
+  subnets left to fill in), then apply it, which takes about 25 minutes the first time.
+- Google Cloud and Azure: build the image with Packer, fill in the example's `terraform.tfvars` (the token stays
+  out of it), then apply it with the token in `TF_VAR_enrollment_token`.
+- Kubernetes: keep the token in a secret, run the host as a Deployment (linking to the role and the preStop hook),
+  and apply a TriggerAuthentication and a ScaledObject whose metrics-api trigger reads the pool's demand with the
+  token, `valueLocation: wanted`.
+
+A footnote says what follows: "Its runners show under it on this tab as they enroll." and when a runner goes.
 
 **Editing a pool** (Edit…) changes it as it runs: its name, labels, placement and runners at once, whose hint says
 what a lower limit does ("Fewer than it has removes none: it enrolls no more until some go."). The dialog's sentence
 says what follows: "Its runners carry the new labels and follow the new placement at once; the sessions they run
 carry on." The toast says the result: "AWS large's runners carry the labels aws and large, and pack sessions".
-
-Created: an amber "Copy it now: it is shown once. Whoever has it enrolls machines in {workspace}, which wait for an
-admin's approval." over the secret, the steps (the enroll command one variable a line, ready for a boot script), and a
-footnote for what bites: "on Linux, where nobody logs in, run loginctl enable-linger for that user first. Run again,
-the install keeps the runner the machine enrolled."
 
 **States.**
 
