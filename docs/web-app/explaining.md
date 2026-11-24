@@ -58,9 +58,9 @@ empty list says what will fill it, and when.
 
 ## A workspace's Runners tab
 
-(routes/workspace.tsx `Runners`, `AddRunner`; components/workspace/runners.tsx; components/runner-driver.tsx;
-components/runner-snapshots.tsx; components/workspace/snapshots.tsx; lib/enrollment.ts; lib/install.ts;
-lib/snapshots.ts)
+(routes/workspace.tsx `Runners`, `AddRunner`; components/workspace/runners.tsx, with `PoolCard`;
+components/runner-driver.tsx; components/runner-snapshots.tsx; components/workspace/snapshots.tsx; lib/enrollment.ts;
+lib/install.ts; lib/pools.ts; lib/pool-setup.ts; lib/snapshots.ts)
 
 **Purpose.** Bring machines online for the workspace, see whose each is and whose sessions it runs, and look after
 them, after teaching a model that's easy to get wrong: whose runner runs whose sessions, and what a runner sees.
@@ -165,9 +165,11 @@ dialog, and explains each choice inside its options rather than above them:
    offline until someone chooses, as the server's default does. Sessions each machine runs ("What the commands below
    give each host.": a host's setting, not the token's, so it shapes only what the next step gives to copy) and
    Runners at once (empty for no limit, "Removed and rejected ones free their place."). When they go offline, each
-   option saying when to pick it: "Keep them" ("They stay until someone removes them."), "Remove after 5 minutes"
+   option saying when to pick it: "Keep them" ("They stay until someone removes them."), "Remove after a minute"
+   ("For machines that never come back: one that loses its network for longer is gone for good."), after 5 minutes
    ("For machines autoscaling destroys without uninstalling."), after 15 minutes ("The same, through a short network
-   outage."), after a day ("For machines that are off overnight."), after a week ("Through a weekend."). Approve each
+   outage."), after an hour ("Through a longer one."), after a day ("For machines that are off overnight."), after a
+   week ("Through a weekend."). Approve each
    runner ("Runners it enrolls wait on this tab, with where they enrolled from, until an admin approves them; until
    then they run nothing. {workspace}'s admins get a notification."). Its token expires.
 3. **Choose where it runs**: Its machines, a Select of Your own machines ("Macs or Linux machines you set up: a boot
@@ -191,8 +193,8 @@ online") and that place's steps (lib/pool-setup.ts), each with what to copy, eve
 pool filled in, and a link to the guide where it leaves something to it:
 
 - Your own machines: install fctl, then enroll it and start its host service, one variable a line, with the
-  machine's capacity always: `fctl host install` would make it 4, where the form, like the cloud modules, starts
-  at 3.
+  machine's capacity always, since hyperstructure/fctl#648: `fctl host install` would make it 4, where the form,
+  like the cloud modules, starts at 3.
 - AWS: keep the token in a file Terraform reads, add fctl's module (its name from the pool's, `fctl-aws-large`; the
   instance as `fctl_server`, its version, the capacity, a `max_size` a few below the pool's limit; the VPC and its
   subnets left to fill in), then apply it, which takes about 25 minutes the first time.
@@ -201,8 +203,9 @@ pool filled in, and a link to the guide where it leaves something to it:
 - Azure: make the image's resource group, gallery and image definition, named after the pool, and build the image
   into that gallery with Packer; then fill in `terraform.tfvars` from the same shell (the subscription, the
   location, the image's ID, and a resource group of the scale set's own) and apply it the same way.
-- Kubernetes: keep the token in a secret, run the host as a Deployment whose pods enroll with `fctl host install
-  --no-service --capacity 3` and run `fctl host run` (linking to the role and the preStop hook), and apply a
+- Kubernetes: keep the token in a secret; run the host as a Deployment, a step in words with nothing to copy (each
+  pod with `FCTL_SERVER` and `FCTL_ENROLL_TOKEN` from the secret, and, since hyperstructure/fctl#648, `fctl host
+  install --no-service --capacity 3`, then `fctl host run`), linking to the role and the preStop hook; then apply a
   TriggerAuthentication and a ScaledObject whose metrics-api trigger reads the pool's demand with the token,
   `valueLocation: wanted`.
 
@@ -1257,7 +1260,7 @@ is on every page that takes the others away.
   you."
 - **Your data.** A checklist of what the export holds ("Claude connections, without their secrets"…) above the
   button, and how often under it: "You can export it once a week: again from Nov 14, 9:10 AM."
-- **Access tokens.** A live summary like enrollment tokens': "Runs sessions in Web; their agents review and comment on
+- **Access tokens.** A live summary like a new pool's: "Runs sessions in Web; their agents review and comment on
   GitHub, and push nothing. It never reaches your account, your workspaces' people and settings, or your other
   tokens." Created: "Copy it now: it is shown once." and an example of using it.
 - **A project's settings** (pages of its Settings tab). Switch rows whose sentence is the whole contract: "When a check of the pull request's
