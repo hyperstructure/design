@@ -378,8 +378,12 @@ mono. Follow-ups held back say so, muted: "Not passed on: the agent heard of fai
 times in a row, with no message from a person in between. Message it to have it look."
 
 Findings passed on read "fctl's review agent found 3 issues in fctl#12 at 3f2a1c9", then a line per
-finding (its title linking to the comment, "Severity · lines", "(old version)"), then what fctl
-told the agent. Times on these show where the pointer rests, and not at all on phones, where
+finding (its title linking to the comment, "Severity · lines", "(old version)"), then, under a
+muted "2 earlier findings still open", a line for each finding of an earlier review the agent may
+have missed (its title linking to its thread, "Severity · lines · 1 reply", each part only where
+fctl could read it), then what fctl told the agent. A review that found nothing new while earlier
+findings are open reads "fctl's review agent found nothing new in fctl#12 at 3f2a1c9", with those
+alone. Times on these show where the pointer rests, and not at all on phones, where
 nothing rests and the time would take a line of its own.
 
 ### Tickets (ticket.tsx)
