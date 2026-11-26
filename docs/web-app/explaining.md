@@ -2,7 +2,7 @@
 
 How fctl's web app introduces a feature before anyone turns it on, walks people through setting it up, and keeps
 explaining itself once it runs: a workspace's Runners tab and settings, a project's Reviews and Schedules tabs and
-its tickets, webhooks, service accounts and the people they ask, connecting Claude, GitHub and Linear, two-factor
+its tickets, webhooks, service accounts and the people they ask, connecting Claude, GitHub, Linear and Slack, two-factor
 sign-in, the domains that sign in with a provider, memory and retrospectives, and the hints, warnings and empty states
 around them.
 
@@ -27,7 +27,7 @@ Most of fctl's features act on someone's behalf, somewhere else, and that shapes
 - **Their result shows up outside the app.** A review is posted on GitHub, a ticket moves in Linear, a runner is set
   up in a terminal. Nobody can see that from the switch, so the page draws it: the review as it will look on the pull
   request, the ticket as it will look in Linear, the schedule's week.
-- **Responsibility is split.** Workspace admins add runners and connect GitHub and Linear; project owners turn review
+- **Responsibility is split.** Workspace admins add runners and connect GitHub, Linear and Slack; project owners turn review
   agents on; maintainers choose the tracker; members can only ask. A greyed-out button leaves people stuck, so every
   page says who can act, and names them where it can.
 - **The first visit is to an empty page.** Switches with nothing behind them give no reason to start. The first visit
@@ -388,7 +388,7 @@ in lists.") in a 260 px column beside the controls from 768 px.
 **Purpose.** A workspace's admins see at a glance whether everyone in it can run sessions this week and next, and
 know exactly what to do about each person who can't, without ever seeing anyone's token, while each person knows
 what their admins see (fctl#627). Sessions run on each person's own Claude subscription, often a seat their
-organization gave them, so the facts live with the people, not on a tab of their own: admins see nine tabs already.
+organization gave them, so the facts live with the people, not on a tab of their own: admins see eight tabs already.
 
 - **Above the list, for admins**, 32 px under the invite form: the summary as one sentence of counts, "5 of 7 people
   have Claude connected for Acme · 1 token runs out within a month · 1 stopped working · 1 waits for a usage limit
@@ -458,10 +458,27 @@ can show: previews take the place's name, and only facts fctl can know.
 problems as the line itself, named with the place; a way out that is complete and copyable, or the link to send;
 say the level to those it's about.
 
-## Connecting GitHub and Linear
+## Integrations: GitHub, Linear and Slack
 
-(routes/workspace.tsx `Github`, `Returned`, `Choice`; components/workspace/review-app.tsx, linear.tsx; lib/tickets.ts.)
-Both connect a service elsewhere through a round trip to its site, and say what connecting leads to beforehand.
+(routes/workspace.tsx `Github`, `Returned`, `Choice`, `IntegrationPage`; components/workspace/integrations.tsx,
+review-app.tsx, linear.tsx; components/slack/; lib/tickets.ts, lib/slack.ts.) All three connect a service elsewhere
+through a round trip to its site, and say what connecting leads to beforehand.
+
+**One tab for all three.** The workspace page's **Integrations** tab puts them side by side as tiles, each with the
+service's mark (Linear's filled mark drawn at 85 %, so that it weighs as much as the others) and how it stands for the
+workspace in a few words beside a dot (`lib/slack.ts`, `githubStanding`, `linearStanding`, `slackStanding`):
+"Connected to Acme" (accent dot with its glow); "Not connected yet", "No GitHub App here", "No Linear app here" or
+"No Slack app yet" (`ink-4`); "Access revoked" (amber), and for Slack, also amber, "Connected, but nothing reaches
+fctl" where the instance takes no events from Slack or its Socket Mode is down, which Slack's page explains. On a
+phone the words shorten ("Connected", "Not yet", "No app", "Revoked", "No events") and the tiles stack their text
+under the mark. The open one takes an accent border and a soft accent fill (`aria-current="page"`), and its page
+follows under the tiles. Each is an address (`?tab=integrations&integration=slack`) because each round trip comes
+back to it, and the old `?tab=github` and `?tab=linear` addresses, outcome parameters included, still open the right
+page; one that asks for an integration the instance lacks opens the first it has. GitHub's tile always shows.
+Linear's shows only where the instance has a Linear app. Slack's shows where the instance has a Slack app; without
+one, only the instance's admins see it, and it opens the steps to make one. Why one tab: three tabs for things an
+admin sets up once crowded out the workspace's everyday tabs, and side by side they read as the set of places fctl
+works in.
 
 **GitHub.** The paragraph says what a connection gives and its limits: "{workspace}'s projects use repositories of
 the GitHub accounts it works in: ones the fctl-sh app is installed on. Agents get tokens for the project's
@@ -497,8 +514,97 @@ beside the delegated-ticket preview ([A project's tickets](#a-projects-tickets))
 the projects that take its tickets, and until one does, points at those that could, as dashed chips: "No project takes
 its tickets yet: choose Linear in a project's settings, under Tickets."
 
+**Slack.** The one that reaches furthest, since it starts and steers agents from somewhere else, so its page says
+before anything else what agents can see there.
+
+- *Not connected* (`Intro`): "Start agents from Slack", in the display face, and a lead that says what connecting
+  leads to: "Connect a Slack workspace, and people there start agents in {workspace}'s projects by mentioning @fctl in
+  a channel, or writing to it directly. The agent works in the thread: its card there shows how it's going, its
+  questions and replies come there, and a reply there steers it." Three facts follow, each with its icon: who a
+  session runs as ("Each session runs as the person who asked, on their Claude subscription. fctl knows people once
+  they link their Slack account, in two clicks the first time they ask."), what agents read (an eye: "the thread they
+  started from, in a channel, a private channel or a direct message, and the public channels {workspace}'s admins make
+  readable") and what they never reach (an eye struck through: "other messages of private channels, anyone's direct
+  messages with fctl, or channels shared with other organizations"). Then **Add to Slack**, the one highlighted
+  button, with what happens next beside it ("Slack asks you to sign in and allow fctl's app. One of its admins may
+  have to approve it."); members read who adds it instead.
+- *The preview* (`SlackThreadPreview`): a Slack thread drawn as Slack draws one, in both themes: Ada's mention ("@fctl
+  Signing in on Safari sends people back to /login. Can you fix the redirect loop?"), "3 replies", fctl's card (the
+  session's title as a link, its step "Running the tests", "Web · web#12 · for Ada Lovelace", the plan "3 of 4 done"
+  with its four steps, the pull request "web#45 · checks passed" and **Open in fctl**), the agent's question with its
+  two answers ("Keep the redirect", "Remove it") and "Click an answer, or reply in this thread.", and Ada's reply
+  ("Keep the redirect: the iOS app still links there."). The app's name and avatar are the instance's, the project
+  the workspace's first one ("Web", web#12, without one). It follows the same made-up pull request as Linear's
+  delegated ticket (the login redirect loop), so that someone who saw one recognizes the next. Decoration:
+  `aria-hidden`, `select-none`; beside the intro from 768 px, under it on a phone, at most 384 px wide.
+- *No Slack app on the instance* (`NoApp`, instance admins only): the same headline beside the steps to make one
+  (`SlackAppSetup`): create the app from the manifest (a link that opens Slack's form with it filled in, and "Or
+  paste its manifest yourself"), give the instance its credentials (the variables to set), then add it to a Slack
+  workspace. Everyone else doesn't see the tile.
+- *Connected* (`Connected`, `ConnectionCard`): the headline stays, its lead now in the present ("People in Acme start
+  {workspace}'s agents by mentioning @fctl in a channel…"). The connection card names the Slack workspace (its icon,
+  its address as a link, "as @fctl", who connected it and when, how many people here linked their account) and, on a
+  tinted band under it, the most important sentence of the page: what agents read there ("Agents read the thread they
+  started from, and #incidents, which they can search."), built from the settings so that it changes as they do.
+  Under it, whether fctl knows you there ("fctl knows your Slack account in Acme: what you ask fctl there starts
+  sessions as you.") or a link to link it. A revoked connection says "Slack took fctl's access back" with **Connect
+  again**, which asks Slack for that Slack workspace alone.
+- *The choices* (`Choices`), in the settings layout, one section per question, each with a sentence that says what it
+  decides: **Starting sessions** (mentions in channels; direct messages, which also cover the Home tab and the
+  shortcut; **Which project**, where a mapping reads as a sentence: "Mentions in #web-team start sessions in
+  [Playground ⌄]", with a trash icon and **Add a channel**), **What agents read** (readable channels as removable
+  chips with **Add a channel**; "Search the readable channels"; "Each project chooses", a row per project with
+  "Reads them →" to its settings), **What agents post** ("Agents' own replies"), **People** (how many linked their
+  account, and whether the instance lets workspaces know people by their address, with its risk), **Notifications
+  and events** (notifications in Slack; projects' events, with each project's channel as a line) and **Transcripts**
+  ("Keep them" or "Drop them once a session ends", saying what each keeps). Each switch saves at once and says what
+  changed in words ("Mentions, /fctl and Send to fctl… start nothing now"). Members see the same, read-only, with On/Off in
+  place of switches and "Acme's admins change these (Ada Lovelace is its primary admin)."
+- *Choosing a channel* (`ChannelPicker`): a dialog that searches Slack's public channels as one types (after 250 ms,
+  the previous results staying until the new ones come, so the list doesn't blink), each with its topic, its member
+  count and "fctl is in it"; channels already chosen for the same thing are disabled with why ("Readable already").
+  Private channels aren't listed, and the dialog says so and how they get there ("their members invite fctl
+  themselves"). Arrow keys move from the field into the list.
+- Then **Connect another Slack workspace**, saying when it isn't needed, and the danger zone's **Disconnect {name}**,
+  which says that sessions already started carry on, without posting there.
+- Back from Slack, a banner names the Slack workspace the way back names ("fctl's app is in Acme now: …"), says why
+  nothing was connected when it wasn't ("You didn't allow fctl's app in Slack, so nothing was connected."), and
+  names Enterprise Grid org-wide installs as not supported yet, in amber rather than red, since nobody did anything
+  wrong.
+
+**Slack elsewhere in the app.**
+
+- *Settings → Slack* (components/slack/accounts.tsx): "Who fctl knows you as in Slack", one row per Slack workspace
+  (a person may be several people in Slack), with their Slack avatar badged with Slack's mark, "{address} ·
+  acme.slack.com · linked 3 days ago" (or "matched by your address 3 days ago"), the project their direct messages with fctl start
+  sessions in ("Ask each time" until they choose) and **Unlink**. On the way to link from Slack, where the instance
+  asks people to confirm it's them first, the page asks at once (a blue card with a fingerprint: "Confirm it's you to
+  link your Slack account in Acme"), since the link was what they asked for, and asks again if they close it.
+- *Settings → Notifications* (components/slack/notifications.tsx): "In Slack", a switch "Tell me in Slack" beside
+  where each would go ("In Acme, to you as Ada, about sessions in Romanesco"), and a drawn direct message from fctl's
+  app ("web#12 waits for your reply", the session's title, the agent's last words quoted, **Open in fctl**).
+- *A project's settings → Slack* (components/project/slack.tsx), only where the instance has a Slack app: "Agents read
+  the readable channels" (on by default, naming them: "Besides the thread their session started from, agents read
+  #incidents: the channels Development's admins made readable.") and "Post events to a channel": the channel (the
+  same picker, which the project's maintainers may search where the workspace lets projects post; "A private channel?
+  Give its ID" for one only its members see), the events as a two-column checklist (pull requests ready for review and
+  failures ticked unless chosen otherwise), and the line it would post, drawn under them.
+- *Sessions* (components/session/slack.tsx): where in Slack a session started, with Slack's mark: in its row
+  ("#web-team", "Direct message"), on its cover beside its schedule and ticket, and in the details rail. Messages that came from Slack show in the
+  transcript with who wrote them and where ("#web-team · Acme"), and fctl's own doings there as quiet notices
+  ("Replied in #web-team", "Asked in #web-team"; failures in `danger`). Every link to Slack (the place in a row, on
+  the cover and in the rail, a message's link, the arrow on a notice) shows only for an https address on slack.com or
+  one of its subdomains (`slackHref`): sandbox events could carry any URL, and a link that looks like Slack's must
+  lead there.
+- *Admin → Slack* (components/slack/admin.tsx): the app's state in one card (which credentials are set, and whether
+  Slack can reach this instance's address or events come over Socket Mode), the addresses Slack calls to copy, the
+  manifest as YAML or JSON, the Slack workspaces it's installed in, and the switch that lets workspaces know people by
+  their verified address, with its risk spelled out under it ("Only where people sign in to Slack and fctl through
+  the same provider…").
+
 **Building one like it.** Say what the connection gives and never reaches; show what follows connecting before
-anyone connects; say when another connection isn't needed; end the round trip on a choice made here.
+anyone connects; say when another connection isn't needed; end the round trip on a choice made here. Where a
+connection lets agents read something, put what they read at the top, as a sentence the settings write.
 
 ## A project's Reviews tab
 
@@ -750,7 +856,7 @@ Then the reader's own standing: "fctl knows your Linear account in Acme: issues 
 you.", or a blue card: "Link your Linear account. fctl starts sessions only for people it knows in Acme, as them. It
 takes a Linear sign-in, which fctl forgets at once." [Link Linear account].
 
-**The preview** (`DelegatedTicket`, beside the steps, and on the workspace's Linear tab before anything is
+**The preview** (`DelegatedTicket`, beside the steps, and on Linear's page under the workspace's Integrations before anything is
 connected): a Linear issue with the project's first team key ("ENG-142" when there's none), "In Review" and fctl's app
 as Linear names it; "Fix the login redirect loop", "Signing in on Safari sends people back to /login."; fctl's note
 "Working on this in fctl session web#12, as {a made-up first name}." with the project's own slug; "Opened a pull
@@ -1054,8 +1160,8 @@ the list's rows, which hold their own answer. A workspace
 closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
 leaves its sessions saying "through a service account deleted since". Leaving a workspace forgets the answers
 given there, so joining again asks again. A secret shows once; the page shows only its end, so people tell two
-apart without it. With it, the workspace's admins see nine tabs where the instance has a Linear app (eight
-elsewhere), which their strip spaces closer so that they fit a computer's column
+apart without it. With it, the workspace's admins see eight tabs, which their strip spaces closer so that they fit
+a computer's column
 ([Page tabs](lists-and-pages.md#narrowing-ordering-and-counting)).
 
 **Building one like it.** When a feature acts as someone, ask that person, where they already look, with what it
@@ -1288,8 +1394,10 @@ is on every page that takes the others away.
   ("Found 1 issue", "2 new commits").
 - **One made-up world.** The review previews follow one pull request, an upload worker whose retries never stop when
   the server is down (`src/sync/upload.rs`, fixed in `3f2a1c9`): the Reviews intro, the summary example and the
-  GitHub tab's thread. The schedule preview shows one idea of each way to run, each the first of its group: Triage new
-  issues on an event, Update dependencies at set times. Someone who saw one recognizes the next.
+  GitHub page's thread. Linear's delegated ticket and Slack's thread follow another, the login redirect loop on
+  Safari (session web#12, pull request web#45). The schedule preview shows one idea of each way to run, each the first
+  of its group: Triage new issues on an event, Update dependencies at set times. Someone who saw one recognizes the
+  next.
 - **Decoration**: `aria-hidden="true"` and `select-none`. The text beside a preview must say everything it shows.
 - **Anatomy**: a main card (`rounded-xl`, `border-line`, `bg-surface`, a long soft shadow, 0 18px 50px -24px at 35%
   black) and, 12 px under it, a smaller card for a second fact (the check, the runs, the label), or for schedules a
