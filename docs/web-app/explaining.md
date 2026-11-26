@@ -27,7 +27,7 @@ Most of fctl's features act on someone's behalf, somewhere else, and that shapes
 - **Their result shows up outside the app.** A review is posted on GitHub, a ticket moves in Linear, a runner is set
   up in a terminal. Nobody can see that from the switch, so the page draws it: the review as it will look on the pull
   request, the ticket as it will look in Linear, the schedule's week.
-- **Responsibility is split.** Workspace admins add runners and connect GitHub and Linear; project owners turn review
+- **Responsibility is split.** Workspace admins add runners and connect GitHub, Linear and Slack; project owners turn review
   agents on; maintainers choose the tracker; members can only ask. A greyed-out button leaves people stuck, so every
   page says who can act, and names them where it can.
 - **The first visit is to an empty page.** Switches with nothing behind them give no reason to start. The first visit
@@ -388,7 +388,7 @@ in lists.") in a 260 px column beside the controls from 768 px.
 **Purpose.** A workspace's admins see at a glance whether everyone in it can run sessions this week and next, and
 know exactly what to do about each person who can't, without ever seeing anyone's token, while each person knows
 what their admins see (fctl#627). Sessions run on each person's own Claude subscription, often a seat their
-organization gave them, so the facts live with the people, not on a tab of their own: admins see nine tabs already.
+organization gave them, so the facts live with the people, not on a tab of their own: admins see eight tabs already.
 
 - **Above the list, for admins**, 32 px under the invite form: the summary as one sentence of counts, "5 of 7 people
   have Claude connected for Acme · 1 token runs out within a month · 1 stopped working · 1 waits for a usage limit
@@ -466,14 +466,19 @@ through a round trip to its site, and say what connecting leads to beforehand.
 
 **One tab for all three.** The workspace page's **Integrations** tab puts them side by side as tiles, each with the
 service's mark (Linear's filled mark drawn at 85 %, so that it weighs as much as the others) and how it stands for the
-workspace in a few words beside a dot: "Connected to Acme" (accent dot with its glow), "Not connected yet" or "No
-GitHub App here" (`ink-4`), "Access revoked" (amber); on a phone the words shorten ("Connected", "No app",
-"Revoked") and the tiles stack their text under the mark. The open one takes an accent border and a soft accent fill
-(`aria-current="page"`), and its page follows under the tiles. Each is an address (`?tab=integrations&integration=slack`) because each round trip comes
+workspace in a few words beside a dot (`lib/slack.ts`, `githubStanding`, `linearStanding`, `slackStanding`):
+"Connected to Acme" (accent dot with its glow); "Not connected yet", "No GitHub App here", "No Linear app here" or
+"No Slack app yet" (`ink-4`); "Access revoked" (amber), and for Slack, also amber, "Connected, but nothing reaches
+fctl" where the instance takes no events from Slack or its Socket Mode is down, which Slack's page explains. On a
+phone the words shorten ("Connected", "Not yet", "No app", "Revoked", "No events") and the tiles stack their text
+under the mark. The open one takes an accent border and a soft accent fill (`aria-current="page"`), and its page
+follows under the tiles. Each is an address (`?tab=integrations&integration=slack`) because each round trip comes
 back to it, and the old `?tab=github` and `?tab=linear` addresses, outcome parameters included, still open the right
-page. Linear's tile shows where the instance has a Linear app; Slack's where it has a Slack app, and for the
-instance's admins, who see how to make one. Why one tab: three tabs for things an admin sets up once crowded out the
-workspace's everyday tabs, and side by side they read as the set of places fctl works in.
+page; one that asks for an integration the instance lacks opens the first it has. GitHub's tile always shows.
+Linear's shows only where the instance has a Linear app. Slack's shows where the instance has a Slack app; without
+one, only the instance's admins see it, and it opens the steps to make one. Why one tab: three tabs for things an
+admin sets up once crowded out the workspace's everyday tabs, and side by side they read as the set of places fctl
+works in.
 
 **GitHub.** The paragraph says what a connection gives and its limits: "{workspace}'s projects use repositories of
 the GitHub accounts it works in: ones the fctl-sh app is installed on. Agents get tokens for the project's
@@ -586,9 +591,11 @@ before anything else what agents can see there.
   failures ticked unless chosen otherwise), and the line it would post, drawn under them.
 - *Sessions* (components/session/slack.tsx): where in Slack a session started, with Slack's mark: in its row
   ("#web-team", "Direct message"), on its cover beside its schedule and ticket, and in the details rail. Messages that came from Slack show in the
-  transcript with who wrote them and where ("#web-team · Acme"), a link back to Slack only for `https://*.slack.com`
-  addresses (sandbox events could carry any URL), and fctl's own doings there as quiet notices ("Replied in
-  #web-team", "Asked in #web-team"; failures in `danger`).
+  transcript with who wrote them and where ("#web-team · Acme"), and fctl's own doings there as quiet notices
+  ("Replied in #web-team", "Asked in #web-team"; failures in `danger`). Every link to Slack (the place in a row, on
+  the cover and in the rail, a message's link, the arrow on a notice) shows only for an https address on slack.com or
+  one of its subdomains (`slackHref`): sandbox events could carry any URL, and a link that looks like Slack's must
+  lead there.
 - *Admin → Slack* (components/slack/admin.tsx): the app's state in one card (which credentials are set, and whether
   Slack can reach this instance's address or events come over Socket Mode), the addresses Slack calls to copy, the
   manifest as YAML or JSON, the Slack workspaces it's installed in, and the switch that lets workspaces know people by
@@ -1153,8 +1160,8 @@ the list's rows, which hold their own answer. A workspace
 closed to someone (its two-factor requirement) asks them nothing until it opens. A service account deleted since
 leaves its sessions saying "through a service account deleted since". Leaving a workspace forgets the answers
 given there, so joining again asks again. A secret shows once; the page shows only its end, so people tell two
-apart without it. With it, the workspace's admins see nine tabs where the instance has a Linear app (eight
-elsewhere), which their strip spaces closer so that they fit a computer's column
+apart without it. With it, the workspace's admins see eight tabs, which their strip spaces closer so that they fit
+a computer's column
 ([Page tabs](lists-and-pages.md#narrowing-ordering-and-counting)).
 
 **Building one like it.** When a feature acts as someone, ask that person, where they already look, with what it
@@ -1387,8 +1394,10 @@ is on every page that takes the others away.
   ("Found 1 issue", "2 new commits").
 - **One made-up world.** The review previews follow one pull request, an upload worker whose retries never stop when
   the server is down (`src/sync/upload.rs`, fixed in `3f2a1c9`): the Reviews intro, the summary example and the
-  GitHub page's thread. The schedule preview shows one idea of each way to run, each the first of its group: Triage new
-  issues on an event, Update dependencies at set times. Someone who saw one recognizes the next.
+  GitHub page's thread. Linear's delegated ticket and Slack's thread follow another, the login redirect loop on
+  Safari (session web#12, pull request web#45). The schedule preview shows one idea of each way to run, each the first
+  of its group: Triage new issues on an event, Update dependencies at set times. Someone who saw one recognizes the
+  next.
 - **Decoration**: `aria-hidden="true"` and `select-none`. The text beside a preview must say everything it shows.
 - **Anatomy**: a main card (`rounded-xl`, `border-line`, `bg-surface`, a long soft shadow, 0 18px 50px -24px at 35%
   black) and, 12 px under it, a smaller card for a second fact (the check, the runs, the label), or for schedules a
