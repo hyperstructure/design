@@ -1149,7 +1149,10 @@ progress while people compare; tick steps from real state; warn inside the step 
 ## Domains that sign in with a provider
 
 (components/sign-in/admin.tsx `SignInAdmin`; routes/admin.tsx `SignInTab`; components/sign-in/provider.tsx;
-routes/auth.tsx `LoginPage`, `DomainRules`; routes/settings.tsx `SignIn`; lib/sign-in.ts; fctl's ADR 0099)
+components/sign-in/sessions.tsx `SessionPolicies`; components/sign-in/networks.tsx `Networks`;
+components/workspace/sign-in.tsx `WorkspaceSignIn`, `SignInBlocked`; routes/auth.tsx `LoginPage`, `DomainRules`;
+routes/settings.tsx `SignIn`, `Devices`; components/tokens.tsx; lib/sign-in.ts; lib/session-policy.ts; fctl's ADRs
+0099, 0102 and 0103)
 
 **Purpose.** Let an instance's admins move their organization's people onto its identity provider (Google today, so
 that the tab reads "acme.com and acme.dev sign in with Google only.") without a nervous afternoon: no way to lock
@@ -1178,6 +1181,9 @@ meets it.
    with its reason beside it.
 4. **Accounts**: the self sign-up switch, its hint following the value.
 5. **Two-factor sign-in**, which moved here from Admin → Settings; the workspace setting's link to it follows.
+6. **Staying signed in**: how long a browser and a CLI stay signed in, the longest an access token lasts, and whether
+   members make them (below).
+7. **Networks**: the IP ranges people sign in and send requests from (below).
 
 **Requiring one is a dialog that shows its consequences as you type** (`RuleDialog`). Domains in one field
 (commas, spaces or lines; `*@` and case don't matter), its placeholder the admin's own domain with "Use acme.com,
@@ -1203,6 +1209,54 @@ those who still have a password, with it. Passwords that went at their first sig
 and how many it releases. Reversible, so its button is primary, not red; the server asks the admin to confirm it's
 them, where the instance asks for that.
 
+**Staying signed in is a draft until it's saved** (`SessionPolicies`). A row per limit, its label and a hint that says
+what the limit costs on the left, a small Select on the right (under it on a phone, but the switch, which stays
+beside its label): "Browsers sign in again after" (While it's used, the default, last; 8 hours … 30 days), "Browsers
+sign out unused for" (15 minutes … 30 days, whose hint says "A tab left open on a page that updates itself counts as
+use."), "CLIs sign in again after", "Access tokens last at most" ("As its maker chooses"), and the "Members make
+access tokens" switch, whose hint follows its value. Each Select offers the saved value too where the CLI set one the
+list doesn't have ("36 hours"). Changing one saves nothing: the preview (`POST /api/v1/admin/sign-in/sessions/preview`)
+fills a sunken box with the CLI's sentences (`fctl admin sign-in policies`): "Saving signs out 14 browsers and 1 CLI at
+once, yours among them: their people sign in again." and "It ends 5 access tokens, 3 of them members': scripts and CI
+that use them need new ones.", or "Nobody is signed out now: sign-ins end as it says from here on." Save waits for the
+preview of the draft as it is (the box fades while an earlier draft's counts show), and Cancel puts the saved policy
+back. Unchanged, one quiet line says what it doesn't hold: "Admin tokens and service accounts' secrets last as long as
+their makers chose: they're for machines, such as the directory sync that closes people's accounts." The section's
+lead says why it matters with a provider: signing in again goes through Google, which checks they still may.
+
+**Networks show the admin's own address beside them** (`Networks`). A lead says where people sign in from now
+("People sign in and send requests from anywhere." or "…only from 203.0.113.0/24 and 2001:db8::/32. The primary
+instance owner signs in from anywhere, in a browser or the CLI."), then a monospace textarea, "Ranges", one a line,
+and under it "Your address: 198.51.100.7" with "Add it" while it isn't typed. Save and Cancel show only once it
+changes. Ranges that would shut the admin out are the server's to refuse (409, "Your own address, …, isn't in these
+networks: saving them would shut you out."), shown in a banner; a range that isn't one is the field's error.
+
+**People meet the limits where they apply.** Settings → Devices adds a sentence where the instance limits sign-ins
+("This instance signs browsers out 12 hours after they sign in, or after an hour unused, and CLIs 30 days after they
+sign in."). The new access token dialog offers no expiry past the longest ("90 days", the longest itself where the
+list lacks it, and no "Never"), with "This instance lets a token last 90 days at most." under it. A member where only
+admins make tokens finds no New button, and the section says who does and what to use instead ("…use the CLI, signed
+in as you with fctl login, or ask an admin."). From outside the networks, the sign-in page leads with an amber banner:
+"Acme factory takes sign-ins only from its organization's networks, and this browser is outside them. Connect to one
+(your VPN, say), then sign in."
+
+**A workspace's own requirement lives in its Settings → Access** (`WorkspaceSignIn`, fctl#659), under two-factor
+sign-in: "Members at your domains sign in with Google", its hint saying who it covers (members in it as an address at those
+domains) and who it doesn't (contractors in it as other addresses), and that closing someone's Google account stops
+their next sign-in, not the ones they have. "Require Google" opens a bordered form: the domains, the admin's own first;
+the passkeys switch; and, once they read as domains, a sunken box from the workspace's own members: "2 people are in
+Acme as an address at acme.com: it opens to them only once they've signed in with Google as that address. Their other
+workspaces don't change." and "1 person in it as other addresses signs in as before." Saving one that would close it
+to the admin is refused (409) with the way out as a link: "Sign in with Google as ada@acme.com". Required, the row
+shows a pill with Google's mark and the domains, and "Change domains" and "Stop requiring it"; where the instance no
+longer signs people in with Google, it says nobody it covers can open the workspace, and Stop stays. The workspace's
+header names it ("Google at acme.com and acme.dev"). A covered member signed in another way finds the workspace page
+replaced by an amber banner (`SignInBlocked`): "Acme requires its members at acme.com to sign in with Google as that
+address, and you signed in another way. Until you do, its projects and sessions are closed to you; your other
+workspaces aren't. Sign in with Google as bob@acme.com", and, for its primary admin, "Stop requiring Google", for when
+nobody can. The sidebar's lock reads "Closed until you sign in with Google" with "Sign in with Google to open it" under
+the workspace, and the home page's notice says the same with "Open it".
+
 **The sign-in page leads with the provider.** Its buttons keep the provider's own mark and neutral colors (never the
 app's yellow, which would clash with them), and under them, a quiet line per rule: "acme.com and acme.dev sign in with
 Google." Typing an address at such a domain turns the form into that provider's button, two lines with the address
@@ -1225,7 +1279,7 @@ instead that they keep their password and passkeys, the way in if the provider i
 in ("Browser · signed in with Google · active 2 minutes ago").
 
 **Building one like it.** Show who is affected before the button, with the real numbers and names, in the same
-sentences the CLI prints. Make the dangerous outcome impossible rather than warned about: the admin proves the
+sentences the CLI prints; where a change is several controls, keep it a draft with its preview and one Save. Make the dangerous outcome impossible rather than warned about: the admin proves the
 provider works for them by signing in with it. Keep a named way in when the outside service is down, and say whose it
 is on every page that takes the others away.
 
