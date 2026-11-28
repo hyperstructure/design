@@ -1243,19 +1243,19 @@ in as you with fctl login, or ask an admin."). From outside the networks, the si
 **A workspace's own requirement lives in its Settings → Access** (`WorkspaceSignIn`, fctl#659), under two-factor
 sign-in: "Members at your domains sign in with Google", its hint saying who it covers (members in it as an address at
 those domains) and who it doesn't (contractors in it as other addresses), and that closing someone's Google account
-stops their next sign-in, not the ones they have. "Require Google" opens a bordered form: the domains, the admin's own first;
-the passkeys switch; and, once they read as domains, a sunken box from the workspace's own members: "2 people are in
-Acme as an address at acme.com: it opens to them only once they've signed in with Google as that address. Their other
-workspaces don't change." and "1 person in it as other addresses signs in as before." Saving one that would close it
-to the admin is refused (409) with the way out as a link: "Sign in with Google as ada@acme.com". Required, the row
-shows a pill with Google's mark and the domains, and "Change domains" and "Stop requiring it"; where the instance no
-longer signs people in with Google, it says nobody it covers can open the workspace, and Stop stays. The workspace's
-header names it ("Google at acme.com and acme.dev"). A covered member signed in another way finds the workspace page
-replaced by an amber banner (`SignInBlocked`): "Acme requires its members at acme.com to sign in with Google as that
-address, and you signed in another way. Until you do, its projects and sessions are closed to you; your other
-workspaces aren't. Sign in with Google as bob@acme.com", and, for its primary admin, "Stop requiring Google", for when
-nobody can. The sidebar's lock reads "Closed until you sign in with Google" with "Sign in with Google to open it" under
-the workspace, and the home page's notice says the same with "Open it".
+stops their next sign-in, not the ones they have. "Require Google" opens a bordered form: the domains, the admin's own
+first; the passkeys switch; and, once they read as domains, a sunken box from the workspace's own members: "2 people are
+in Acme as an address at acme.com: it opens to them only once they've signed in with Google as that address. Their other
+workspaces don't change." and "1 person in it as other addresses signs in as before." Saving one that would close it to
+the admin is refused (409) with the way out as a link: "Sign in with Google as ada@acme.com". Required, the row shows a
+pill with Google's mark and the domains, and "Change domains" and "Stop requiring it"; where the instance no longer
+signs people in with Google, it says nobody it covers can open the workspace, and Stop stays. The workspace's header
+names it ("Google at acme.com and acme.dev"). A covered member signed in another way finds the workspace page replaced
+by an amber banner (`SignInBlocked`): "Acme requires its members at acme.com to sign in with Google as that address, and
+you signed in another way. Until you do, its projects and sessions are closed to you; your other workspaces aren't. Sign
+in with Google as bob@acme.com", and, for its primary admin, "Stop requiring Google", for when nobody can. The sidebar's
+lock reads "Closed until you sign in with Google" with "Sign in with Google to open it" under the workspace, and the
+home page's notice says the same with "Open it".
 
 **The sign-in page leads with the provider.** Its buttons keep the provider's own mark and neutral colors (never the
 app's yellow, which would clash with them), and under them, a quiet line per rule: "acme.com and acme.dev sign in with
