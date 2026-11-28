@@ -1241,9 +1241,9 @@ in as you with fctl login, or ask an admin."). From outside the networks, the si
 (your VPN, say), then sign in."
 
 **A workspace's own requirement lives in its Settings → Access** (`WorkspaceSignIn`, fctl#659), under two-factor
-sign-in: "Members at your domains sign in with Google", its hint saying who it covers (members in it as an address at those
-domains) and who it doesn't (contractors in it as other addresses), and that closing someone's Google account stops
-their next sign-in, not the ones they have. "Require Google" opens a bordered form: the domains, the admin's own first;
+sign-in: "Members at your domains sign in with Google", its hint saying who it covers (members in it as an address at
+those domains) and who it doesn't (contractors in it as other addresses), and that closing someone's Google account
+stops their next sign-in, not the ones they have. "Require Google" opens a bordered form: the domains, the admin's own first;
 the passkeys switch; and, once they read as domains, a sunken box from the workspace's own members: "2 people are in
 Acme as an address at acme.com: it opens to them only once they've signed in with Google as that address. Their other
 workspaces don't change." and "1 person in it as other addresses signs in as before." Saving one that would close it
