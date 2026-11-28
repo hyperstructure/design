@@ -1278,10 +1278,10 @@ loses its Disconnect button, and a note under the list says why and who removes 
 instead that they keep their password and passkeys, the way in if the provider is down. Devices say how each signed
 in ("Browser · signed in with Google · active 2 minutes ago").
 
-**Building one like it.** Show who is affected before the button, with the real numbers and names, in the same
-sentences the CLI prints; where a change is several controls, keep it a draft with its preview and one Save. Make the dangerous outcome impossible rather than warned about: the admin proves the
-provider works for them by signing in with it. Keep a named way in when the outside service is down, and say whose it
-is on every page that takes the others away.
+**Building one like it.** Show who is affected before the button, with the real numbers and names, in the same sentences
+the CLI prints; where a change is several controls, keep it a draft with its preview and one Save. Make the dangerous
+outcome impossible rather than warned about: the admin proves the provider works for them by signing in with it. Keep a
+named way in when the outside service is down, and say whose it is on every page that takes the others away.
 
 ## Memory and retrospectives
 
